@@ -1,6 +1,6 @@
 import pygame as pg
 from pygame.locals import *
-import sys, time
+import sys, time, os
 
 pg.init()
 screen = pg.display.set_mode((1200, 900))
@@ -17,14 +17,16 @@ mode = 'init'
 choose = 0
 Round = 1
 
+file_path = os.path.dirname(os.path.abspath(__file__))
+img_dir_path = file_path + "\\img\\"
 for color in ("Red", "Yellow", "Blue"):
     for num in range(1, 6):
         card_name = f"{color}_{num}"
-        card_image = pg.transform.scale(pg.image.load("Thief Poker/img/" + card_name + ".png"), (180, 270))
+        card_image = pg.transform.scale(pg.image.load(img_dir_path + card_name + ".png"), (180, 270))
         Card_IMGlist[card_name] = card_image
 
-Card_IMGlist["Black"] = pg.transform.scale(pg.image.load("Thief Poker/img/Black.png"), (180, 270))
-Hide_card = pg.transform.scale(pg.image.load("Thief Poker/img/Hide.png"), (180, 270))
+Card_IMGlist["Black"] = pg.transform.scale(pg.image.load(img_dir_path + "Black.png"), (180, 270))
+Card_IMGlist["Hide"] = pg.transform.scale(pg.image.load(img_dir_path + "Hide.png"), (180, 270))
 
 def in_rect(pos, rect):
     return rect[0] <= pos[0] <= rect[0] + rect[2] and rect[1] <= pos[1] <= rect[1] + rect[3]
@@ -253,7 +255,7 @@ while True:
                 if card in p1.active_list:
                     pg.draw.rect(screen, Red, (10 + i*200, 450, 180, 270), 2)
             for i in range(4):
-                screen.blit(Card.shrink(Hide_card), ((400 + i*100, 300)))
+                screen.blit(Card.shrink(Card_IMGlist["Hide"]), ((400 + i*100, 300)))
             screen.blit(text, (300, 50))
             screen.blit(Next_Button, (800, 750))
         
@@ -271,7 +273,7 @@ while True:
                     card = p2.showc[i]
                     screen.blit(Card.shrink(card.img), (400 + i*100, 300))
                 else:
-                    screen.blit(Card.shrink(Hide_card), ((400 + i*100, 300)))
+                    screen.blit(Card.shrink(Card_IMGlist["Hide"]), ((400 + i*100, 300)))
             screen.blit(text, (150, 50))
             screen.blit(Next_Button, (800, 750))
 
@@ -347,7 +349,7 @@ while True:
         screen.blit(rtext, (wx, 820))
 
         pg.display.update()
-        time.sleep(14)
+        time.sleep(4)
 
         Round += 1
         mode = 'init'
@@ -443,6 +445,6 @@ while True:
         screen.blit(Next_Button, (800, 750))
 
         pg.display.update()
-        time.sleep(15)
+        time.sleep(4)
         pg.quit()
         sys.exit()
