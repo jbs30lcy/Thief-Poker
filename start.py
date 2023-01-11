@@ -57,7 +57,7 @@ def phase2(var):
     player2.active_list = []
     while True:
         x, y = random.sample(range(6), 2)
-        if not player2.card_list[x] in player2.active_list and not player2.card_list[y] in player2.active_list: break
+        if not player2.card_list[x] in player2.showc and not player2.card_list[y] in player2.showc: break
     player2.active_list.append(player2.card_list[x])
     player2.active_list.append(player2.card_list[y])
     return (player1, player2)

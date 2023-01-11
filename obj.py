@@ -30,6 +30,13 @@ class Card:
             self.img = Card_IMGlist['Black']
         self.show = False
 
+    def __str__(self):
+        if color == 'Black':
+            return '==Card Black=='
+        else:
+            return f'==Card {self.color} {self.val}=='
+
+
     @classmethod
     def shrink(cls, surf):
         return pg.transform.scale(surf, (90, 135))
