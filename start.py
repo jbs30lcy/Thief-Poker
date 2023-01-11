@@ -1,10 +1,12 @@
 import pygame as pg
+import random
 from obj import *
 def start(const, var):
     Round   = const
     player1 = var[0]
     player2 = var[1]
 
+    p1b = p2b = False
     player1.active_list = []
     player1.showc       = []
     player2.active_list = []
@@ -12,48 +14,52 @@ def start(const, var):
     if Round == 1:
         player1.card_list = []
         player2.card_list = []
-        player1.card_list.append(Card('Red', 1))
-        player1.card_list.append(Card('Red', 2))
-        player1.card_list.append(Card('Yellow', 2))
-        player1.card_list.append(Card('Blue', 2))
-        player1.card_list.append(Card('Blue', 4))
-        player1.card_list.append(Card('Blue', 5))
-        player2.card_list.append(Card('Red', 4))
-        player2.card_list.append(Card('Yellow', 2))
-        player2.card_list.append(Card('Yellow', 3))
-        player2.card_list.append(Card('Yellow', 3))
-        player2.card_list.append(Card('Blue', 1))
-        player2.card_list.append(Card('Black'))
+        # player1.card_list.append(Card('Red', 1))
+        # player1.card_list.append(Card('Red', 2))
+        # player1.card_list.append(Card('Yellow', 2))
+        # player1.card_list.append(Card('Blue', 2))
+        # player1.card_list.append(Card('Blue', 4))
+        # player1.card_list.append(Card('Blue', 5))
+        # player2.card_list.append(Card('Red', 4))
+        # player2.card_list.append(Card('Yellow', 2))
+        # player2.card_list.append(Card('Yellow', 3))
+        # player2.card_list.append(Card('Yellow', 3))
+        # player2.card_list.append(Card('Blue', 1))
+        # player2.card_list.append(Card('Black'))
+        for i in range(6):
+            if not p1b and random.random() < 1/16:
+                player1.card_list.append(Card('Black'))
+                p1b = True
+            else:
+                player1.card_list.append(Card(random.choice(['Red', 'Yellow', 'Blue']), random.randint(1, 5)))
+            if not p2b and random.random() < 1/16:
+                player2.card_list.append(Card('Black'))
+                p2b = True
+            else:
+                player2.card_list.append(Card(random.choice(['Red', 'Yellow', 'Blue']), random.randint(1, 5)))
 
     return (player1, player2)
 
 
-def phase1(const, var):
-    Round   = const
-    player1 = var[0]
-    player2 = var[1]
-    if Round == 1:
-        player2.active_list.append(player2.card_list[1])
-        player2.active_list.append(player2.card_list[2])
-    if Round == 2:
-        player2.active_list.append(player2.card_list[3])
-        player2.active_list.append(player2.card_list[5])
-    return (player1, player2)
+def phase1(var):
+    player2 = var
+
+    x, y = random.sample(range(6), 2)
+    player2.active_list.append(player2.card_list[x])
+    player2.active_list.append(player2.card_list[y])
+    return player2
 
 
-def phase2(const, var):
-    Round   = const
+def phase2(var):
     player1 = var[0]
     player2 = var[1]
     player1.active_list = []
     player2.active_list = []
-    if Round == 1:
-        player2.active_list.append(player2.card_list[3])
-        player2.active_list.append(player2.card_list[4])
-    if Round == 2:
-        player2.active_list.append(player2.card_list[1])
-        player2.active_list.append(player2.card_list[2])
-
+    while True:
+        x, y = random.sample(range(6), 2)
+        if not player2.card_list[x] in player2.active_list and not player2.card_list[y] in player2.active_list: break
+    player2.active_list.append(player2.card_list[x])
+    player2.active_list.append(player2.card_list[y])
     return (player1, player2)
 
 

@@ -49,7 +49,7 @@ def main():
             mode = 'phase1'
         
         if mode == 'phase1':
-            p1, p2 = phase1(Round, (p1, p2))
+            p2 = phase1(p2)
             mode = 'play'
         
         if mode == 'play':
@@ -113,7 +113,7 @@ def main():
             pg.display.update()
             time.sleep(2)
 
-            p1, p2 = phase2(Round, (p1, p2))
+            p1, p2 = phase2((p1, p2))
             mode = 'play'
 
         if mode == 'result':
