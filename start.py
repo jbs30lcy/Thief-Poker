@@ -14,18 +14,6 @@ def start(const, var):
     if Round == 1:
         player1.card_list = []
         player2.card_list = []
-        # player1.card_list.append(Card('Red', 1))
-        # player1.card_list.append(Card('Red', 2))
-        # player1.card_list.append(Card('Yellow', 2))
-        # player1.card_list.append(Card('Blue', 2))
-        # player1.card_list.append(Card('Blue', 4))
-        # player1.card_list.append(Card('Blue', 5))
-        # player2.card_list.append(Card('Red', 4))
-        # player2.card_list.append(Card('Yellow', 2))
-        # player2.card_list.append(Card('Yellow', 3))
-        # player2.card_list.append(Card('Yellow', 3))
-        # player2.card_list.append(Card('Blue', 1))
-        # player2.card_list.append(Card('Black'))
         for i in range(6):
             if not p1b and random.random() < 1/16:
                 player1.card_list.append(Card('Black'))

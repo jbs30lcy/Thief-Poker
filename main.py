@@ -5,8 +5,10 @@ from obj import *
 from start import *
 from draw import *
 
+WIDTH = 1600
+HEIGHT = 900
 pg.init()
-screen = pg.display.set_mode((1200, 900))
+screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption("도둑 포커")
 clock = pg.time.Clock()
 
@@ -59,56 +61,50 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
                     pos = pg.mouse.get_pos()
-                    if choose == 0:
-                        for i in range(len(p1.card_list)):
-                            if in_rect(pos, (10 + i*200, 450, 180, 270)): # 6장 기준
-                                card = p1.card_list[i]
-                                if card in p1.active_list:
-                                    p1.active_list.remove(card)
-                                else:
-                                    p1.active_list.append(card)
-                        if in_rect(pos, (800, 750, 90, 60)):
-                            if len(p1.active_list) != 2:
-                                print("Wrong number of cards")
-                                pg.quit()
-                                sys.exit()
+                    c1 = len(p1.card_list)
+                    for i in range(len(p1.card_list)):
+                        if p1.card_list[i] in p1.showc:
+                            continue
+                        x = 900 - c1*100 + i*200
+                        if in_rect(pos, (x - 90, 450, 180, 270)):
+                            card = p1.card_list[i]
+                            if card in p1.active_list:
+                                p1.active_list.remove(card)
                             else:
-                                mode = 'phase2'
+                                p1.active_list.append(card)
+                    if in_rect(pos, (1300 - 90, 750, 90, 60)):
+                        if len(p1.active_list) != 2:
+                            print("Wrong number of cards")
+                            pg.quit()
+                            sys.exit()
+                        else:
+                            if choose == 0:
                                 choose = 0.5
-                                p1.showc = p1.active_list.copy()
-
-                    if choose == 1:
-                        for i in range(6):
-                            if p1.card_list[i] in p1.showc:
-                                continue
-                            if in_rect(pos, (10 + i*200, 450, 180, 270)):
-                                card = p1.card_list[i]
-                                if card in p1.active_list:
-                                    p1.active_list.remove(card)
-                                else:
-                                    p1.active_list.append(card)
-                        if in_rect(pos, (800, 750, 90, 60)):
-                            if len(p1.active_list) != 2:
-                                print("Wrong number of cards")
-                                pg.quit()
-                                sys.exit()
-                            else:
+                                mode = 'phase2'
+                                p1.showc = p1.active_list.copy() # p2는 지금 받으면 안됨
+                            if choose == 1:
                                 mode = 'result'
-                                choose = 2
                                 p1.showc = p1.showc + p1.active_list.copy()
-                                p1.active_list = []
+                                p1.active_list = [] # 왜 이걸 여기서 초기화 시키지?
                                 p2.showc = p2.showc + p2.active_list.copy()
                                 p2.active_list = []
 
-            
             p1, p2 = draw_play(screen, (Round, choose), (p1, p2))
-            if choose == 0.5:
-                choose = 1
 
+            if choose == 0.5: choose = 1
             clock.tick(60)
             pg.display.update()
 
         if mode == 'phase2':
+
+            p2.showc = p2.active_list.copy()
+            for card in p1.showc:
+                if not card in p1.shown:
+                    p1.shown.append(card)
+            for card in p2.showc:
+                if not card in p2.shown:
+                    p2.shown.append(card)
+
             draw_flop(screen, (p1, p2))
             pg.display.update()
             time.sleep(2)
@@ -117,6 +113,14 @@ def main():
             mode = 'play'
 
         if mode == 'result':
+
+            for card in p1.showc:
+                if not card in p1.shown:
+                    p1.shown.append(card)
+            for card in p2.showc:
+                if not card in p2.shown:
+                    p2.shown.append(card)
+
             p1, p2, t = draw_result(screen, w, (p1, p2, t))
             if t == 60:
                 w = win(p1, p2)
@@ -139,16 +143,18 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
                     pos = pg.mouse.get_pos()
-
+                    c1 = len(p1.card_list)
+                    s2 = len(p2.shown)
                     if choose == 0:
-                        for i in range(6):
-                            if in_rect(pos, (10 + i*200, 450, 180, 270)):
+                        for i in range(c1):
+                            x = 900 - c1*100 + i*200
+                            if in_rect(pos, (x - 90, 450, 180, 270)):
                                 card = p1.card_list[i]
                                 if card in p1.active_list:
                                     p1.active_list.remove(card)
                                 else:
                                     p1.active_list.append(card)
-                        if in_rect(pos, (800, 750, 90, 60)):
+                        if in_rect(pos, (1300 - 90, 750, 90, 60)):
                             if len(p1.active_list) != 1:
                                 print("Wrong number of cards")
                                 pg.quit()
@@ -157,14 +163,15 @@ def main():
                                 choose = 0.5
                     
                     if choose == 1:
-                        for i in range(len(p2.showc)):
-                            if in_rect(pos, (610 - 100 * len(p2.shown)+ i*200, 150, 180, 270)):
+                        for i in range(s2):
+                            x = x = 900 - s2*100 + i*200
+                            if in_rect(pos, (x - 90, 400 - 270, 180, 270)):
                                 card = p2.shown[i]
                                 if card in p2.active_list:
                                     p2.active_list.remove(card)
                                 else:
                                     p2.active_list.append(card)
-                        if in_rect(pos, (800, 750, 90, 60)):
+                        if in_rect(pos, (1300 - 90, 750, 90, 60)):
                             if len(p2.active_list) != 1:
                                 print("Wrong number of cards")
                                 pg.quit()
