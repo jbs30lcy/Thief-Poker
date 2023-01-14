@@ -1,11 +1,14 @@
 import pygame as pg
 import os
 
-White = (255, 255, 255)
-Black = (0, 0, 0)
-Red   = (240, 26, 0)
-Grey1 = (200, 200, 200)
-GreyA = (127, 127, 127, 127)
+White  = (255, 255, 255)
+Black  = (0, 0, 0)
+Red    = (240, 26, 0)
+Yellow = (210, 190, 0)
+Blue   = (24, 160, 230)
+Grey1  = (200, 200, 200)
+Grey2  = (230, 230, 230)
+GreyA  = (127, 127, 127, 127)
 Card_IMGlist = {}
 
 file_path = os.path.dirname(os.path.abspath(__file__))
