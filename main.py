@@ -194,11 +194,13 @@ def main():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
+                if event.type == MOUSEBUTTONDOWN:
+                    pos = pg.mouse.get_pos()
+                    if in_rect(pos, (1300 - 90, 750, 90, 60)):
+                        pg.quit()
+                        sys.exit()
 
-            t = draw_exchange_result(screen, p1, t)
-            if t == 240:
-                pg.quit()
-                sys.exit()
+            t = draw_exchange_result(screen, p1, t) # 유령 변수
 
             clock.tick(60)
             pg.display.update()
