@@ -29,6 +29,8 @@ Next_Button.fill((227, 181, 140))
 Next_Button_text = AR24.render('Next', True, Black)
 Mblit(Next_Button, Next_Button_text, (45, 30))
 
+Coin_icon = pg.transform.scale(pg.image.load(img_dir_path + 'coin.png'), (50, 50))
+
 def draw_play(screen, const, var):
     Round   = const[0]
     choose  = const[1]
@@ -64,15 +66,20 @@ def draw_play(screen, const, var):
     Mblit(screen, Next_Button, (1300, 750), 'TR')
     
     text = AR24.render(f"round {Round}", True, Black)
-    screen.blit(text, (20, 20))
+    coin = AR24.render(str(player1.coin), True, Black)
+    coin_icon_x = 1580 - coin.get_width()
+    Mblit(screen, text, (20, 20), 'TL')
+    Mblit(screen, coin, (1580, 40), 'MR')
+    Mblit(screen, Coin_icon, (coin_icon_x - 10, 40), 'MR')
     screen.blit(Alpha_screen, (0, 0))
 
     return (player1, player2)
 
 
 def draw_flop(screen, const):
-    player1 = const[0]
-    player2 = const[1]
+    Round   = const[0]
+    player1 = const[1]
+    player2 = const[2]
 
     screen.fill(Grey1)
     p1_text = AR24.render('My Card', True, Black)
@@ -84,9 +91,17 @@ def draw_flop(screen, const):
     Mblit(screen, p1_text, (1050, 530), 'TL')
     Mblit(screen, p2_text, (1050, 370), 'BL')
 
+    text = AR24.render(f"round {Round}", True, Black)
+    coin = AR24.render(str(player1.coin), True, Black)
+    coin_icon_x = 1580 - coin.get_width()
+    Mblit(screen, text, (20, 20), 'TL')
+    Mblit(screen, coin, (1580, 40), 'MR')
+    Mblit(screen, Coin_icon, (coin_icon_x - 10, 40), 'MR')
+
 
 def draw_result(screen, const, var):
-    w       = const
+    Round   = const[0]
+    w       = const[1]
     player1 = var[0]
     player2 = var[1]
     tick    = var[2]
@@ -103,13 +118,20 @@ def draw_result(screen, const, var):
     if w >= 0: # tick < 60 에서 w = -1로, 표기되지 않음.
         if w == 0:
             rtext = AR36.render(f'DRAW', True, Black)
-            player1.coin += 10
+            if tick == 60: player1.coin += 5
         if w == 1:
             rtext = AR36.render(f'YOU WIN', True, Black)
-            player1.coin += 5
+            if tick == 60: player1.coin += 10
         if w == 2:
             rtext = AR36.render(f'YOU LOSE', True, Black)
         Mblit(screen, rtext, (800, 840))
+
+    text = AR24.render(f"round {Round}", True, Black)
+    coin = AR24.render(str(player1.coin), True, Black)
+    coin_icon_x = 1580 - coin.get_width()
+    Mblit(screen, text, (20, 20), 'TL')
+    Mblit(screen, coin, (1580, 40), 'MR')
+    Mblit(screen, Coin_icon, (coin_icon_x - 10, 40), 'MR')
 
     return player1, player2, tick+1
 

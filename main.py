@@ -105,7 +105,7 @@ def main():
                 if not card in p2.shown:
                     p2.shown.append(card)
 
-            draw_flop(screen, (p1, p2))
+            draw_flop(screen, (Round, p1, p2))
             pg.display.update()
             time.sleep(2)
 
@@ -121,7 +121,7 @@ def main():
                 if not card in p2.shown:
                     p2.shown.append(card)
 
-            p1, p2, t = draw_result(screen, w, (p1, p2, t))
+            p1, p2, t = draw_result(screen, (Round, w), (p1, p2, t))
             if t == 60:
                 w = win(p1, p2)
             if t == 240:
