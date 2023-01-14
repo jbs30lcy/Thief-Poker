@@ -28,9 +28,9 @@ def win(player1, player2):
     if abs(score2) > abs(score1):
         return 2
     if score1 < 0 and score2 > 0:
-        return 1
-    if score1 > 0 and score2 < 0:
         return 2
+    if score1 > 0 and score2 < 0:
+        return 1
     return 0
 
 def main():
