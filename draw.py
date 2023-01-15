@@ -1,8 +1,12 @@
+# draw.py : 플레이어들에게 보여지는 UI를 그리는 부분을 떼어놓은 파일.
 import pygame as pg
 from pygame.locals import *
 from obj import *
 pg.init()
 
+# Mblit : ~~.blit 메소드는 입력받은 좌표를 왼쪽 위로 설정하고 Surface를 그림.
+# 그 좌표의 기준을 정할 수 있는 함수
+# 기본값은 MM, 즉 입력 좌표를 정중앙으로 두게끔 그림.
 def Mblit(screen, surf, pos, poscon = 'MM'):
     x, y = pos
     r, c = poscon
@@ -20,6 +24,7 @@ def Mblit(screen, surf, pos, poscon = 'MM'):
 
     screen.blit(surf, (x, y))
 
+# 글꼴은 일단 Arialrounded를 썼지만, 이 글꼴은 한글이 호환되지 않는다.
 AR72 = pg.font.SysFont('Arialrounded', 72)
 AR24 = pg.font.SysFont('Arialrounded', 24)
 AR36 = pg.font.SysFont('Arialrounded', 36)
@@ -31,6 +36,7 @@ Mblit(Next_Button, Next_Button_text, (45, 30))
 
 Coin_icon = pg.transform.scale(pg.image.load(img_dir_path + 'coin.png'), (50, 50))
 
+# draw_play : mode = play일 때의 UI
 def draw_play(screen, const, var):
     Round   = const[0]
     choose  = const[1]
@@ -76,6 +82,7 @@ def draw_play(screen, const, var):
     return (player1, player2)
 
 
+# draw_flop : mode = phase2일 떄의 UI
 def draw_flop(screen, const):
     Round   = const[0]
     player1 = const[1]
@@ -99,6 +106,7 @@ def draw_flop(screen, const):
     Mblit(screen, Coin_icon, (coin_icon_x - 10, 40), 'MR')
 
 
+# draw_result : mode = result일 때의 UI
 def draw_result(screen, const, var):
     Round   = const[0]
     w       = const[1]
@@ -135,6 +143,8 @@ def draw_result(screen, const, var):
 
     return player1, player2, tick+1
 
+
+# draw_exchange : mode = exchange일 때의 UI
 def draw_exchange(screen, const, var):
     choose  = const
     player1 = var[0]
@@ -167,7 +177,7 @@ def draw_exchange(screen, const, var):
 
     return (player1, player2)
 
-
+# draw_exchange_result : mode = exchangeR일 때의 UI
 def draw_exchange_result(screen, const, var):
     player1 = const
     t = var

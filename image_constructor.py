@@ -1,3 +1,5 @@
+# image_constructor.py : img 폴더의 각 카드 이미지를 생성했던 파일. 사용하지 않는 파일이다
+
 import pygame as pg
 from pygame.locals import *
 from obj import *

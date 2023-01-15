@@ -1,3 +1,6 @@
+# start.py : UI가 표시되지 않고 즉시 넘어가는 mode는 입력을 받지 않기 때문에
+# 따로 파일을 빼 놓았다.
+
 import pygame as pg
 import random
 from obj import *

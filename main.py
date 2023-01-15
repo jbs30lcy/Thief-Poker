@@ -1,6 +1,6 @@
 import pygame as pg
 from pygame.locals import *
-import sys, time, os
+import sys, time
 from obj import *
 from start import *
 from draw import *
@@ -12,9 +12,12 @@ screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption("도둑 포커")
 clock = pg.time.Clock()
 
+# in_rect: 점이 사각형 안에 포함되어 있으면 True를 return
 def in_rect(pos, rect):
     return rect[0] <= pos[0] <= rect[0] + rect[2] and rect[1] <= pos[1] <= rect[1] + rect[3]
 
+# win: 한 판이 끝나고 두 player 객체의 승패를 판단
+# 내가 이겼으면 1, 상대방이 이겼으면 2, 무승부면 0을 return
 def win(player1, player2):
     score1 = player1.str2score(player1.rank())
     score2 = player2.str2score(player2.rank())
@@ -42,7 +45,8 @@ def main():
 
     p1 = Player()
     p2 = Player()
-
+    
+    # mode 변수에 따라 실행되는 코드가 달라짐
     while True:
         if mode == 'init':
             choose = 0

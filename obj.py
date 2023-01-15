@@ -1,3 +1,6 @@
+# obj 파일 : 모든 파일에서 필요한 기초 오브젝트를 구현해 놓음.
+# 색상, 파일 경로, 카드 이미지 집합, Card class, Player class
+
 import pygame as pg
 import os
 
@@ -24,7 +27,7 @@ Card_IMGlist["Black"] = pg.transform.scale(pg.image.load(img_dir_path + "Black.p
 Card_IMGlist["Hide"] = pg.transform.scale(pg.image.load(img_dir_path + "Hide.png"), (180, 270))
 
 class Card:
-    def __init__(self, color, val = 6): # Black card val : 6
+    def __init__(self, color, val = 0):
         self.color = color
         self.val = val
         if 1 <= self.val <= 5:
@@ -51,7 +54,10 @@ class Player:
         self.showc = []
         self.shown = []
         self.coin = 0
-        #self.pre(전적)
+        # self.key (Client를 구별할 요소)
+        # self.pre (전적)
+
+    # str2score: 족보가 적혀 있는 str을 int로 변환하는 함수.
     def str2score(self, s):
         sign = -1 if 'Black' in s else 1
         if 'Four of a kind' in s:
@@ -66,8 +72,9 @@ class Player:
             return sign * (100 + 10 * int(s[0]))
         if 'No rank' in s:
             return int(s[8:][1:][:-1])
-        
-    def _rrank(self, arr, black):
+    
+    # _rrank: Card 객체 4개가 담긴 list인 arr을 확인해 str 형태의 족보로 반환하는 함수.
+    def _rrank(self, arr, black): 
         n1 = arr[0].val
         n2 = arr[1].val
         n3 = arr[2].val
@@ -105,6 +112,7 @@ class Player:
             return f"{n3} {blacks} Pair"
         return f"No rank ({n1+n2+n3+n4})"
 
+    # rank: 검정 카드를 포함한 족보를 계산하기 위한, _rrank의 wrapper 함수
     def rank(self):
         black_in = False
         for i in range(4):
