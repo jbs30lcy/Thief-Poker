@@ -104,6 +104,7 @@ def draw_flop(screen, const):
     Mblit(screen, text, (20, 20), 'TL')
     Mblit(screen, coin, (1580, 40), 'MR')
     Mblit(screen, Coin_icon, (coin_icon_x - 10, 40), 'MR')
+    Mblit(screen, Next_Button, (1300, 750), 'TR')
 
 
 # draw_result : mode = result일 때의 UI

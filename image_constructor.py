@@ -17,7 +17,7 @@ Card = pg.Surface((WIDTH, HEIGHT))
 Card.fill(Grey2)
 
 # =========== 1 ===========
-pg.draw.circle(Card, Red, (200, 300), 40)
+# pg.draw.circle(Card, Red, (200, 300), 40)
 
 # =========== 2 ===========
 # pg.draw.circle(Card, Red, (200, 150), 30)
@@ -41,6 +41,23 @@ pg.draw.circle(Card, Red, (200, 300), 40)
 # pg.draw.circle(Card, Red, (320, 450), 25)
 # pg.draw.circle(Card, Red, (200, 300), 25)
 
+# =========== 6 ===========
+# pg.draw.circle(Card, Red, (70, 200), 25)
+# pg.draw.circle(Card, Red, (70, 400), 25)
+# pg.draw.circle(Card, Red, (200, 500), 25)
+# pg.draw.circle(Card, Red, (330, 400), 25)
+# pg.draw.circle(Card, Red, (330, 200), 25)
+# pg.draw.circle(Card, Red, (200, 100), 25)
+
+# =========== 7 ===========
+# pg.draw.circle(Card, Red, (70, 200), 25)
+# pg.draw.circle(Card, Red, (70, 400), 25)
+# pg.draw.circle(Card, Red, (200, 500), 25)
+# pg.draw.circle(Card, Red, (330, 400), 25)
+# pg.draw.circle(Card, Red, (330, 200), 25)
+# pg.draw.circle(Card, Red, (200, 100), 25)
+# pg.draw.circle(Card, Red, (200, 300), 25)
+
 # =========== Black ===========
 # F = pg.font.SysFont('Arialrounded', 84)
 # pg.draw.circle(Card, Black, (200, 300), 60)
@@ -57,7 +74,32 @@ pg.draw.circle(Card, Red, (200, 300), 40)
 # ============ saving file ============
 # pg.image.save(Card, img_dir_path + 'Red_1.png')
 
+# Cardr = pg.Surface((WIDTH, HEIGHT))
+# Cardy = pg.Surface((WIDTH, HEIGHT))
+# Cardb = pg.Surface((WIDTH, HEIGHT))
+# Cardr.fill(Grey2)
+# Cardy.fill(Grey2)
+# Cardb.fill(Grey2)
 
+# for color in (Red, Yellow, Blue):
+#     if color == Red:
+#         card = Cardr
+#         name = 'Red'
+#     if color == Yellow:
+#         card = Cardy
+#         name = 'Yellow'
+#     if color == Blue:
+#         card = Cardb
+#         name = 'Blue'
+#     pg.draw.circle(card, color, (70, 200), 25)
+#     pg.draw.circle(card, color, (70, 400), 25)
+#     pg.draw.circle(card, color, (200, 500), 25)
+#     pg.draw.circle(card, color, (330, 400), 25)
+#     pg.draw.circle(card, color, (330, 200), 25)
+#     pg.draw.circle(card, color, (200, 100), 25)
+#     pg.draw.circle(card, color, (200, 300), 25)
+
+#     pg.image.save(card, img_dir_path + f'{name}_7.png')
 
 while True:
     for event in pg.event.get():

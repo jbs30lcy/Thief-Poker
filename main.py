@@ -109,15 +109,23 @@ def main():
                 if not card in p2.shown:
                     p2.shown.append(card)
 
+            mode = 'flop'
+        
+        if mode == 'flop':
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+                if event.type == MOUSEBUTTONDOWN:
+                    pos = pg.mouse.get_pos()
+                    if in_rect(pos, (1300 - 90, 750, 90, 60)):
+                        p1, p2 = phase2((p1, p2))
+                        mode = 'play'
+            
             draw_flop(screen, (Round, p1, p2))
             pg.display.update()
-            time.sleep(2)
-
-            p1, p2 = phase2((p1, p2))
-            mode = 'play'
 
         if mode == 'result':
-
             for card in p1.showc:
                 if not card in p1.shown:
                     p1.shown.append(card)
@@ -128,7 +136,7 @@ def main():
             p1, p2, t = draw_result(screen, (Round, w), (p1, p2, t))
             if t == 60:
                 w = win(p1, p2)
-            if t == 240:
+            if t == 300:
                 t = 0
                 Round += 1
                 mode = 'init'

@@ -15,19 +15,25 @@ def start(const, var):
     player2.active_list = []
     player2.showc       = []
     if Round == 1:
-        player1.card_list = []
-        player2.card_list = []
-        for i in range(6):
-            if not p1b and random.random() < 1/16:
-                player1.card_list.append(Card('Black'))
-                p1b = True
-            else:
-                player1.card_list.append(Card(random.choice(['Red', 'Yellow', 'Blue']), random.randint(1, 5)))
-            if not p2b and random.random() < 1/16:
-                player2.card_list.append(Card('Black'))
-                p2b = True
-            else:
-                player2.card_list.append(Card(random.choice(['Red', 'Yellow', 'Blue']), random.randint(1, 5)))
+        whole_card_list = []
+        whole_card_list.append(Card('Black'))
+        for color in ('Red', 'Yellow', 'Blue'):
+            for num in range(1, 8):
+                whole_card_list.append(Card(color, num))
+
+        while True:
+            player1.card_list = random.sample(whole_card_list, 6)
+            n = 0
+            for i in range(6):
+                if player1.card_list[i].color == 'black': n += 1
+            if n <= 1: break
+
+        while True:
+            player2.card_list = random.sample(whole_card_list, 6)
+            n = 0
+            for i in range(6):
+                if player2.card_list[i].color == 'black': n += 1
+            if n <= 1: break
 
     return (player1, player2)
 

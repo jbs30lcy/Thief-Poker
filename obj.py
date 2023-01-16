@@ -18,7 +18,7 @@ file_path = os.path.dirname(os.path.abspath(__file__))
 img_dir_path = file_path + "\\img\\"
 
 for color in ("Red", "Yellow", "Blue"):
-    for num in range(1, 6):
+    for num in range(1, 8):
         card_name = f"{color}_{num}"
         card_image = pg.transform.scale(pg.image.load(img_dir_path + card_name + ".png"), (180, 270))
         Card_IMGlist[card_name] = card_image
@@ -30,7 +30,7 @@ class Card:
     def __init__(self, color, val = 0):
         self.color = color
         self.val = val
-        if 1 <= self.val <= 5:
+        if 1 <= self.val <= 7:
             self.img = Card_IMGlist[self.color + '_' + str(self.val)]
         else:
             self.img = Card_IMGlist['Black']
@@ -67,7 +67,7 @@ class Player:
         if 'Three of a kind' in s:
             return sign * (300 + 10 * int(s[0]))
         if 'Two pair' in s:
-            return sign * (200 + 5 * int(s[0]) + int(s[2]))
+            return sign * (200 + 7 * int(s[0]) + int(s[2]))
         if 'Pair' in s:
             return sign * (100 + 10 * int(s[0]))
         if 'No rank' in s:
@@ -126,7 +126,7 @@ class Player:
             max_s = ''
             max_score = 0
             for color in ('Red', 'Yellow', 'Blue'):
-                for val in range(1, 6):
+                for val in range(1, 8):
                     new_showc[black_i] = Card(color, val)
                     x = self._rrank(new_showc, black_in)
                     #print(x)
