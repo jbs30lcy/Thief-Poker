@@ -155,6 +155,21 @@ def main():
             pg.display.update()
 
         if mode == 'result':
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+                if event.type == MOUSEBUTTONDOWN:
+                    pos = pg.mouse.get_pos()
+                    if t >= 60 and in_rect(pos, (1450 - 90, 750, 90, 60)):
+                        Round += 1
+                        mode = 'init'
+                        if Round == 3:
+                            mode = 'exchange'
+                            choose = 0
+                            p1.active_list = []
+                            p2.active_list = []
+
             for card in p1.showc:
                 if not card in p1.shown:
                     p1.shown.append(card)
@@ -165,15 +180,6 @@ def main():
             p1, p2, t = draw_result(screen, (Round, w), (p1, p2, t))
             if t == 60:
                 w = win(p1, p2)
-            if t == 300:
-                t = 0
-                Round += 1
-                mode = 'init'
-                if Round == 3:
-                    mode = 'exchange'
-                    choose = 0
-                    p1.active_list = []
-                    p2.active_list = []
             clock.tick(60)
             pg.display.update()
             

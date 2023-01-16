@@ -26,15 +26,12 @@ def Mblit(screen, surf, pos, poscon = 'MM'):
     screen.blit(surf, (x, y))
 
 # 글꼴은 일단 Arialrounded를 썼지만, 이 글꼴은 한글이 호환되지 않는다.
-AR96 = pg.font.SysFont('Arialrounded', 96)
-AR72 = pg.font.SysFont('Arialrounded', 72)
-AR48 = pg.font.SysFont('Arialrounded', 48)
-AR24 = pg.font.SysFont('Arialrounded', 24)
-AR36 = pg.font.SysFont('Arialrounded', 36)
+AR = [pg.font.SysFont('Arialrounded', x) for x in range(1, 100)]
+AR.insert(0, 0)
 
 Next_Button = pg.Surface((90, 60))
 Next_Button.fill(Brown1)
-Next_Button_text = AR24.render('Next', True, Black)
+Next_Button_text = AR[24].render('Next', True, Black)
 Mblit(Next_Button, Next_Button_text, (45, 30))
 
 Coin_icon = pg.transform.scale(pg.image.load(img_dir_path + 'coin.png'), (50, 50))
@@ -44,10 +41,10 @@ Coin_icon = pg.transform.scale(pg.image.load(img_dir_path + 'coin.png'), (50, 50
 def draw_begin(screen): 
     screen.fill(Grey1)
 
-    title = AR96.render("Dodook Poker", True, Black)
+    title = AR[96].render("Dodook Poker", True, Black)
     start_button = pg.Surface((300, 100))
     start_button.fill(Brown1)
-    start_button_text = AR48.render('Start', True, Black)
+    start_button_text = AR[48].render('Start', True, Black)
     Mblit(start_button, start_button_text, (150, 50))
 
     Mblit(screen, title, (800, 150))
@@ -59,7 +56,7 @@ def draw_getmatch(screen, var):
 
     screen.fill(Grey1)
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
-    text = AR72.render("Finding player...", True, Black)
+    text = AR[72].render("Finding player...", True, Black)
     Mblit(screen, text, (800, 150))
 
     for i in range(8):
@@ -84,9 +81,9 @@ def draw_play(screen, const, var):
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
 
     if choose == 1:
-        text = AR72.render("Choose another two cards", True, Black)
+        text = AR[72].render("Choose another two cards", True, Black)
     else:
-        text = AR72.render("Choose two cards", True, Black) # choose == 0 or 0.5
+        text = AR[72].render("Choose two cards", True, Black) # choose == 0 or 0.5
     
     for i in range(c1):
         card = player1.card_list[i]
@@ -107,8 +104,8 @@ def draw_play(screen, const, var):
     Mblit(screen, text, (800, 100))
     Mblit(screen, Next_Button, (1300, 750), 'TR')
     
-    text = AR24.render(f"round {Round}", True, Black)
-    coin = AR24.render(str(player1.coin), True, Black)
+    text = AR[24].render(f"round {Round}", True, Black)
+    coin = AR[24].render(str(player1.coin), True, Black)
     coin_icon_x = 1580 - coin.get_width()
     Mblit(screen, text, (20, 20), 'TL')
     Mblit(screen, coin, (1580, 40), 'MR')
@@ -125,8 +122,8 @@ def draw_flop(screen, const):
     player2 = const[2]
 
     screen.fill(Grey1)
-    p1_text = AR24.render('My Card', True, Black)
-    p2_text = AR24.render('Rival\'s Card', True, Black)
+    p1_text = AR[24].render('My Card', True, Black)
+    p2_text = AR[24].render('Rival\'s Card', True, Black)
     Mblit(screen, player1.showc[0].img, (700, 480), 'TM')
     Mblit(screen, player1.showc[1].img, (900, 480), 'TM')
     Mblit(screen, player2.showc[0].img, (700, 420), 'BM')
@@ -134,8 +131,8 @@ def draw_flop(screen, const):
     Mblit(screen, p1_text, (1050, 530), 'TL')
     Mblit(screen, p2_text, (1050, 370), 'BL')
 
-    text = AR24.render(f"round {Round}", True, Black)
-    coin = AR24.render(str(player1.coin), True, Black)
+    text = AR[24].render(f"round {Round}", True, Black)
+    coin = AR[24].render(str(player1.coin), True, Black)
     coin_icon_x = 1580 - coin.get_width()
     Mblit(screen, text, (20, 20), 'TL')
     Mblit(screen, coin, (1580, 40), 'MR')
@@ -152,8 +149,8 @@ def draw_result(screen, const, var):
     tick    = var[2]
 
     screen.fill(Grey1)
-    p1_text = AR24.render(f'My Card : {player1.rank()}', True, Black)
-    p2_text = AR24.render(f'Rival\'s Card : {player2.rank()}', True, Black)
+    p1_text = AR[24].render(f'My Card : {player1.rank()}', True, Black)
+    p2_text = AR[24].render(f'Rival\'s Card : {player2.rank()}', True, Black)
     for i in range(4):
         Mblit(screen, player1.showc[i].img, (500 + 200*i, 480), 'TM')
         Mblit(screen, player2.showc[i].img, (500 + 200*i, 420), 'BM')
@@ -162,21 +159,22 @@ def draw_result(screen, const, var):
 
     if w >= 0: # tick < 60 에서 w = -1로, 표기되지 않음.
         if w == 0:
-            rtext = AR36.render(f'DRAW', True, Black)
+            rtext = AR[36].render(f'DRAW', True, Black)
             if tick == 60: player1.coin += 5
         if w == 1:
-            rtext = AR36.render(f'YOU WIN', True, Black)
+            rtext = AR[36].render(f'YOU WIN', True, Black)
             if tick == 60: player1.coin += 10
         if w == 2:
-            rtext = AR36.render(f'YOU LOSE', True, Black)
+            rtext = AR[36].render(f'YOU LOSE', True, Black)
         Mblit(screen, rtext, (800, 840))
 
-    text = AR24.render(f"round {Round}", True, Black)
-    coin = AR24.render(str(player1.coin), True, Black)
+    text = AR[24].render(f"round {Round}", True, Black)
+    coin = AR[24].render(str(player1.coin), True, Black)
     coin_icon_x = 1580 - coin.get_width()
     Mblit(screen, text, (20, 20), 'TL')
     Mblit(screen, coin, (1580, 40), 'MR')
     Mblit(screen, Coin_icon, (coin_icon_x - 10, 40), 'MR')
+    if tick >= 60: Mblit(screen, Next_Button, (1450, 750), 'TR')
 
     return player1, player2, tick+1
 
@@ -190,9 +188,9 @@ def draw_exchange(screen, const, var):
     s2      = len(player2.shown)
 
     if choose == 1:
-        text = AR72.render("Choose a card you want", True, Black)
+        text = AR[72].render("Choose a card you want", True, Black)
     else:
-        text = AR72.render("Choose my card", True, Black)
+        text = AR[72].render("Choose my card", True, Black)
 
     screen.fill(Grey1)
     for i in range(c1):
@@ -221,7 +219,7 @@ def draw_exchange_result(screen, const, var):
     c1 = len(player1.card_list)
 
     screen.fill(Grey1)
-    text = AR72.render("Result", True, Black)
+    text = AR[72].render("Result", True, Black)
     for i in range(c1):
         card = player1.card_list[i]
         x = 900 - c1*100 + i*200
