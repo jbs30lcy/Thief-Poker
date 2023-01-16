@@ -8,11 +8,14 @@ White  = (255, 255, 255)
 Black  = (0, 0, 0)
 Red    = (240, 26, 0)
 Yellow = (210, 190, 0)
+Green  = (70, 200, 120)
 Blue   = (24, 160, 230)
 Grey1  = (200, 200, 200)
 Grey2  = (230, 230, 230)
 GreyA  = (127, 127, 127, 127)
+Brown1 = (227, 181, 140)
 Card_IMGlist = {}
+
 
 file_path = os.path.dirname(os.path.abspath(__file__))
 img_dir_path = file_path + "\\img\\"

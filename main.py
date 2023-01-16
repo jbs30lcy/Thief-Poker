@@ -38,7 +38,7 @@ def win(player1, player2):
 
 def main():
 
-    mode = 'init'
+    mode = 'start'
     choose = 0
     Round = 1
     t, w = 0, -1
@@ -48,6 +48,35 @@ def main():
     
     # mode 변수에 따라 실행되는 코드가 달라짐
     while True:
+        if mode == 'start':
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+                if event.type == MOUSEBUTTONDOWN:
+                    pos = pg.mouse.get_pos()
+                    if in_rect(pos, (800 - 150, 700 - 50, 300, 100)):
+                        mode = 'getMatch'
+            
+            draw_begin(screen)
+
+            clock.tick(60)
+            pg.display.update()
+
+        if mode == 'getMatch':
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+            
+            t = draw_getmatch(screen, t)
+
+            if t == 200:
+                mode = 'init'
+
+            clock.tick(60)
+            pg.display.update()
+
         if mode == 'init':
             choose = 0
             t, w = 0, -1

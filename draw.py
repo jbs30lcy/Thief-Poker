@@ -2,6 +2,7 @@
 import pygame as pg
 from pygame.locals import *
 from obj import *
+import math
 pg.init()
 
 # Mblit : ~~.blit 메소드는 입력받은 좌표를 왼쪽 위로 설정하고 Surface를 그림.
@@ -25,16 +26,51 @@ def Mblit(screen, surf, pos, poscon = 'MM'):
     screen.blit(surf, (x, y))
 
 # 글꼴은 일단 Arialrounded를 썼지만, 이 글꼴은 한글이 호환되지 않는다.
+AR96 = pg.font.SysFont('Arialrounded', 96)
 AR72 = pg.font.SysFont('Arialrounded', 72)
+AR48 = pg.font.SysFont('Arialrounded', 48)
 AR24 = pg.font.SysFont('Arialrounded', 24)
 AR36 = pg.font.SysFont('Arialrounded', 36)
 
 Next_Button = pg.Surface((90, 60))
-Next_Button.fill((227, 181, 140))
+Next_Button.fill(Brown1)
 Next_Button_text = AR24.render('Next', True, Black)
 Mblit(Next_Button, Next_Button_text, (45, 30))
 
 Coin_icon = pg.transform.scale(pg.image.load(img_dir_path + 'coin.png'), (50, 50))
+
+
+# draw_begin : mode = start일 때의 UI
+def draw_begin(screen): 
+    screen.fill(Grey1)
+
+    title = AR96.render("Dodook Poker", True, Black)
+    start_button = pg.Surface((300, 100))
+    start_button.fill(Brown1)
+    start_button_text = AR48.render('Start', True, Black)
+    Mblit(start_button, start_button_text, (150, 50))
+
+    Mblit(screen, title, (800, 150))
+    Mblit(screen, start_button, (800, 700))
+
+# draw_getmatch : mode = getMatch일 떄의 UI
+def draw_getmatch(screen, var):
+    tick = var
+
+    screen.fill(Grey1)
+    Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
+    text = AR72.render("Finding player...", True, Black)
+    Mblit(screen, text, (800, 150))
+
+    for i in range(8):
+        x = 800 + 120*math.sin(math.pi * (i + round(tick/5)) / 4)
+        y = 450 + 120*math.cos(math.pi * (i + round(tick/5)) / 4)
+        c = list(Green) + [55 + i*200 / 8]
+        pg.draw.circle(Alpha_screen, c, (x, y), 20)
+
+    screen.blit(Alpha_screen, (0, 0))
+    return tick+1
+
 
 # draw_play : mode = play일 때의 UI
 def draw_play(screen, const, var):
