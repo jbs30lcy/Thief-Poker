@@ -39,7 +39,7 @@ class Card:
             self.img = Card_IMGlist['Black']
         self.show = False
 
-    def __str__(self):
+    def __repr__(self):
         if color == 'Black':
             return '==Card Black=='
         else:
@@ -57,6 +57,7 @@ class Player:
         self.showc = []
         self.shown = []
         self.coin = 0
+        self.common = None
         # self.key (Client를 구별할 요소)
         # self.pre (전적)
 
@@ -117,32 +118,44 @@ class Player:
 
     # rank: 검정 카드를 포함한 족보를 계산하기 위한, _rrank의 wrapper 함수
     def rank(self):
-        black_in = False
-        for i in range(4):
-            card = self.showc[i]
-            if card.color == 'Black':
-                black_in = True
-                black_i = i
-                break
-        if black_in:
+        R = 'No rank (1)'
+        for i in range(5):
+            black_in = False
             new_showc = self.showc.copy()
-            max_s = ''
-            max_score = 0
-            for color in ('Red', 'Yellow', 'Blue'):
-                for val in range(1, 8):
-                    new_showc[black_i] = Card(color, val)
-                    x = self._rrank(new_showc, black_in)
-                    #print(x)
-                    if abs(self.str2score(x)) > max_score:
-                        max_score = abs(self.str2score(x))
-                        max_s = x
-            x = self._rrank(self.showc, black_in)
-            if abs(self.str2score(x)) > max_score:
-                max_score = self.str2score(x)
-                max_s = x
-            return max_s
-        else:
-            return self._rrank(self.showc, black_in)
+            del new_showc[i]
+            for j in range(4):
+                card = new_showc[j]
+                if card.color == 'Black':
+                    black_in = True
+                    black_i = j
+                    break
+            if black_in:
+                arr = new_showc.copy()
+                max_s = ''
+                max_score = 0
+                for color in ('Red', 'Yellow', 'Blue'):
+                    for val in range(1, 8):
+                        arr[black_i] = Card(color, val)
+                        x = self._rrank(arr, black_in)
+                        if abs(self.str2score(x)) > max_score:
+                            max_score = abs(self.str2score(x))
+                            max_s = x
+                x = self._rrank(arr, black_in)
+                if abs(self.str2score(x)) > max_score:
+                    max_score = self.str2score(x)
+                    max_s = x
+                result_s = max_s
+            else:
+                result_s = self._rrank(new_showc, black_in)
+
+            rs = abs(self.str2score(result_s))
+            Rs = abs(self.str2score(R))
+            if rs > Rs:
+                R = result_s
+            elif rs == Rs and rs > 0:
+                R = result_s
+
+        return R
 
 
 if __name__ == '__main__':

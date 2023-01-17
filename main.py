@@ -42,6 +42,7 @@ def main():
     choose = 0
     Round = 1
     t, w = 0, -1
+    common = None
 
     p1 = Player()
     p2 = Player()
@@ -116,10 +117,11 @@ def main():
                                 mode = 'phase2'
                                 p1.showc = p1.active_list.copy() # p2는 지금 받으면 안됨
                             if choose == 1:
+                                t = 0
                                 mode = 'result'
-                                p1.showc = p1.showc + p1.active_list.copy()
+                                p1.showc = [common] + p1.showc + p1.active_list.copy()
                                 p1.active_list = [] # 왜 이걸 여기서 초기화 시키지?
-                                p2.showc = p2.showc + p2.active_list.copy()
+                                p2.showc = [common] + p2.showc + p2.active_list.copy()
                                 p2.active_list = []
 
             p1, p2 = draw_play(screen, (Round, choose), (p1, p2))
@@ -145,13 +147,20 @@ def main():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
-                if event.type == MOUSEBUTTONDOWN:
+                if t >= 60 and event.type == MOUSEBUTTONDOWN:
                     pos = pg.mouse.get_pos()
                     if in_rect(pos, (1300 - 90, 750, 90, 60)):
+                        t = 0
                         p1, p2 = phase2((p1, p2))
                         mode = 'play'
             
-            draw_flop(screen, (Round, p1, p2))
+            t = draw_flop(screen, (Round, p1, p2), t)
+            if t == 60:
+                common = Card(random.choice(('Red', 'Yellow', 'Blue')), random.randint(1, 7))
+                p1.common = common
+                p2.common = common
+
+            clock.tick(60)
             pg.display.update()
 
         if mode == 'result':
@@ -169,13 +178,14 @@ def main():
                             choose = 0
                             p1.active_list = []
                             p2.active_list = []
-
-            for card in p1.showc:
-                if not card in p1.shown:
-                    p1.shown.append(card)
-            for card in p2.showc:
-                if not card in p2.shown:
-                    p2.shown.append(card)
+                
+            if t == 0:
+                for card in p1.showc:
+                    if not card == common and not card in p1.shown:
+                        p1.shown.append(card)
+                for card in p2.showc:
+                    if not card == common and not card in p2.shown:
+                        p2.shown.append(card)
 
             p1, p2, t = draw_result(screen, (Round, w), (p1, p2, t))
             if t == 60:

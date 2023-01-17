@@ -101,6 +101,10 @@ def draw_play(screen, const, var):
         else:
             Mblit(screen, Card.shrink(Card_IMGlist["Hide"]), (650 + i*100, 400), 'BM')
 
+    if choose == 1:
+        Mblit(screen, Card.shrink(player1.common.img), (1200, 400), 'BM')
+        pg.draw.rect(screen, Yellow, (1200 - 50, 400 - 140, 100, 145), 2)
+    
     Mblit(screen, text, (800, 100))
     Mblit(screen, Next_Button, (1300, 750), 'TR')
     
@@ -110,20 +114,21 @@ def draw_play(screen, const, var):
     Mblit(screen, text, (20, 20), 'TL')
     Mblit(screen, coin, (1580, 40), 'MR')
     Mblit(screen, Coin_icon, (coin_icon_x - 10, 40), 'MR')
-    screen.blit(Alpha_screen, (0, 0))
 
+    screen.blit(Alpha_screen, (0, 0))
     return (player1, player2)
 
 
 # draw_flop : mode = phase2일 떄의 UI
-def draw_flop(screen, const):
+def draw_flop(screen, const, var):
     Round   = const[0]
     player1 = const[1]
     player2 = const[2]
+    tick    = var
 
     screen.fill(Grey1)
-    p1_text = AR[24].render('My Card', True, Black)
-    p2_text = AR[24].render('Rival\'s Card', True, Black)
+    p1_text = AR[28].render('My Card', True, Black)
+    p2_text = AR[28].render('Rival\'s Card', True, Black)
     Mblit(screen, player1.showc[0].img, (700, 480), 'TM')
     Mblit(screen, player1.showc[1].img, (900, 480), 'TM')
     Mblit(screen, player2.showc[0].img, (700, 420), 'BM')
@@ -137,7 +142,13 @@ def draw_flop(screen, const):
     Mblit(screen, text, (20, 20), 'TL')
     Mblit(screen, coin, (1580, 40), 'MR')
     Mblit(screen, Coin_icon, (coin_icon_x - 10, 40), 'MR')
-    Mblit(screen, Next_Button, (1300, 750), 'TR')
+    if tick >= 60:
+        text = AR[28].render('Community card', True, Black)
+        Mblit(screen, text, (300, 270))
+        Mblit(screen, Next_Button, (1300, 750), 'TR')
+        Mblit(screen, player1.common.img, (300, 450))
+
+    return tick+1
 
 
 # draw_result : mode = result일 때의 UI
@@ -151,11 +162,13 @@ def draw_result(screen, const, var):
     screen.fill(Grey1)
     p1_text = AR[24].render(f'My Card : {player1.rank()}', True, Black)
     p2_text = AR[24].render(f'Rival\'s Card : {player2.rank()}', True, Black)
-    for i in range(4):
-        Mblit(screen, player1.showc[i].img, (500 + 200*i, 480), 'TM')
-        Mblit(screen, player2.showc[i].img, (500 + 200*i, 420), 'BM')
-    Mblit(screen, p1_text, (800, 760), 'TM')
-    Mblit(screen, p2_text, (800, 140), 'BM')
+    for i in range(5):
+        Mblit(screen, player1.showc[i].img, (400 + 200*i, 480), 'TM')
+        Mblit(screen, player2.showc[i].img, (400 + 200*i, 420), 'BM')
+    pg.draw.rect(screen, Yellow, (400 - 95, 480 - 5, 190, 280), 2)
+    pg.draw.rect(screen, Yellow, (400 - 95, 420 - 275, 190, 280), 2)
+    Mblit(screen, p1_text, (800, 780), 'TM')
+    Mblit(screen, p2_text, (800, 120), 'BM')
 
     if w >= 0: # tick < 60 에서 w = -1로, 표기되지 않음.
         if w == 0:
