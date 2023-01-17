@@ -148,11 +148,11 @@ class Player:
             else:
                 result_s = self._rrank(new_showc, black_in)
 
-            rs = abs(self.str2score(result_s))
-            Rs = abs(self.str2score(R))
-            if rs > Rs:
+            rs = self.str2score(result_s)
+            Rs = self.str2score(R)
+            if abs(rs) > abs(Rs):
                 R = result_s
-            elif rs == Rs and rs > 0:
+            elif abs(rs) == abs(Rs) and rs > 0:
                 R = result_s
 
         return R

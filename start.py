@@ -9,7 +9,6 @@ def start(const, var):
     player1 = var[0]
     player2 = var[1]
 
-    p1b = p2b = False
     player1.active_list = []
     player1.showc       = []
     player2.active_list = []
@@ -59,6 +58,8 @@ def phase2(var):
     player2.active_list.append(player2.card_list[y])
     return (player1, player2)
 
+def get_common():
+    return Card(random.choice(('Red', 'Yellow', 'Blue')), random.randint(1, 7))
 
 if __name__ == '__main__':
     print("This File is not executable file. please run main.py.")
