@@ -107,6 +107,8 @@ def main():
                                 p1.active_list.remove(card)
                             else:
                                 p1.active_list.append(card)
+                                if len(p1.active_list) > 2:
+                                    del p1.active_list[0]
                     if in_rect(pos, (1300 - 90, 750, 90, 60)):
                         if len(p1.active_list) != 2:
                             print("Wrong number of cards")
@@ -213,6 +215,8 @@ def main():
                                     p1.active_list.remove(card)
                                 else:
                                     p1.active_list.append(card)
+                                    if len(p1.active_list) > 1:
+                                        del p1.active_list[0]
                         if in_rect(pos, (1300 - 90, 750, 90, 60)):
                             if len(p1.active_list) != 1:
                                 print("Wrong number of cards")
@@ -230,6 +234,9 @@ def main():
                                     p2.active_list.remove(card)
                                 else:
                                     p2.active_list.append(card)
+                                    if len(p2.active_list) > 1:
+                                        del p2.active_list[0]
+
                         if in_rect(pos, (1300 - 90, 750, 90, 60)):
                             if len(p2.active_list) != 1:
                                 print("Wrong number of cards")
