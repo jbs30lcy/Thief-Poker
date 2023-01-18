@@ -72,7 +72,8 @@ def draw_getmatch(screen, var):
 # draw_play : mode = play일 때의 UI
 def draw_play(screen, const, var):
     Round   = const[0]
-    choose  = const[1]
+    Match   = const[1]
+    choose  = const[2]
     player1 = var[0]
     player2 = var[1]
     c1      = len(player1.card_list)
@@ -108,10 +109,12 @@ def draw_play(screen, const, var):
     Mblit(screen, text, (800, 100))
     Mblit(screen, Next_Button, (1300, 750), 'TR')
     
-    text = AR[24].render(f"round {Round}", True, Black)
+    Match_text = AR[24].render(f"Match {Match}", True, Black)
+    Round_text = AR[24].render(f"round {Round}", True, Black)
     coin = AR[24].render(str(player1.coin), True, Black)
     coin_icon_x = 1580 - coin.get_width()
-    Mblit(screen, text, (20, 20), 'TL')
+    Mblit(screen, Match_text, (20, 20), 'TL')
+    Mblit(screen, Round_text, (20, 50), 'TL')
     Mblit(screen, coin, (1580, 40), 'MR')
     Mblit(screen, Coin_icon, (coin_icon_x - 10, 40), 'MR')
 
@@ -122,8 +125,9 @@ def draw_play(screen, const, var):
 # draw_flop : mode = phase2일 떄의 UI
 def draw_flop(screen, const, var):
     Round   = const[0]
-    player1 = const[1]
-    player2 = const[2]
+    Match   = const[1]
+    player1 = const[2]
+    player2 = const[3]
     tick    = var
 
     screen.fill(Grey1)
@@ -136,10 +140,12 @@ def draw_flop(screen, const, var):
     Mblit(screen, p1_text, (1050, 530), 'TL')
     Mblit(screen, p2_text, (1050, 370), 'BL')
 
-    text = AR[24].render(f"round {Round}", True, Black)
+    Match_text = AR[24].render(f"Match {Match}", True, Black)
+    Round_text = AR[24].render(f"round {Round}", True, Black)
     coin = AR[24].render(str(player1.coin), True, Black)
     coin_icon_x = 1580 - coin.get_width()
-    Mblit(screen, text, (20, 20), 'TL')
+    Mblit(screen, Match_text, (20, 20), 'TL')
+    Mblit(screen, Round_text, (20, 50), 'TL')
     Mblit(screen, coin, (1580, 40), 'MR')
     Mblit(screen, Coin_icon, (coin_icon_x - 10, 40), 'MR')
     if tick >= 60:
@@ -154,7 +160,8 @@ def draw_flop(screen, const, var):
 # draw_result : mode = result일 때의 UI
 def draw_result(screen, const, var):
     Round   = const[0]
-    w       = const[1]
+    Match   = const[1]
+    w       = const[2]
     player1 = var[0]
     player2 = var[1]
     tick    = var[2]
@@ -181,10 +188,13 @@ def draw_result(screen, const, var):
             rtext = AR[36].render(f'YOU LOSE', True, Black)
         Mblit(screen, rtext, (800, 840))
 
-    text = AR[24].render(f"round {Round}", True, Black)
+
+    Match_text = AR[24].render(f"Match {Match}", True, Black)
+    Round_text = AR[24].render(f"round {Round}", True, Black)
     coin = AR[24].render(str(player1.coin), True, Black)
     coin_icon_x = 1580 - coin.get_width()
-    Mblit(screen, text, (20, 20), 'TL')
+    Mblit(screen, Match_text, (20, 20), 'TL')
+    Mblit(screen, Round_text, (20, 50), 'TL')
     Mblit(screen, coin, (1580, 40), 'MR')
     Mblit(screen, Coin_icon, (coin_icon_x - 10, 40), 'MR')
     if tick >= 60: Mblit(screen, Next_Button, (1450, 750), 'TR')
@@ -194,7 +204,8 @@ def draw_result(screen, const, var):
 
 # draw_exchange : mode = exchange일 때의 UI
 def draw_exchange(screen, const, var):
-    choose  = const
+    Match   = const[0]
+    choose  = const[1]
     player1 = var[0]
     player2 = var[1]
     c1      = len(player1.card_list)
@@ -223,12 +234,16 @@ def draw_exchange(screen, const, var):
     Mblit(screen, text, (800, 70))
     Mblit(screen, Next_Button, (1300, 750), 'TR')
 
+    Match_text = AR[24].render(f"Match {Match}", True, Black)
+    Mblit(screen, Match_text, (20, 20), 'TL')
+
     return (player1, player2)
 
 # draw_exchange_result : mode = exchangeR일 때의 UI
 def draw_exchange_result(screen, const, var):
-    player1 = const
-    t = var
+    Match   = const[0]
+    player1 = const[1]
+    t       = var
     c1 = len(player1.card_list)
 
     screen.fill(Grey1)
@@ -239,6 +254,9 @@ def draw_exchange_result(screen, const, var):
         Mblit(screen, card.img, (x, 450), 'TM')
     Mblit(screen, text, (800, 100))
     Mblit(screen, Next_Button, (1300, 750), 'TR')
+
+    Match_text = AR[24].render(f"Match {Match}", True, Black)
+    Mblit(screen, Match_text, (20, 20), 'TL')
 
     return t+1
 

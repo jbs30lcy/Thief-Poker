@@ -38,8 +38,9 @@ def win(player1, player2):
 
 def main():
 
-    mode = 'start'
+    mode = 'main'
     choose = 0
+    Match = 0
     Round = 1
     t, w = 0, -1
     common = None
@@ -49,7 +50,7 @@ def main():
     
     # mode 변수에 따라 실행되는 코드가 달라짐
     while True:
-        if mode == 'start':
+        if mode == 'main':
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -81,7 +82,7 @@ def main():
         if mode == 'init':
             choose = 0
             t, w = 0, -1
-            p1, p2 = start(Round, (p1, p2))
+            p1, p2, Match = start(Round, (p1, p2, Match))
             mode = 'phase1'
         
         if mode == 'phase1':
@@ -124,7 +125,7 @@ def main():
                                 p2.showc = [common] + p2.showc + p2.active_list.copy()
                                 p2.active_list = []
 
-            p1, p2 = draw_play(screen, (Round, choose), (p1, p2))
+            p1, p2 = draw_play(screen, (Round, Match, choose), (p1, p2))
 
             if choose == 0.5: choose = 1
             clock.tick(60)
@@ -154,7 +155,7 @@ def main():
                         p1, p2 = phase2((p1, p2))
                         mode = 'play'
             
-            t = draw_flop(screen, (Round, p1, p2), t)
+            t = draw_flop(screen, (Round, Match, p1, p2), t)
             if t == 60:
                 common = get_common()
                 p1.common = common
@@ -174,6 +175,7 @@ def main():
                         Round += 1
                         mode = 'init'
                         if Round == 3:
+                            Round = 1
                             mode = 'exchange'
                             choose = 0
                             p1.active_list = []
@@ -187,7 +189,7 @@ def main():
                     if not card == common and not card in p2.shown:
                         p2.shown.append(card)
 
-            p1, p2, t = draw_result(screen, (Round, w), (p1, p2, t))
+            p1, p2, t = draw_result(screen, (Round, Match, w), (p1, p2, t))
             if t == 60:
                 w = win(p1, p2)
             clock.tick(60)
@@ -240,7 +242,7 @@ def main():
                                 p1.card_list.append(p2.active_list[0])
                                 p2.card_list.append(p1.active_list[0])
 
-            p1, p2 = draw_exchange(screen, choose, (p1, p2))
+            p1, p2 = draw_exchange(screen, (Match, choose), (p1, p2))
             
             if choose == 0.5: choose = 1
             clock.tick(60)
@@ -254,10 +256,10 @@ def main():
                 if event.type == MOUSEBUTTONDOWN:
                     pos = pg.mouse.get_pos()
                     if in_rect(pos, (1300 - 90, 750, 90, 60)):
-                        pg.quit()
-                        sys.exit()
+                        t = 0
+                        mode = 'getMatch'
 
-            t = draw_exchange_result(screen, p1, t) # 유령 변수
+            t = draw_exchange_result(screen, (Match, p1), t) # 유령 변수
 
             clock.tick(60)
             pg.display.update()

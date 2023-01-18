@@ -8,24 +8,30 @@ def start(const, var):
     Round   = const
     player1 = var[0]
     player2 = var[1]
+    Match   = var[2]
 
     player1.active_list = []
     player1.showc       = []
     player2.active_list = []
     player2.showc       = []
+
     if Round == 1:
+        player1.shown = []
+        player2.shown = []
+        Match += 1
         whole_card_list = []
         whole_card_list.append(Card('Black'))
         for color in ('Red', 'Yellow', 'Blue', 'Green'):
             for num in range(1, 8):
                 whole_card_list.append(Card(color, num))
 
-        while True:
-            player1.card_list = random.sample(whole_card_list, 6)
-            n = 0
-            for i in range(6):
-                if player1.card_list[i].color == 'black': n += 1
-            if n <= 1: break
+        if Match == 1:
+            while True:
+                player1.card_list = random.sample(whole_card_list, 6)
+                n = 0
+                for i in range(6):
+                    if player1.card_list[i].color == 'black': n += 1
+                if n <= 1: break
 
         while True:
             player2.card_list = random.sample(whole_card_list, 6)
@@ -34,7 +40,7 @@ def start(const, var):
                 if player2.card_list[i].color == 'black': n += 1
             if n <= 1: break
 
-    return (player1, player2)
+    return (player1, player2, Match)
 
 
 def phase1(var):
