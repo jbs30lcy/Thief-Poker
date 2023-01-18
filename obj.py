@@ -8,13 +8,12 @@ White  = (255, 255, 255)
 Black  = (0, 0, 0)
 Red    = (240, 26, 0)
 Yellow = (210, 190, 0)
-Green  = (70, 200, 120)
+Green  = (60, 179, 113)
 Blue   = (24, 160, 230)
 Grey1  = (200, 200, 200)
 Grey2  = (230, 230, 230)
 GreyA  = (127, 127, 127, 127)
 Brown1 = (227, 181, 140)
-Green = (60, 179, 113)
 Card_IMGlist = {}
 
 
@@ -34,6 +33,7 @@ class Card:
     def __init__(self, color, val = 0):
         self.color = color
         self.val = val
+        self.time = 5     # 카드의 수명 얘기 나와서요
         if 1 <= self.val <= 7:
             self.img = Card_IMGlist[self.color + '_' + str(self.val)]
         else:
@@ -60,7 +60,7 @@ class Player:
         self.coin = 0
         self.common = None
         # self.key (Client를 구별할 요소)
-        # self.pre (전적)
+        self.pre = [0]
 
     # str2score: 족보가 적혀 있는 str을 int로 변환하는 함수.
     def str2score(self, s):

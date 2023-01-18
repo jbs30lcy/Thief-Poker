@@ -4,6 +4,15 @@
 import pygame as pg
 import random
 from obj import *
+
+def make_whole():
+    card_list = []
+    card_list.append(Card('Black'))
+    for color in ('Red', 'Yellow', 'Blue', 'Green'):
+        for num in range(1, 8):
+            card_list.append(Card(color, num))
+    return card_list
+
 def start(const, var):
     Round   = const
     player1 = var[0]
@@ -14,18 +23,16 @@ def start(const, var):
     player1.showc       = []
     player2.active_list = []
     player2.showc       = []
+    player1.pre.append([])
+    player2.pre.append([])
 
     if Round == 1:
         player1.shown = []
         player2.shown = []
         Match += 1
-        whole_card_list = []
-        whole_card_list.append(Card('Black'))
-        for color in ('Red', 'Yellow', 'Blue', 'Green'):
-            for num in range(1, 8):
-                whole_card_list.append(Card(color, num))
 
         if Match == 1:
+            whole_card_list = make_whole()
             while True:
                 player1.card_list = random.sample(whole_card_list, 6)
                 n = 0
@@ -33,6 +40,7 @@ def start(const, var):
                     if player1.card_list[i].color == 'black': n += 1
                 if n <= 1: break
 
+        whole_card_list = make_whole() # 한 번 선언하고 두 번 써먹으니까 같은색 같은무늬면 아예 같은객체였음
         while True:
             player2.card_list = random.sample(whole_card_list, 6)
             n = 0
