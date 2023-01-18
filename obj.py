@@ -14,6 +14,10 @@ Grey1  = (200, 200, 200)
 Grey2  = (230, 230, 230)
 GreyA  = (127, 127, 127, 127)
 Brown1 = (227, 181, 140)
+Grad1  = (40, 205, 147)
+Grad2  = (40, 205, 198)
+Grad3  = (40, 171, 205)
+Grad4  = (40, 137, 205)
 Card_IMGlist = {}
 
 
@@ -33,6 +37,7 @@ class Card:
     def __init__(self, color, val = 0):
         self.color = color
         self.val = val
+        self.dd = []
         self.time = 5     # 카드의 수명 얘기 나와서요
         if 1 <= self.val <= 7:
             self.img = Card_IMGlist[self.color + '_' + str(self.val)]

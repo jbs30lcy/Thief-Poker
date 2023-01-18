@@ -75,5 +75,11 @@ def phase2(var):
 def get_common():
     return Card(random.choice(('Red', 'Yellow', 'Blue', 'Green')), random.randint(1, 7))
 
+def get_dd(r2, dd):
+    dd = [0, 0]
+    if 1 in r2: dd[0] = Card(random.choice(('Red', 'Yellow', 'Blue', 'Green')), random.randint(1, 7))
+    if 2 in r2: dd[1] = tuple( random.sample(('Red', 'Yellow', 'Blue', 'Green'), 2) )
+    return dd
+
 if __name__ == '__main__':
     print("This File is not executable file. please run main.py.")

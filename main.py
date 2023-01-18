@@ -12,10 +12,6 @@ screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption("도둑 포커")
 clock = pg.time.Clock()
 
-# in_rect: 점이 사각형 안에 포함되어 있으면 True를 return
-def in_rect(pos, rect):
-    return rect[0] <= pos[0] <= rect[0] + rect[2] and rect[1] <= pos[1] <= rect[1] + rect[3]
-
 # win: 한 판이 끝나고 두 player 객체의 승패를 판단
 # 내가 이겼으면 1, 상대방이 이겼으면 2, 무승부면 0을 return
 def win(player1, player2):
@@ -44,6 +40,7 @@ def main():
     Round = 1
     t, w = 0, -1
     common = None
+    r1, r2, dd = 'Straight', [], []
 
     p1 = Player()
     p2 = Player()
@@ -57,10 +54,41 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
                     pos = pg.mouse.get_pos()
-                    if in_rect(pos, (800 - 150, 700 - 50, 300, 100)):
-                        mode = 'getMatch'
+                    if in_rect(pos, (800 - 150, 640 - 50, 300, 100)):
+                        mode = 'chooseRank'
             
             draw_begin(screen)
+
+            clock.tick(60)
+            pg.display.update()
+
+        if mode == 'chooseRank':
+            pos = pg.mouse.get_pos()
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+                if event.type == MOUSEBUTTONDOWN:
+                    if in_rect(pos, (550, 200, 200, 120)):
+                        r1 = 'Straight'
+                    if in_rect(pos, (850, 200, 200, 120)):
+                        r1 = 'Flush'
+                    if in_rect(pos, (250, 600, 200, 120)):
+                        r2 = []
+                    if in_rect(pos, (550, 600, 200, 120)):
+                        if 1 in r2: r2.remove(1)
+                        else: r2.append(1)
+                    if in_rect(pos, (850, 600, 200, 120)):
+                        if 2 in r2: r2.remove(2)
+                        else: r2.append(2)
+                    if in_rect(pos, (1150, 600, 200, 120)):
+                        if 4 in r2: r2.remove(4)
+                        else: r2.append(4)
+                    if in_rect(pos, (1300 - 45, 450 - 30, 90, 60)):
+                        r2.sort()
+                        mode = 'getMatch'
+            
+            draw_chooserank(screen, (r1, r2, pos))
 
             clock.tick(60)
             pg.display.update()
@@ -87,7 +115,24 @@ def main():
         
         if mode == 'phase1':
             p2 = phase1(p2)
-            mode = 'play'
+            if 1 in r2 or 2 in r2:
+                mode = 'showDD'
+            else:
+                mode = 'play'
+
+        if mode == 'showDD':
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+
+            if t == 0: dd = get_dd(r2, dd)
+            if t == 180: mode = 'play'
+            
+            t = draw_showDD(screen, dd, t)
+
+            clock.tick(60)
+            pg.display.update()
         
         if mode == 'play':
             for event in pg.event.get():
@@ -143,6 +188,7 @@ def main():
                 if not card in p2.shown:
                     p2.shown.append(card)
 
+            t = 0
             mode = 'flop'
         
         if mode == 'flop':
