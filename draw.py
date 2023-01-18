@@ -39,7 +39,7 @@ Coin_icon = pg.transform.scale(pg.image.load(img_dir_path + 'coin.png'), (50, 50
 
 # draw_begin : mode = start일 때의 UI
 def draw_begin(screen): 
-    screen.fill(Grey1)
+    draw_bg1(screen)
 
     title = AR[96].render("Dodook Poker", True, Black)
     start_button = pg.Surface((300, 100))
@@ -78,7 +78,7 @@ def draw_play(screen, const, var):
     player2 = var[1]
     c1      = len(player1.card_list)
 
-    screen.fill(Grey1)
+    draw_bg2(screen)
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
 
     if choose == 1:
@@ -130,7 +130,7 @@ def draw_flop(screen, const, var):
     player2 = const[3]
     tick    = var
 
-    screen.fill(Grey1)
+    draw_bg1(screen)
     p1_text = AR[28].render('My Card', True, Black)
     p2_text = AR[28].render('Rival\'s Card', True, Black)
     Mblit(screen, player1.showc[0].img, (700, 480), 'TM')
@@ -166,7 +166,7 @@ def draw_result(screen, const, var):
     player2 = var[1]
     tick    = var[2]
 
-    screen.fill(Grey1)
+    draw_bg1(screen)
     p1_text = AR[24].render(f'My Card : {player1.rank()}', True, Black)
     p2_text = AR[24].render(f'Rival\'s Card : {player2.rank()}', True, Black)
     for i in range(5):
@@ -216,7 +216,7 @@ def draw_exchange(screen, const, var):
     else:
         text = AR[72].render("Choose my card", True, Black)
 
-    screen.fill(Grey1)
+    draw_bg1(screen)
     for i in range(c1):
         card = player1.card_list[i]
         x = 900 - c1*100 + i*200
@@ -247,6 +247,7 @@ def draw_exchange_result(screen, const, var):
     c1 = len(player1.card_list)
 
     screen.fill(Grey1)
+    draw_bg1(screen)
     text = AR[72].render("Result", True, Black)
     for i in range(c1):
         card = player1.card_list[i]
@@ -259,6 +260,22 @@ def draw_exchange_result(screen, const, var):
     Mblit(screen, Match_text, (20, 20), 'TL')
 
     return t+1
+
+# draw_bg1 : 테이블 위 배경 그리기
+def draw_bg1(screen):
+    file_path = os.path.dirname(os.path.abspath(__file__))
+    img_dir_path = file_path + "\\img\\"
+    bg_img = pg.image.load(img_dir_path + "com_bg.png")
+    bg_img = pg.transform.scale(bg_img, (1600,900))
+    screen.blit(bg_img, (0,0))
+
+# draw_bg2 : 테이블 옆 배경 그리기
+def draw_bg2(screen):
+    file_path = os.path.dirname(os.path.abspath(__file__))
+    img_dir_path = file_path + "\\img\\"
+    bg_img = pg.image.load(img_dir_path + "com_bg_2.png")
+    bg_img = pg.transform.scale(bg_img, (1600,900))
+    screen.blit(bg_img, (0,0))
 
 if __name__ == '__main__':
     print("This File is not executable file. please run main.py.")
