@@ -3,6 +3,7 @@ import pygame as pg
 from pygame.locals import *
 import sys, random
 from obj import *
+from draw import Mblit
 
 pg.init()
 clock = pg.time.Clock()
@@ -20,7 +21,7 @@ while True:
         if event.type == MOUSEBUTTONDOWN:
             card = Card(random.choice(('Red', 'Blue', 'Yellow', 'Green')), random.randint(1, 7))
     
-    screen.blit(card.img, (200, 100))
+    Mblit(screen, card.img, (400, 400))
     if card.color == 'Red':
         t = f.render("Spade", True, Black)
     if card.color == 'Blue':
@@ -30,7 +31,7 @@ while True:
     if card.color == 'Green':
         t = f.render("Clover", True, Black)
 
-    screen.blit(t, (200, 600))
+    Mblit(screen, t, (400, 600))
 
     clock.tick(60)
     pg.display.flip()
