@@ -156,7 +156,7 @@ def main():
             
             t = draw_flop(screen, (Round, p1, p2), t)
             if t == 60:
-                common = Card(random.choice(('Red', 'Yellow', 'Blue')), random.randint(1, 7))
+                common = get_common()
                 p1.common = common
                 p2.common = common
 

@@ -59,7 +59,7 @@ def phase2(var):
     return (player1, player2)
 
 def get_common():
-    return Card(random.choice(('Red', 'Yellow', 'Blue')), random.randint(1, 7))
+    return Card(random.choice(('Red', 'Yellow', 'Blue', 'Green')), random.randint(1, 7))
 
 if __name__ == '__main__':
     print("This File is not executable file. please run main.py.")
