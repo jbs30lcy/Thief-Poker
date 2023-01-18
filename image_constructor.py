@@ -16,47 +16,58 @@ tick = 0
 Card = pg.Surface((WIDTH, HEIGHT))
 Card.fill(Grey2)
 
+# =========== 이 3개만 건드릴 것! ==========
+check_num = 7
+check_color = Yellow
+check_name = 'Yellow'
+
 # =========== 1 ===========
-# pg.draw.circle(Card, Red, (200, 300), 40)
+if check_num == 1:
+    pg.draw.circle(Card, check_color, (200, 300), 40)
 
 # =========== 2 ===========
-# pg.draw.circle(Card, Red, (200, 150), 30)
-# pg.draw.circle(Card, Red, (200, 450), 30)
+elif check_num == 2:
+    pg.draw.circle(Card, check_color, (200, 150), 30)
+    pg.draw.circle(Card, check_color, (200, 450), 30)
 
 # =========== 3 ===========
-# pg.draw.circle(Card, Red, (200, 150), 30)
-# pg.draw.circle(Card, Red, (80, 400), 30)
-# pg.draw.circle(Card, Red, (320, 400), 30)
+elif check_num == 3:
+    pg.draw.circle(Card, check_color, (200, 150), 30)
+    pg.draw.circle(Card, check_color, (80, 400), 30)
+    pg.draw.circle(Card, check_color, (320, 400), 30)
 
 # =========== 4 ===========
-# pg.draw.circle(Card, Red, (80, 150), 25)
-# pg.draw.circle(Card, Red, (320, 150), 25)
-# pg.draw.circle(Card, Red, (80, 450), 25)
-# pg.draw.circle(Card, Red, (320, 450), 25)
+elif check_num == 4:
+    pg.draw.circle(Card, check_color, (80, 150), 25)
+    pg.draw.circle(Card, check_color, (320, 150), 25)
+    pg.draw.circle(Card, check_color, (80, 450), 25)
+    pg.draw.circle(Card, check_color, (320, 450), 25)
 
 # =========== 5 ===========
-# pg.draw.circle(Card, Red, (80, 150), 25)
-# pg.draw.circle(Card, Red, (320, 150), 25)
-# pg.draw.circle(Card, Red, (80, 450), 25)
-# pg.draw.circle(Card, Red, (320, 450), 25)
-# pg.draw.circle(Card, Red, (200, 300), 25)
+elif check_num == 5:
+    pg.draw.circle(Card, check_color, (80, 150), 25)
+    pg.draw.circle(Card, check_color, (320, 150), 25)
+    pg.draw.circle(Card, check_color, (80, 450), 25)
+    pg.draw.circle(Card, check_color, (320, 450), 25)
+    pg.draw.circle(Card, check_color, (200, 300), 25)
 
-# =========== 6 ===========
-# pg.draw.circle(Card, Red, (70, 200), 25)
-# pg.draw.circle(Card, Red, (70, 400), 25)
-# pg.draw.circle(Card, Red, (200, 500), 25)
-# pg.draw.circle(Card, Red, (330, 400), 25)
-# pg.draw.circle(Card, Red, (330, 200), 25)
-# pg.draw.circle(Card, Red, (200, 100), 25)
+elif check_num == 6:
+    pg.draw.circle(Card, check_color, (70, 200), 25)
+    pg.draw.circle(Card, check_color, (70, 400), 25)
+    pg.draw.circle(Card, check_color, (200, 500), 25)
+    pg.draw.circle(Card, check_color, (330, 400), 25)
+    pg.draw.circle(Card, check_color, (330, 200), 25)
+    pg.draw.circle(Card, check_color, (200, 100), 25)
 
 # =========== 7 ===========
-# pg.draw.circle(Card, Red, (70, 200), 25)
-# pg.draw.circle(Card, Red, (70, 400), 25)
-# pg.draw.circle(Card, Red, (200, 500), 25)
-# pg.draw.circle(Card, Red, (330, 400), 25)
-# pg.draw.circle(Card, Red, (330, 200), 25)
-# pg.draw.circle(Card, Red, (200, 100), 25)
-# pg.draw.circle(Card, Red, (200, 300), 25)
+elif check_num == 7:
+    pg.draw.circle(Card, check_color, (70, 200), 25)
+    pg.draw.circle(Card, check_color, (70, 400), 25)
+    pg.draw.circle(Card, check_color, (200, 500), 25)
+    pg.draw.circle(Card, check_color, (330, 400), 25)
+    pg.draw.circle(Card, check_color, (330, 200), 25)
+    pg.draw.circle(Card, check_color, (200, 100), 25)
+    pg.draw.circle(Card, check_color, (200, 300), 25)
 
 # =========== Black ===========
 # F = pg.font.SysFont('Arialrounded', 84)
@@ -72,16 +83,20 @@ Card.fill(Grey2)
 # Card.blit(text, (85, 80))
 
 # ============ saving file ============
-# pg.image.save(Card, img_dir_path + 'Red_1.png')
+pg.image.save(Card, img_dir_path + f'{check_name}_{check_num}.png')
 
+
+# ============ 하단은 폐기 =============
 # Cardr = pg.Surface((WIDTH, HEIGHT))
 # Cardy = pg.Surface((WIDTH, HEIGHT))
 # Cardb = pg.Surface((WIDTH, HEIGHT))
+# Cardg = pg.Surface((WIDTH, HEIGHT))
 # Cardr.fill(Grey2)
 # Cardy.fill(Grey2)
 # Cardb.fill(Grey2)
+# Cardg.fill(Grey2)
 
-# for color in (Red, Yellow, Blue):
+# for color in (Red, Yellow, Blue, Green):
 #     if color == Red:
 #         card = Cardr
 #         name = 'Red'
@@ -91,13 +106,15 @@ Card.fill(Grey2)
 #     if color == Blue:
 #         card = Cardb
 #         name = 'Blue'
-#     pg.draw.circle(card, color, (70, 200), 25)
-#     pg.draw.circle(card, color, (70, 400), 25)
-#     pg.draw.circle(card, color, (200, 500), 25)
-#     pg.draw.circle(card, color, (330, 400), 25)
-#     pg.draw.circle(card, color, (330, 200), 25)
-#     pg.draw.circle(card, color, (200, 100), 25)
-#     pg.draw.circle(card, color, (200, 300), 25)
+#     if color == Green:
+#         card = Cardg
+# #     pg.draw.circle(card, color, (70, 200), 25)
+# #     pg.draw.circle(card, color, (70, 400), 25)
+# #     pg.draw.circle(card, color, (200, 500), 25)
+# #     pg.draw.circle(card, color, (330, 400), 25)
+# #     pg.draw.circle(card, color, (330, 200), 25)
+# #     pg.draw.circle(card, color, (200, 100), 25)
+# #     pg.draw.circle(card, color, (200, 300), 25)
 
 #     pg.image.save(card, img_dir_path + f'{name}_7.png')
 

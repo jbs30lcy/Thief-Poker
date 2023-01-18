@@ -14,13 +14,14 @@ Grey1  = (200, 200, 200)
 Grey2  = (230, 230, 230)
 GreyA  = (127, 127, 127, 127)
 Brown1 = (227, 181, 140)
+Green = (60, 179, 113)
 Card_IMGlist = {}
 
 
 file_path = os.path.dirname(os.path.abspath(__file__))
 img_dir_path = file_path + "\\img\\"
 
-for color in ("Red", "Yellow", "Blue"):
+for color in ("Red", "Yellow", "Blue", "Green"):
     for num in range(1, 8):
         card_name = f"{color}_{num}"
         card_image = pg.transform.scale(pg.image.load(img_dir_path + card_name + ".png"), (180, 270))
@@ -133,7 +134,7 @@ class Player:
                 arr = new_showc.copy()
                 max_s = ''
                 max_score = 0
-                for color in ('Red', 'Yellow', 'Blue'):
+                for color in ('Red', 'Yellow', 'Blue', 'Green'):
                     for val in range(1, 8):
                         arr[black_i] = Card(color, val)
                         x = self._rrank(arr, black_in)

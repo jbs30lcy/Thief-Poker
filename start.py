@@ -16,7 +16,7 @@ def start(const, var):
     if Round == 1:
         whole_card_list = []
         whole_card_list.append(Card('Black'))
-        for color in ('Red', 'Yellow', 'Blue'):
+        for color in ('Red', 'Yellow', 'Blue', 'Green'):
             for num in range(1, 8):
                 whole_card_list.append(Card(color, num))
 
