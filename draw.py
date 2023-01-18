@@ -246,7 +246,6 @@ def draw_exchange_result(screen, const, var):
     t       = var
     c1 = len(player1.card_list)
 
-    screen.fill(Grey1)
     draw_bg1(screen)
     text = AR[72].render("Result", True, Black)
     for i in range(c1):
