@@ -130,7 +130,7 @@ class Player:
             return f"{n3} {blacks} Pair"
         return f"No rank ({n1+n2+n3+n4})"
 
-    # rank: 검정 카드를 포함한 족보를 계산하기 위한, _rrank의 wrapper 함수. ( self.isdd 변수도 세팅해줌.  => 아직 구현안됨)
+    # rank: 검정 카드를 포함한 족보를 계산하기 위한, _rrank의 wrapper 함수.
     def rank(self):
         if self.Rank: return self.Rank  # memoization
         R = 'No rank (1)'

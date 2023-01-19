@@ -374,5 +374,9 @@ def draw_exchange_result(screen, const, var):
 
     return t+1
 
+# 배포 직전에 main함수를 try문으로 감싸면서 넣을 것이다. 제발 불려지지 않았으면 좋겠는 함수.
+def draw_error(screen):
+    Mblit("알 수 없는 오류가 발생했습니다. 디렉터에게 문의하세요.")
+
 if __name__ == '__main__':
     print("This File is not executable file. please run main.py.")
