@@ -5,6 +5,9 @@ from obj import *
 import math
 pg.init()
 
+bg1 = pg.transform.scale(pg.image.load(img_dir_path + 'com_bg.png'), (1600, 900)) # 테이블 앞 배경
+bg2 = pg.transform.scale(pg.image.load(img_dir_path + 'com_bg.png'), (1600, 900)) # 테이블 뒤 배경
+
 # in_rect: 점이 사각형 안에 포함되어 있으면 True를 return
 def in_rect(pos, rect):
     return rect[0] <= pos[0] <= rect[0] + rect[2] and rect[1] <= pos[1] <= rect[1] + rect[3]
@@ -43,7 +46,7 @@ Coin_icon = pg.transform.scale(pg.image.load(img_dir_path + 'coin.png'), (50, 50
 
 # draw_begin : mode = start일 때의 UI
 def draw_begin(screen): 
-    draw_bg1(screen)
+    screen.blit(bg1, (0, 0))
 
     title = AR[96].render("Dodook Poker", True, Black)
     start_button = pg.Surface((300, 100))
@@ -122,15 +125,15 @@ def draw_showDD(screen, const, var):
     tick = var
 
     screen.fill(Grey1)
-    draw_bg1(screen)
+    screen.blit(bg1, (0, 0))
 
     if dd[0]:
-        text = AR[48].render('DDangjabi Card', True, Black)
-        Mblit(screen, text, (400, 250))
+        text = AR[40].render('DDangjabi Card', True, Black)
+        Mblit(screen, text, (400, 300))
         Mblit(screen, dd[0].img, (400, 500))
     if dd[1]:
-        text = AR[48].render('DDangjabi Color', True, Black)
-        Mblit(screen, text, (1200, 250))
+        text = AR[40].render('DDangjabi Color', True, Black)
+        Mblit(screen, text, (1200, 300))
         pg.draw.rect(screen, eval(dd[1][0]), (1010, 500 - 135, 180, 270))
         pg.draw.rect(screen, eval(dd[1][1]), (1210, 500 - 135, 180, 270))
         pg.draw.rect(screen, White, (1010, 500 - 135, 180, 270), 3)
@@ -169,7 +172,7 @@ def draw_play(screen, const, var):
     player2 = var[1]
     c1      = len(player1.card_list)
 
-    draw_bg2(screen)
+    screen.blit(bg2, (0, 0))
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
 
     if choose == 1:
@@ -221,7 +224,7 @@ def draw_flop(screen, const, var):
     player2 = const[3]
     tick    = var
 
-    draw_bg1(screen)
+    screen.blit(bg1, (0, 0))
     p1_text = AR[28].render('My Card', True, White)
     p2_text = AR[28].render('Rival\'s Card', True, White)
     Mblit(screen, player1.showc[0].img, (700, 480), 'TM')
@@ -257,7 +260,7 @@ def draw_result(screen, const, var):
     player2 = var[1]
     tick    = var[2]
 
-    draw_bg1(screen)
+    screen.blit(bg1, (0, 0))
     p1_text = AR[24].render(f'My Card : {player1.rank()}', True, White)
     p2_text = AR[24].render(f'Rival\'s Card : {player2.rank()}', True, White)
     for i in range(5):
@@ -307,7 +310,7 @@ def draw_exchange(screen, const, var):
     else:
         text = AR[72].render("Choose my card", True, White)
 
-    draw_bg1(screen)
+    screen.blit(bg1, (0, 0))
     for i in range(c1):
         card = player1.card_list[i]
         x = 900 - c1*100 + i*200
@@ -337,7 +340,7 @@ def draw_exchange_result(screen, const, var):
     t       = var
     c1 = len(player1.card_list)
 
-    draw_bg1(screen)
+    screen.blit(bg1, (0, 0))
     text = AR[72].render("Result", True, White)
     for i in range(c1):
         card = player1.card_list[i]
@@ -350,22 +353,6 @@ def draw_exchange_result(screen, const, var):
     Mblit(screen, Match_text, (20, 20), 'TL')
 
     return t+1
-
-# draw_bg1 : 테이블 위 배경 그리기
-def draw_bg1(screen):
-    file_path = os.path.dirname(os.path.abspath(__file__))
-    img_dir_path = file_path + "\\img\\"
-    bg_img = pg.image.load(img_dir_path + "com_bg.png")
-    bg_img = pg.transform.scale(bg_img, (1600,900))
-    screen.blit(bg_img, (0,0))
-
-# draw_bg2 : 테이블 옆 배경 그리기
-def draw_bg2(screen):
-    file_path = os.path.dirname(os.path.abspath(__file__))
-    img_dir_path = file_path + "\\img\\"
-    bg_img = pg.image.load(img_dir_path + "com_bg_2.png")
-    bg_img = pg.transform.scale(bg_img, (1600,900))
-    screen.blit(bg_img, (0,0))
 
 if __name__ == '__main__':
     print("This File is not executable file. please run main.py.")
