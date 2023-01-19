@@ -32,13 +32,14 @@ def Mblit(screen, surf, pos, poscon = 'MM'):
 
     screen.blit(surf, (x, y))
 
-# 글꼴은 일단 Arialrounded를 썼지만, 이 글꼴은 한글이 호환되지 않는다.
-AR = [pg.font.SysFont('Arialrounded', x) for x in range(1, 100)]
-AR.insert(0, 0)
+NS = [pg.font.Font(file_path + '\\NanumSquareNeoOTF-cBd.otf', x) for x in range(1, 100)]
+NSE = [pg.font.Font(file_path + '\\NanumSquareNeoOTF-dEb.otf', x) for x in range(1, 100)]
+NS.insert(0, 0)
+NSE.insert(0, 0)
 
 Next_Button = pg.Surface((90, 60))
 Next_Button.fill(Brown1)
-Next_Button_text = AR[24].render('Next', True, Black)
+Next_Button_text = NS[24].render('Next', True, Black)
 Mblit(Next_Button, Next_Button_text, (45, 30))
 
 Coin_icon = pg.transform.scale(pg.image.load(img_dir_path + 'coin.png'), (50, 50))
@@ -48,10 +49,10 @@ Coin_icon = pg.transform.scale(pg.image.load(img_dir_path + 'coin.png'), (50, 50
 def draw_begin(screen): 
     screen.blit(bg1, (0, 0))
 
-    title = AR[96].render("Dodook Poker", True, Black)
+    title = NSE[96].render("도둑 포커", True, Black)
     start_button = pg.Surface((300, 100))
     start_button.fill(Brown1)
-    start_button_text = AR[48].render('Start', True, Black)
+    start_button_text = NS[48].render('Start', True, Black)
     Mblit(start_button, start_button_text, (150, 50))
 
     Mblit(screen, title, (800, 250))
@@ -78,19 +79,19 @@ def draw_chooserank(screen, const):
     oneDD.fill(Grad2)
     twoDD.fill(Grad3)
     fourDD.fill(Grad4)
-    Mblit(Straight, AR[36].render('Straight', True, Black),     (100, 60))
-    Mblit(Flush,    AR[36].render('Flush', True, Black),        (100, 60))
-    Mblit(NoDD,     AR[27].render('No DDangjabi', True, Black), (100, 60))
-    Mblit(oneDD,    AR[36].render('type I', True, Black),       (100, 60))
-    Mblit(twoDD,    AR[36].render('type II', True, Black),      (100, 60))
-    Mblit(fourDD,   AR[36].render('type III', True, Black),     (100, 60))
+    Mblit(Straight, NS[36].render('Straight', True, Black),     (100, 60))
+    Mblit(Flush,    NS[36].render('Flush', True, Black),        (100, 60))
+    Mblit(NoDD,     NS[27].render('No DDangjabi', True, Black), (100, 60))
+    Mblit(oneDD,    NS[36].render('type I', True, Black),       (100, 60))
+    Mblit(twoDD,    NS[36].render('type II', True, Black),      (100, 60))
+    Mblit(fourDD,   NS[36].render('type III', True, Black),     (100, 60))
 
-    text = AR[60].render('Choose one', True, Black)
+    text = NS[60].render('Choose one', True, Black)
     Mblit(screen, text,     (800, 100))
     Mblit(screen, Straight, (550, 200), 'TL')
     Mblit(screen, Flush,    (850, 200), 'TL')
 
-    text = AR[60].render('Choose DDangjabi', True, Black)
+    text = NS[60].render('Choose DDangjabi', True, Black)
     Mblit(screen, text,   (800, 500))
     Mblit(screen, NoDD,   (250, 600), 'TL')
     Mblit(screen, oneDD,  (550, 600), 'TL')
@@ -105,7 +106,7 @@ def draw_chooserank(screen, const):
         desc = f"If the rank contains all four colors, it will beat {r1}."
     else:
         desc = ''
-    desc_surf = AR[28].render(desc, True, Black)
+    desc_surf = NS[28].render(desc, True, Black)
     Mblit(screen, desc_surf, (800, 850))
 
     if r1 == 'Straight': pg.draw.rect(screen, Red, (550, 200, 200, 120), 3)
@@ -128,18 +129,18 @@ def draw_showDD(screen, const, var):
     screen.blit(bg1, (0, 0))
 
     if dd[0]:
-        text = AR[40].render('DDangjabi Card', True, Black)
+        text = NS[40].render('DDangjabi Card', True, Black)
         Mblit(screen, text, (400, 300))
         Mblit(screen, dd[0].img, (400, 500))
     if dd[1]:
-        text = AR[40].render('DDangjabi Color', True, Black)
+        text = NS[40].render('DDangjabi Color', True, Black)
         Mblit(screen, text, (1200, 300))
         pg.draw.rect(screen, eval(dd[1][0]), (1010, 500 - 135, 180, 270))
         pg.draw.rect(screen, eval(dd[1][1]), (1210, 500 - 135, 180, 270))
         pg.draw.rect(screen, White, (1010, 500 - 135, 180, 270), 3)
         pg.draw.rect(screen, White, (1210, 500 - 135, 180, 270), 3)
-        Mblit(screen, AR[48].render(dd[1][0], True, Black), (1100, 500))
-        Mblit(screen, AR[48].render(dd[1][1], True, Black), (1300, 500))
+        Mblit(screen, NS[48].render(dd[1][0], True, Black), (1100, 500))
+        Mblit(screen, NS[48].render(dd[1][1], True, Black), (1300, 500))
     
     return tick+1
 
@@ -150,7 +151,7 @@ def draw_getmatch(screen, var):
 
     screen.fill(Grey1)
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
-    text = AR[72].render("Finding player...", True, Black)
+    text = NS[72].render("Finding player...", True, Black)
     Mblit(screen, text, (800, 150))
 
     for i in range(8):
@@ -176,9 +177,9 @@ def draw_play(screen, const, var):
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
 
     if choose == 1:
-        text = AR[72].render("Choose another two cards", True, White)
+        text = NS[72].render("Choose another two cards", True, White)
     else:
-        text = AR[72].render("Choose two cards", True, White) # choose == 0 or 0.5
+        text = NS[72].render("Choose two cards", True, White) # choose == 0 or 0.5
     
     for i in range(c1):
         card = player1.card_list[i]
@@ -203,9 +204,9 @@ def draw_play(screen, const, var):
     Mblit(screen, text, (800, 100))
     Mblit(screen, Next_Button, (1300, 750), 'TR')
     
-    Match_text = AR[24].render(f"Match {Match}", True, White)
-    Round_text = AR[24].render(f"round {Round}", True, White)
-    coin = AR[24].render(str(player1.coin), True, White)
+    Match_text = NS[24].render(f"Match {Match}", True, White)
+    Round_text = NS[24].render(f"round {Round}", True, White)
+    coin = NS[24].render(str(player1.coin), True, White)
     coin_icon_x = 1580 - coin.get_width()
     Mblit(screen, Match_text, (20, 20), 'TL')
     Mblit(screen, Round_text, (20, 50), 'TL')
@@ -225,8 +226,8 @@ def draw_flop(screen, const, var):
     tick    = var
 
     screen.blit(bg1, (0, 0))
-    p1_text = AR[28].render('My Card', True, White)
-    p2_text = AR[28].render('Rival\'s Card', True, White)
+    p1_text = NS[28].render('My Card', True, White)
+    p2_text = NS[28].render('Rival\'s Card', True, White)
     Mblit(screen, player1.showc[0].img, (700, 480), 'TM')
     Mblit(screen, player1.showc[1].img, (900, 480), 'TM')
     Mblit(screen, player2.showc[0].img, (700, 420), 'BM')
@@ -234,16 +235,16 @@ def draw_flop(screen, const, var):
     Mblit(screen, p1_text, (1050, 530), 'TL')
     Mblit(screen, p2_text, (1050, 370), 'BL')
 
-    Match_text = AR[24].render(f"Match {Match}", True, White)
-    Round_text = AR[24].render(f"round {Round}", True, White)
-    coin = AR[24].render(str(player1.coin), True, White)
+    Match_text = NS[24].render(f"Match {Match}", True, White)
+    Round_text = NS[24].render(f"round {Round}", True, White)
+    coin = NS[24].render(str(player1.coin), True, White)
     coin_icon_x = 1580 - coin.get_width()
     Mblit(screen, Match_text, (20, 20), 'TL')
     Mblit(screen, Round_text, (20, 50), 'TL')
     Mblit(screen, coin, (1580, 40), 'MR')
     Mblit(screen, Coin_icon, (coin_icon_x - 10, 40), 'MR')
     if tick >= 60:
-        text = AR[28].render('Community card', True, White)
+        text = NS[28].render('Community card', True, White)
         Mblit(screen, text, (300, 270))
         Mblit(screen, Next_Button, (1300, 750), 'TR')
         Mblit(screen, player1.common.img, (300, 450))
@@ -261,8 +262,8 @@ def draw_result(screen, const, var):
     tick    = var[2]
 
     screen.blit(bg1, (0, 0))
-    p1_text = AR[24].render(f'My Card : {player1.rank()}', True, White)
-    p2_text = AR[24].render(f'Rival\'s Card : {player2.rank()}', True, White)
+    p1_text = NS[24].render(f'My Card : {player1.rank()}', True, White)
+    p2_text = NS[24].render(f'Rival\'s Card : {player2.rank()}', True, White)
     for i in range(5):
         Mblit(screen, player1.showc[i].img, (400 + 200*i, 480), 'TM')
         Mblit(screen, player2.showc[i].img, (400 + 200*i, 420), 'BM')
@@ -273,19 +274,19 @@ def draw_result(screen, const, var):
 
     if w >= 0: # tick < 60 에서 w = -1로, 표기되지 않음.
         if w == 0:
-            rtext = AR[36].render(f'DRAW', True, White)
+            rtext = NS[36].render(f'DRAW', True, White)
             if tick == 60: player1.coin += 5
         if w == 1:
-            rtext = AR[36].render(f'YOU WIN', True, White)
+            rtext = NS[36].render(f'YOU WIN', True, White)
             if tick == 60: player1.coin += 10
         if w == 2:
-            rtext = AR[36].render(f'YOU LOSE', True, White)
+            rtext = NS[36].render(f'YOU LOSE', True, White)
         Mblit(screen, rtext, (800, 840))
 
 
-    Match_text = AR[24].render(f"Match {Match}", True, White)
-    Round_text = AR[24].render(f"round {Round}", True, White)
-    coin = AR[24].render(str(player1.coin), True, White)
+    Match_text = NS[24].render(f"Match {Match}", True, White)
+    Round_text = NS[24].render(f"round {Round}", True, White)
+    coin = NS[24].render(str(player1.coin), True, White)
     coin_icon_x = 1580 - coin.get_width()
     Mblit(screen, Match_text, (20, 20), 'TL')
     Mblit(screen, Round_text, (20, 50), 'TL')
@@ -306,9 +307,9 @@ def draw_exchange(screen, const, var):
     s2      = len(player2.shown)
 
     if choose == 1:
-        text = AR[72].render("Choose a card you want", True, White)
+        text = NS[72].render("Choose a card you want", True, White)
     else:
-        text = AR[72].render("Choose my card", True, White)
+        text = NS[72].render("Choose my card", True, White)
 
     screen.blit(bg1, (0, 0))
     for i in range(c1):
@@ -328,7 +329,7 @@ def draw_exchange(screen, const, var):
     Mblit(screen, text, (800, 70))
     Mblit(screen, Next_Button, (1300, 750), 'TR')
 
-    Match_text = AR[24].render(f"Match {Match}", True, White)
+    Match_text = NS[24].render(f"Match {Match}", True, White)
     Mblit(screen, Match_text, (20, 20), 'TL')
 
     return (player1, player2)
@@ -341,7 +342,7 @@ def draw_exchange_result(screen, const, var):
     c1 = len(player1.card_list)
 
     screen.blit(bg1, (0, 0))
-    text = AR[72].render("Result", True, White)
+    text = NS[72].render("Result", True, White)
     for i in range(c1):
         card = player1.card_list[i]
         x = 900 - c1*100 + i*200
@@ -349,7 +350,7 @@ def draw_exchange_result(screen, const, var):
     Mblit(screen, text, (800, 100))
     Mblit(screen, Next_Button, (1300, 750), 'TR')
 
-    Match_text = AR[24].render(f"Match {Match}", True, White)
+    Match_text = NS[24].render(f"Match {Match}", True, White)
     Mblit(screen, Match_text, (20, 20), 'TL')
 
     return t+1
