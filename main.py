@@ -20,6 +20,8 @@ def win(player1, player2):
     p1b = 'Black' in player1.rank()
     p2b = 'Black' in player2.rank()
 
+    if 400 <= score1 <= 500 and player2.isdd: return 2
+    if 400 <= score2 <= 500 and player1.isdd: return 1 # 땡잡이가 스트레이트나 플러시를 잡기
     if p1b and 0 < score2 < 100: return 2
     if p2b and 0 < score1 < 100: return 1  # 개패가 검은 족보를 잡기
     if score1 > score2: return 1
@@ -132,7 +134,8 @@ def main():
                 dd = get_dd(r2, dd)
                 p1.dd = dd
                 p2.dd = dd
-            if t == 180: mode = 'play'
+            if t == 180:
+                mode = 'play'
             
             t = draw_showDD(screen, dd, t)
 
@@ -229,7 +232,7 @@ def main():
                         mode = 'init'
                         if Round == 3:
                             Round = 1
-                            mode = 'exchange'
+                            mode = 'exchangeA'
                             choose = 0
                             p1.active_list = []
                             p2.active_list = []
@@ -248,7 +251,7 @@ def main():
             clock.tick(60)
             pg.display.update()
             
-        if mode == 'exchange': # 교환 당할 때 mode도 따로 만들어야됨.
+        if mode == 'exchangeA':
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()

@@ -294,12 +294,21 @@ def draw_result(screen, const, var):
     if w >= 0: # tick < 60 에서 w = -1로, 표기되지 않음.
         if w == 0:
             rtext = NS[36].render(f'DRAW', True, White)
-            if tick == 60: player1.coin += 5
+            if tick == 60:
+                player1.coin += 5
+                player1.pre[-1].append(0)
+                player2.pre[-1].append(0)
         if w == 1:
             rtext = NS[36].render(f'YOU WIN', True, White)
-            if tick == 60: player1.coin += 10
+            if tick == 60:
+                player1.coin += 10
+                player1.pre[-1].append(1)
+                player2.pre[-1].append(-1)
         if w == 2:
             rtext = NS[36].render(f'YOU LOSE', True, White)
+            if tick == 60:
+                player1.pre[-1].append(-1)
+                player2.pre[-1].append(1)
         Mblit(screen, rtext, (800, 840))
 
 
@@ -316,7 +325,7 @@ def draw_result(screen, const, var):
     return player1, player2, tick+1
 
 
-# draw_exchange : mode = exchange일 때의 UI
+# draw_exchange : mode = exchangeA일 때의 UI
 def draw_exchange(screen, const, var):
     Match   = const[0]
     choose  = const[1]
@@ -376,7 +385,7 @@ def draw_exchange_result(screen, const, var):
 
 # 배포 직전에 main함수를 try문으로 감싸면서 넣을 것이다. 제발 불려지지 않았으면 좋겠는 함수.
 def draw_error(screen):
-    Mblit("알 수 없는 오류가 발생했습니다. 디렉터에게 문의하세요.")
+    Mblit(screen, "알 수 없는 오류가 발생했습니다. 디렉터에게 문의하세요.", (800, 450))
 
 if __name__ == '__main__':
     print("This File is not executable file. please run main.py.")
