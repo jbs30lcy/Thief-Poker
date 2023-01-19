@@ -64,41 +64,50 @@ class Player:
         self.shown = []
         self.coin = 0
         self.common = None
+        self.Rule = []
+        self.dd = []
+        self.Rank = ''
+        self.isdd = False
+        self.isblack = False
         # self.key (Client를 구별할 요소)
         self.pre = [0]
 
     # str2score: 족보가 적혀 있는 str을 int로 변환하는 함수.
     def str2score(self, s):
-        sign = -1 if 'Black' in s else 1
         if 'Four of a kind' in s:
-            return sign * (500 + 10 * int(s[0]))
+            return 500 + 10 * int(s[0])
+        if 'Straight' in s:
+            return 400 + int(s[0])
         if 'Flush' in s:
-            return sign * 400
+            return 400
         if 'Three of a kind' in s:
-            return sign * (300 + 10 * int(s[0]))
+            return 300 + 10 * int(s[0])
         if 'Two pair' in s:
-            return sign * (200 + 7 * int(s[0]) + int(s[2]))
+            return 200 + 7 * int(s[0]) + int(s[2])
         if 'Pair' in s:
-            return sign * (100 + 10 * int(s[0]))
+            return 100 + 10 * int(s[0])
         if 'No rank' in s:
             return int(s[8:][1:][:-1])
     
     # _rrank: Card 객체 4개가 담긴 list인 arr을 확인해 str 형태의 족보로 반환하는 함수.
-    def _rrank(self, arr, black): 
-        n1 = arr[0].val
-        n2 = arr[1].val
-        n3 = arr[2].val
-        n4 = arr[3].val
-        c1 = arr[0].color
-        c2 = arr[1].color
-        c3 = arr[2].color
-        c4 = arr[3].color
-        blacks = 'Black' if black == True else '' 
-        #print(n1, c1, n2, c2, n3, c3, n4, c4)
+    def _rrank(self, arr, black):
+        new_arr = arr.copy()
+        new_arr.sort(key = lambda x: x.val)
+        n1 = new_arr[0].val
+        n2 = new_arr[1].val
+        n3 = new_arr[2].val
+        n4 = new_arr[3].val
+        c1 = new_arr[0].color
+        c2 = new_arr[1].color
+        c3 = new_arr[2].color
+        c4 = new_arr[3].color
+        blacks = 'Black' if black == True else ''
 
         if n1 == n2 == n3 == n4:
             return f"{n1} {blacks} Four of a kind"
-        if c1 == c2 == c3 == c4:
+        if self.Rule[0] == 'Straight' and n1+3 == n2+2 == n3+1 == n4:
+            return f"{n4} {blacks} Straight"
+        if self.Rule[0] == 'Flush' and c1 == c2 == c3 == c4:
             return f"{c1} {blacks} Flush"
         if n1 == n2 == n3:
             return f"{n1} {blacks} Three of a kind"
@@ -122,8 +131,9 @@ class Player:
             return f"{n3} {blacks} Pair"
         return f"No rank ({n1+n2+n3+n4})"
 
-    # rank: 검정 카드를 포함한 족보를 계산하기 위한, _rrank의 wrapper 함수
+    # rank: 검정 카드를 포함한 족보를 계산하기 위한, _rrank의 wrapper 함수. ( self.isdd 변수도 세팅해줌.  => 아직 구현안됨)
     def rank(self):
+        if self.Rank: return self.Rank  # memoization
         R = 'No rank (1)'
         for i in range(5):
             black_in = False
@@ -143,24 +153,23 @@ class Player:
                     for val in range(1, 8):
                         arr[black_i] = Card(color, val)
                         x = self._rrank(arr, black_in)
-                        if abs(self.str2score(x)) > max_score:
-                            max_score = abs(self.str2score(x))
+                        if self.str2score(x) > max_score:
+                            max_score = self.str2score(x)
                             max_s = x
-                x = self._rrank(arr, black_in)
-                if abs(self.str2score(x)) > max_score:
-                    max_score = self.str2score(x)
-                    max_s = x
                 result_s = max_s
+                result_isblack = True
             else:
                 result_s = self._rrank(new_showc, black_in)
+                result_isblack = False
 
             rs = self.str2score(result_s)
             Rs = self.str2score(R)
-            if abs(rs) > abs(Rs):
+            if rs > Rs:
                 R = result_s
-            elif abs(rs) == abs(Rs) and rs > 0:
+            elif rs == Rs and not result_isblack:
                 R = result_s
 
+        self.Rank = R
         return R
 
 

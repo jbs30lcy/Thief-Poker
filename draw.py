@@ -60,9 +60,9 @@ def draw_begin(screen):
 
 # draw_chooserank : mode = chooseRank일 때의 UI
 def draw_chooserank(screen, const):
-    r1  = const[0]
-    r2  = const[1]
-    pos = const[2]
+    r1  = const[0][0]
+    r2  = const[0][1]
+    pos = const[1]
     
     screen.fill(Grey1)
 

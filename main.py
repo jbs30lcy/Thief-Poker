@@ -17,19 +17,15 @@ clock = pg.time.Clock()
 def win(player1, player2):
     score1 = player1.str2score(player1.rank())
     score2 = player2.str2score(player2.rank())
+    p1b = 'Black' in player1.rank()
+    p2b = 'Black' in player2.rank()
 
-    if score1 < -100 and 0 < score2 < 100:
-        return 2
-    if score2 < -100 and 0 < score1 < 100:
-        return 1
-    if abs(score1) > abs(score2):
-        return 1
-    if abs(score2) > abs(score1):
-        return 2
-    if score1 < 0 and score2 > 0:
-        return 2
-    if score1 > 0 and score2 < 0:
-        return 1
+    if p1b and 0 < score2 < 100: return 2
+    if p2b and 0 < score1 < 100: return 1  # 개패가 검은 족보를 잡기
+    if score1 > score2: return 1
+    if score2 > score1: return 2 # 족보의 높낮이
+    if p1b: return 2
+    if p2b: return 1 # 동일 족보에서 검은 족보가 짐.
     return 0
 
 def main():
@@ -40,7 +36,8 @@ def main():
     Round = 1
     t, w = 0, -1
     common = None
-    r1, r2, dd = 'Straight', [], []
+    Rule = ['Straight', []]
+    dd = []
 
     p1 = Player()
     p2 = Player()
@@ -64,6 +61,7 @@ def main():
 
         if mode == 'chooseRank':
             pos = pg.mouse.get_pos()
+            r1, r2 = Rule
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -86,9 +84,13 @@ def main():
                         else: r2.append(4)
                     if in_rect(pos, (1300 - 45, 450 - 30, 90, 60)):
                         r2.sort()
+                        Rule = [r1, r2]
+                        p1.Rule = Rule
+                        p2.Rule = Rule
                         mode = 'getMatch'
             
-            draw_chooserank(screen, (r1, r2, pos))
+            draw_chooserank(screen, (Rule, pos))
+            Rule = [r1, r2]
 
             clock.tick(60)
             pg.display.update()
@@ -126,7 +128,10 @@ def main():
                     pg.quit()
                     sys.exit()
 
-            if t == 0: dd = get_dd(r2, dd)
+            if t == 0:
+                dd = get_dd(r2, dd)
+                p1.dd = dd
+                p2.dd = dd
             if t == 180: mode = 'play'
             
             t = draw_showDD(screen, dd, t)

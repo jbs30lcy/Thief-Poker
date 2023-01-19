@@ -23,10 +23,12 @@ def start(const, var):
     player1.showc       = []
     player2.active_list = []
     player2.showc       = []
-    player1.pre.append([])
-    player2.pre.append([])
+    player1.Rank = ''
+    player2.Rank = ''
 
     if Round == 1:
+        player1.pre.append([])
+        player2.pre.append([])
         player1.shown = []
         player2.shown = []
         Match += 1
