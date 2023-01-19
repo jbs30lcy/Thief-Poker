@@ -103,7 +103,7 @@ def draw_chooserank(screen, const):
     elif in_rect(pos, (850, 600, 200, 120)):
         desc = f"If the rank is 'One Pair' and their colors are same as certain colors(randomly selected), it will beat {r1}."
     elif in_rect(pos, (1150, 600, 200, 120)):
-        desc = f"If the rank contains all four colors, it will beat {r1}."
+        desc = f"If the rank is lower than 'One Pair' and contains all four colors, it will beat {r1}."
     else:
         desc = ''
     desc_surf = NS[28].render(desc, True, Black)
@@ -204,6 +204,17 @@ def draw_play(screen, const, var):
     Mblit(screen, text, (800, 100))
     Mblit(screen, Next_Button, (1300, 750), 'TR')
     
+    if 1 in player1.Rule[1]:
+        DD_text = NS[28].render('땡잡이 카드', True, White)
+        Mblit(screen, DD_text, (150, 220))
+        Mblit(screen, Card.shrink(player1.dd[0].img), (150, 250), 'TM')
+    if 2 in player1.Rule[1]:
+        DD_text = NS[28].render('땡잡이 색', True, White)
+        Mblit(screen, DD_text, (1450, 220))
+        pg.draw.rect(screen, player1.dd[1][0], (1400, 250, 50, 75))
+        pg.draw.rect(screen, player1.dd[1][1], (1450, 250, 50, 75))
+        
+    
     Match_text = NS[24].render(f"Match {Match}", True, White)
     Round_text = NS[24].render(f"round {Round}", True, White)
     coin = NS[24].render(str(player1.coin), True, White)
@@ -262,8 +273,16 @@ def draw_result(screen, const, var):
     tick    = var[2]
 
     screen.blit(bg1, (0, 0))
-    p1_text = NS[24].render(f'My Card : {player1.rank()}', True, White)
-    p2_text = NS[24].render(f'Rival\'s Card : {player2.rank()}', True, White)
+    if tick >= 60:
+        if ('Straight' in player1.rank() or 'Flush' in player1.rank()) and player2.isdd: p2s = 'DDangjabi!'
+        else: p2s = player2.rank()
+        if ('Straight' in player2.rank() or 'Flush' in player2.rank()) and player1.isdd: p1s = 'DDangjabi!'
+        else: p1s = player1.rank()
+    else:
+        p1s = player1.rank()
+        p2s = player2.rank()
+    p1_text = NS[24].render(f'My Card : {p1s}', True, White)
+    p2_text = NS[24].render(f'Rival\'s Card : {p2s}', True, White)
     for i in range(5):
         Mblit(screen, player1.showc[i].img, (400 + 200*i, 480), 'TM')
         Mblit(screen, player2.showc[i].img, (400 + 200*i, 420), 'BM')

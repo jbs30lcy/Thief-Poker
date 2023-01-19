@@ -68,7 +68,6 @@ class Player:
         self.dd = []
         self.Rank = ''
         self.isdd = False
-        self.isblack = False
         # self.key (Client를 구별할 요소)
         self.pre = [0]
 
@@ -160,6 +159,7 @@ class Player:
                 result_isblack = True
             else:
                 result_s = self._rrank(new_showc, black_in)
+                self.isdd = self.set_isdd(new_showc, result_s)
                 result_isblack = False
 
             rs = self.str2score(result_s)
@@ -171,6 +171,25 @@ class Player:
 
         self.Rank = R
         return R
+
+    def set_isdd(self, arr, rrank):
+        if self.isdd: return True
+        if 1 in self.Rule[1] and 'No rank' in rrank:
+            for card in arr:
+                if card.color == self.dd[0].color and card.val == self.dd[0].val:
+                    return True
+        if 2 in self.Rule[1] and 'Pair' in rrank:
+            for i, j in [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]:
+                card1 = arr[i]
+                card2 = arr[j]
+                if card1.val == card2.val and card1.color in self.dd[1] and card2.color in self.dd[1]:
+                    return True
+        if 4 in self.Rule[1] and self.str2score(rrank) < 200:
+            color_arr = list(map(lambda x: x.color, arr))
+            color_arr.sort()
+            if tuple(color_arr) == ('Blue', 'Green', 'Red', 'Yellow'):
+                return True
+        return False
 
 
 if __name__ == '__main__':
