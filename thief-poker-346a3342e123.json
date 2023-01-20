@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "thief-poker",
+  "private_key_id": "346a3342e123606347ff10b691257f75358f5492",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCpQQanldwEfwaQ\nHhiykoJnuDhmmHSboh8JdHd/8fIkBkc9wk+pfWZWnYofgmMSXtn0hKgSvwQq/82L\nOOq990jBxOKUdzT972MGXOLyppJttsAmRqImqSbUNxWcer5PY2ryGt+LBEhG0Y7F\nMlhirod3VYb9sEzLYYHp/oLmyw6D3o0mZ1/mq+45TV4kVmJzynoFuLrCC2945/j7\n1aNOFXxmZZvrX4KRNK2Vzc4ZtSh02jZ/1vpDOfK5QkfFef8KWH9/Pjo75TQgkldh\ntN6We8GsNNtoww/wU6ROChmI+RNx2Rl86iCv3DH6fOKDYP/fiXfpLBOvN2YaZ3rz\nzpnL+UdbAgMBAAECggEAMGpcd/XjURnxC6rAT9yfFwJYh+iWeqqejDrXsC7KoEl3\neZAq74Xij2ZTS34lzux5FnwYA/zGOXKhHnEynRKuqlcipWuQKg+fWQObG+RQQLgl\nMQ3Fdp+ubsgvE2r9I4KB5i2Pwpl//1oUqA4lwFzCfX1mtw0Geqsy2XenhFOTnF7H\nEdxHjlbD8c7xHS36nLnRgWaNW0H1VbE17OVLMwlCgi5nCKSsZpUx7XRwgZSNMPpT\ndTUZiVRk+MFF+Ws4aiHY0Lxuy/R/tZoIqRUkjEKS76cv6Gex6gg3Djkuoyt4dDYp\nSwMu8PWuFl48szcMM/0WWIPnGPAkszFEhxS8PVDh2QKBgQDTI1G/6r4O9OhnBwbI\nckB/8oO9+03YIcP0RWAwmA3B7H+cdn6hCabPDCSQIVqiGaNVez0YJmmL4S7VpC7r\nV+TyWOJGiai2lj7+9hGcMC7UETif1SA5vrB693SYNDA2Csv78at2mhdP+4iAcet7\nj/Cd+ipbEEHjN+v+lYSRvt317QKBgQDNN3ZXXogDAm0XZPzMIDQRG+CgfrQULxTk\nsGgJfaPprWGF04Pi5D1c8CCJhp2zDqeLcflkuMLS8+cOMIQ6QWTN2voyzobH7ylS\n4203Q84UUNILDPGHcj1mPGA1qUGVs6Z5QIPpg1GdrTxORnIm4R62N1mrAjC9fVYd\nTrfivl4JZwKBgQCTRmW1qvZb1HVvuDUBCMD4/p7qnCrWgeb/sozAGLAv/tmcuALo\nLaVPczbl2n4v6BZIgChDejfRPIfAuj+IJc0rRti/PzKR+geDLP1npyxi/Ig05SMP\nZHYRsB6CNJUUfT+ARDjICAAO6HN0tQH/NI4wg9mbn6F17wIMmRrZ1vtYmQKBgQDC\nzhdksLPkR3VPc+oVy6whYZlGQYCoeFkZDex0tfPXa2LcKwFTbN5jTv9UDZm90/dw\nA+1+k3U905JOgffDZThPwcMoX6zKNlm/+Ww/vfnuhxocq1jL/sISPtYFmnpLpZIu\nH/QYwzPCviQ1GeJazfDdgIV6NEYYWtZYU9VzRMr3mQKBgCSU/4xajJt2AbM1fXu7\nMuQ6ZhZcCigbxsHep6xQ6lU7ZsHni5EzdN/RRkXRbMvsWiwiLG6LuQxEPMOCqJgR\nX9jYa0J2oLUJl0TVmkPE8CAcJtcd6WESGAZWNZefmmMRl5gMD0xXAWhWpfwwNpNb\nPgiEXGkaq5t7GiKxKlj0kBX+\n-----END PRIVATE KEY-----\n",
+  "client_email": "thief-poker@thief-poker.iam.gserviceaccount.com",
+  "client_id": "115037386056614210110",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/thief-poker%40thief-poker.iam.gserviceaccount.com"
+}
