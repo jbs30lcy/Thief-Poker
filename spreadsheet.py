@@ -16,6 +16,10 @@ spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1l7bGqQjoqhLUXDCAhGzFq
 doc = gc.open_by_url(spreadsheet_url)
 worksheet = doc.worksheet('시트1')
 
-#worksheet.update_acell('B2', 'novels')
-value_all = worksheet.get_all_values()
-print(value_all)
+# 위는 놔두고 아래부터 수정, json 파일 수정 금지
+
+# worksheet에 업로드 하는 코드
+# worksheet.update_acell('B2', 'novels')
+
+# worksheet 상의 모든 텍스트 다 가져오는 코드
+# value_all = worksheet.get_all_values()
