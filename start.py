@@ -28,12 +28,14 @@ def start(const, var):
 
     if Round == 1:
         player1.pre.append([])
-        player2.pre.append([])
+        player2.pre.append([]) # 얘는 이제 DB에서 갖고와야 하는 부분.
         player1.shown = []
         player2.shown = []
         Match += 1
+        player2.key = random.randint(1, 999)
 
         if Match == 1:
+            player1.key = random.randint(1, 999)
             whole_card_list = make_whole()
             while True:
                 player1.card_list = random.sample(whole_card_list, 6)

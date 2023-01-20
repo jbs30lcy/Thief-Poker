@@ -201,8 +201,22 @@ def draw_play(screen, const, var):
         Mblit(screen, Card.shrink(player1.common.img), (1200, 400), 'BM')
         pg.draw.rect(screen, Yellow, (1200 - 50, 400 - 140, 100, 145), 2)
     
-    Mblit(screen, text, (800, 100))
+    key_text = NS[28].render(f'user {player2.key}', True, White)
+    Mblit(screen, key_text, (800, 230))
+    Mblit(screen, text, (800, 70))
     Mblit(screen, Next_Button, (1300, 750), 'TR')
+    pg.draw.rect(screen, Grey3, (1000, 200, 160, 40))
+    for i in range(max(2, len(player2.pre) - 5), len(player2.pre)):
+        print(player2.pre)
+        k = sum(player2.pre[i-1])
+        print(k)
+        if k == 2: color = Green
+        if k == 1: color = GreenG
+        if k == 0: color = Grey1
+        if k == -1: color = RedG
+        if k == -2: color = Red
+        x = 1155 + 30*i - 30*len(player2.pre) - max(210 - 30*len(player2.pre), 0)
+        pg.draw.rect(screen, color, (x, 205, 30, 30))
     
     if 1 in player1.Rule[1]:
         DD_text = NS[28].render('땡잡이 카드', True, White)
@@ -416,7 +430,7 @@ def draw_exchange_delay(screen, const, var):
         c = list(Red) + [55 + i*200 / 8]
         pg.draw.circle(Alpha_screen, c, (x, y), 10)
 
-    Mblit(screen, text, (800, 120))
+    Mblit(screen, text, (800, 70))
     screen.blit(Alpha_screen, (0, 0))
 
     return tick+1
@@ -435,7 +449,7 @@ def draw_exchange_result(screen, const, var):
         card = player1.card_list[i]
         x = 900 - c1*100 + i*200
         Mblit(screen, card.img, (x, 450), 'TM')
-    Mblit(screen, text, (800, 100))
+    Mblit(screen, text, (800, 70))
     Mblit(screen, Next_Button, (1300, 750), 'TR')
 
     Match_text = NS[24].render(f"Match {Match}", True, White)
