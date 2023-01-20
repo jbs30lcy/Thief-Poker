@@ -238,7 +238,7 @@ def draw_flop(screen, const, var):
 
     screen.blit(bg1, (0, 0))
     p1_text = NS[28].render('My Card', True, White)
-    p2_text = NS[28].render('Rival\'s Card', True, White)
+    p2_text = NS[28].render('Opponent\'s Card', True, White)
     Mblit(screen, player1.showc[0].img, (700, 480), 'TM')
     Mblit(screen, player1.showc[1].img, (900, 480), 'TM')
     Mblit(screen, player2.showc[0].img, (700, 420), 'BM')
@@ -261,7 +261,6 @@ def draw_flop(screen, const, var):
         Mblit(screen, player1.common.img, (300, 450))
 
     return tick+1
-
 
 # draw_result : mode = result일 때의 UI
 def draw_result(screen, const, var):
@@ -362,11 +361,72 @@ def draw_exchange(screen, const, var):
 
     return (player1, player2)
 
+
+# draw_exchange_oneside: mode = exchangeB일 때의 UI
+def draw_exchange_oneside(screen, const, var):
+    Match = const
+    player1 = var[0]
+    player2 = var[1]
+    c1 = len(player1.card_list)
+    s2 = len(player2.shown)
+    
+    screen.blit(bg1, (0, 0))
+    Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
+    text = NS[72].render("Choose a card you want", True, White)
+    for i in range(c1):
+        card = player1.card_list[i]
+        x = 900 - c1*100 + i*200
+        Mblit(screen, card.img, (x, 450), 'TM')
+        pg.draw.rect(Alpha_screen, GreyA, (x - 90, 450, 180, 270))
+
+    for i in range(s2):
+        card = player2.shown[i]
+        x = 900 - s2*100 + i*200
+        Mblit(screen, card.img, (x, 400), 'BM')
+        if card in player2.active_list:
+            pg.draw.rect(screen, Red, (x - 90, 400 - 270, 180, 270), 2)
+    Mblit(screen, text, (800, 70))
+    Mblit(screen, Next_Button, (1300, 750), 'TR')
+
+    Match_text = NS[24].render(f"Match {Match}", True, White)
+    Mblit(screen, Match_text, (20, 20), 'TL')
+    screen.blit(Alpha_screen, (0, 0))
+
+    return player1, player2
+
+
+# draw_exchange_delay : mode = exchangeD일 때의 UI
+def draw_exchange_delay(screen, const, var):
+    player1 = const
+    tick    = var
+    c1      = len(player1.card_list)
+
+    screen.blit(bg1, (0, 0))
+    Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
+    text = NS[60].render('Please wait...', True, White)
+
+    for i in range(c1):
+        card = player1.card_list[i]
+        x = 900 - c1*100 + i*200
+        Mblit(screen, card.img, (x, 450), 'TM')
+    
+    for i in range(8):
+        x = 800 + 60*math.sin(math.pi * (i + round(tick/5)) / 4)
+        y = 450 + 60*math.cos(math.pi * (i + round(tick/5)) / 4)
+        c = list(Red) + [55 + i*200 / 8]
+        pg.draw.circle(Alpha_screen, c, (x, y), 10)
+
+    Mblit(screen, text, (800, 120))
+    screen.blit(Alpha_screen, (0, 0))
+
+    return tick+1
+
+
 # draw_exchange_result : mode = exchangeR일 때의 UI
 def draw_exchange_result(screen, const, var):
     Match   = const[0]
     player1 = const[1]
-    t       = var
+    tick    = var
     c1 = len(player1.card_list)
 
     screen.blit(bg1, (0, 0))
@@ -381,7 +441,8 @@ def draw_exchange_result(screen, const, var):
     Match_text = NS[24].render(f"Match {Match}", True, White)
     Mblit(screen, Match_text, (20, 20), 'TL')
 
-    return t+1
+    return tick+1
+
 
 # 배포 직전에 main함수를 try문으로 감싸면서 넣을 것이다. 제발 불려지지 않았으면 좋겠는 함수.
 def draw_error(screen):

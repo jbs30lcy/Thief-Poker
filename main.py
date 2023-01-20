@@ -214,6 +214,9 @@ def main():
             t = draw_flop(screen, (Round, Match, p1, p2), t)
             if t == 60:
                 common = get_common()
+                if 1 in Rule[1]:
+                    while dd[0].color == common.color and dd[0].val == common.val:
+                        common = get_common() # 커뮤니티 카드와 땡잡이 중복 방지
                 p1.common = common
                 p2.common = common
 
@@ -232,10 +235,15 @@ def main():
                         mode = 'init'
                         if Round == 3:
                             Round = 1
-                            mode = 'exchangeA'
                             choose = 0
+                            t = 0
                             p1.active_list = []
                             p2.active_list = []
+                            p1.showc = []
+                            p2.showc = []
+                            if sum(p1.pre[-1]) > 0: mode = 'exchangeD'
+                            if sum(p1.pre[-1]) == 0: mode = 'exchangeB'
+                            if sum(p1.pre[-1]) < -1: mode = 'exchangeA'
                 
             if t == 0:
                 for card in p1.showc:
@@ -245,11 +253,12 @@ def main():
                     if not card == common and not card in p2.shown:
                         p2.shown.append(card)
 
-            p1, p2, t = draw_result(screen, (Round, Match, w), (p1, p2, t))
-            if t == 60:
-                w = win(p1, p2)
-            clock.tick(60)
-            pg.display.update()
+            if mode == 'result': # 또 달아줘야 이벤트로 모드가 바뀌었을 때 나는 오류를 해결함.
+                p1, p2, t = draw_result(screen, (Round, Match, w), (p1, p2, t))
+                if t == 60:
+                    w = win(p1, p2)
+                clock.tick(60)
+                pg.display.update()
             
         if mode == 'exchangeA':
             for event in pg.event.get():
@@ -281,7 +290,7 @@ def main():
                     
                     if choose == 1:
                         for i in range(s2):
-                            x = x = 900 - s2*100 + i*200
+                            x = 900 - s2*100 + i*200
                             if in_rect(pos, (x - 90, 400 - 270, 180, 270)):
                                 card = p2.shown[i]
                                 if card in p2.active_list:
@@ -308,6 +317,65 @@ def main():
             if choose == 0.5: choose = 1
             clock.tick(60)
             pg.display.update()
+
+        if mode == 'exchangeB':
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+                if event.type == MOUSEBUTTONDOWN:
+                    s2 = len(p2.shown)
+                    pos = pg.mouse.get_pos()
+                    for i in range(s2):
+                        x = 900 - s2*100 + i*200
+                        if in_rect(pos, (x - 90, 400 - 270, 180, 270)):
+                            card = p2.shown[i]
+                            if card in p2.active_list:
+                                p2.active_list.remove(card)
+                            else:
+                                p2.active_list.append(card)
+                                if len(p2.active_list) > 1:
+                                    del p2.active_list[0]
+                    if in_rect(pos, (1300 - 90, 750, 90, 60)):
+                        if len(p2.active_list) != 1:
+                            print("Wrong number of cards")
+                            pg.quit()
+                            sys.exit()
+                        else:
+                            t = 0
+                            mode = 'exchangeD'
+            
+            p1, p2 = draw_exchange_oneside(screen, Match, (p1, p2))
+
+            clock.tick(60)
+            pg.display.update()
+        
+        if mode == 'exchangeD':
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+            
+            t = draw_exchange_delay(screen, p1, t)
+
+            if sum(p1.pre[-1]) > 0 and t == 120:
+                mycard   = get_random_exchange(p1)
+                yourcard = get_random_exchange(p2)
+                p1.card_list.remove(mycard)
+                p2.card_list.remove(yourcard)
+                p1.card_list.append(yourcard)
+                p2.card_list.append(mycard)
+                mode = 'exchangeR'
+            if sum(p1.pre[-1]) == 0 and t == 60:
+                mycard = get_random_exchange(p1)
+                p1.card_list.remove(mycard)
+                p2.card_list.remove(p2.active_list[0])
+                p1.card_list.append(p2.active_list[0])
+                p2.card_list.append(mycard)
+                mode = 'exchangeR'
+
+            clock.tick(60)
+            pg.display.flip()
 
         if mode == 'exchangeR':
             for event in pg.event.get():

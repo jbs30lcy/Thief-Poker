@@ -83,5 +83,8 @@ def get_dd(r2, dd):
     if 2 in r2: dd[1] = tuple( random.sample(('Red', 'Yellow', 'Blue', 'Green'), 2) )
     return dd
 
+def get_random_exchange(player):
+    return random.choice(player.card_list)
+
 if __name__ == '__main__':
     print("This File is not executable file. please run main.py.")

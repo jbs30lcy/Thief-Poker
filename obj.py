@@ -159,7 +159,6 @@ class Player:
                 result_isblack = True
             else:
                 result_s = self._rrank(new_showc, black_in)
-                self.isdd = self.set_isdd(new_showc, result_s)
                 result_isblack = False
 
             rs = self.str2score(result_s)
@@ -168,6 +167,18 @@ class Player:
                 R = result_s
             elif rs == Rs and not result_isblack:
                 R = result_s
+
+        Is_black = False
+        for i in range(5):
+            card = self.showc[i]
+            if card.color == 'black':
+                Is_black = True
+                break
+        if not Is_black:
+            for i in range(5):
+                new_showc = self.showc.copy()
+                del new_showc[i]
+                self.isdd = self.set_isdd(new_showc, R)
 
         self.Rank = R
         return R
