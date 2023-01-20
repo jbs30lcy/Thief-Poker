@@ -5,6 +5,8 @@
 2. pygame 모듈을 설치한다. cmd창이나 powershell에 다음을 입력한다.
 ```powershell
     pip install pygame
+    pip install --upgrade oauth2client
+    pip install gspread
 ```
 3. main.py 프로그램을 실행한다.
 아주 쉽다 !
