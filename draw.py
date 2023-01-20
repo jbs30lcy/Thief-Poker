@@ -6,7 +6,7 @@ import math
 pg.init()
 
 bg1 = pg.transform.scale(pg.image.load(img_dir_path + 'com_bg.png'), (1600, 900)) # 테이블 앞 배경
-bg2 = pg.transform.scale(pg.image.load(img_dir_path + 'com_bg.png'), (1600, 900)) # 테이블 뒤 배경
+bg2 = pg.transform.scale(pg.image.load(img_dir_path + 'com_bg_2.png'), (1600, 900)) # 테이블 뒤 배경
 
 # in_rect: 점이 사각형 안에 포함되어 있으면 True를 return
 def in_rect(pos, rect):
