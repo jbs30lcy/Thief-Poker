@@ -4,6 +4,7 @@ import sys, time
 from obj import *
 from start import *
 from draw import *
+from spreadsheet import *
 
 WIDTH = 1600
 HEIGHT = 900
@@ -115,6 +116,11 @@ def main():
             choose = 0
             t, w = 0, -1
             p1, p2, Match = start(Round, (p1, p2, Match))
+            # 전체 카드를 스프레드시트에 업로드
+            for i in range(len(p1.card_list)):
+                worksheet.update_acell(chr(69+i)+str(p1.key),p1.card_list[i].name)
+            for i in range(len(p2.card_list)):
+                worksheet.update_acell(chr(69+i)+str(p2.key),p2.card_list[i].name)
             mode = 'phase1'
         
         if mode == 'phase1':
@@ -168,6 +174,11 @@ def main():
                             pg.quit()
                             sys.exit()
                         else:
+                            # 시트1에 flop 업데이트
+                            worksheet.update_acell('C'+str(p1.key), p1.active_list[0].name)
+                            worksheet.update_acell('D'+str(p1.key), p1.active_list[1].name)
+                            worksheet.update_acell('C'+str(p2.key), p2.active_list[0].name)
+                            worksheet.update_acell('D'+str(p2.key), p2.active_list[1].name)                            
                             if choose == 0:
                                 choose = 0.5
                                 mode = 'phase2'

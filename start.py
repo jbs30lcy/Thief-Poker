@@ -32,10 +32,12 @@ def start(const, var):
         player1.shown = []
         player2.shown = []
         Match += 1
-        player2.key = random.randint(1, 999)
+        # player2.key = random.randint(1, 999)
+        player2.key = 12 # 확인을 위해 임의 할당 - ksiwon
 
         if Match == 1:
-            player1.key = random.randint(1, 999)
+            # player1.key = random.randint(1, 999)
+            player1.key = 11 # 확인을 위해 임의 할당 - ksiwon
             whole_card_list = make_whole()
             while True:
                 player1.card_list = random.sample(whole_card_list, 6)

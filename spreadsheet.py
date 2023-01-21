@@ -23,3 +23,6 @@ worksheet = doc.worksheet('시트1')
 
 # worksheet 상의 모든 텍스트 다 가져오는 코드
 # value_all = worksheet.get_all_values()
+
+# worksheet 상의 특정 셀의 텍스트를 가져오는 코드
+# cell1 = worksheet.get('B1')
