@@ -169,6 +169,7 @@ def draw_play(screen, const, var):
     Round   = const[0]
     Match   = const[1]
     choose  = const[2]
+    tickf1  = const[3]
     player1 = var[0]
     player2 = var[1]
     c1      = len(player1.card_list)
@@ -235,6 +236,10 @@ def draw_play(screen, const, var):
     Mblit(screen, Round_text, (20, 50), 'TL')
     Mblit(screen, coin, (1580, 40), 'MR')
     Mblit(screen, Coin_icon, (coin_icon_x - 10, 40), 'MR')
+
+    warn_text = NSE[72].render(f"Choose more card.", True, Black).convert_alpha()
+    warn_text.set_alpha(tickf1*255/30)
+    Mblit(Alpha_screen, warn_text, (800, 450))
 
     screen.blit(Alpha_screen, (0, 0))
     return (player1, player2)
@@ -340,11 +345,13 @@ def draw_result(screen, const, var):
 def draw_exchange(screen, const, var):
     Match   = const[0]
     choose  = const[1]
+    tickf1  = const[2]
     player1 = var[0]
     player2 = var[1]
     c1      = len(player1.card_list)
     s2      = len(player2.shown)
 
+    Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
     if choose == 1:
         text = NS[72].render("Choose a card you want", True, White)
     else:
@@ -371,12 +378,19 @@ def draw_exchange(screen, const, var):
     Match_text = NS[24].render(f"Match {Match}", True, White)
     Mblit(screen, Match_text, (20, 20), 'TL')
 
+    warn_text = NSE[72].render(f"Choose more card.", True, Black).convert_alpha()
+    warn_text.set_alpha(tickf1*255/30)
+    Mblit(Alpha_screen, warn_text, (800, 450))
+
+    screen.blit(Alpha_screen, (0, 0))
+
     return (player1, player2)
 
 
 # draw_exchange_oneside: mode = exchangeB일 때의 UI
 def draw_exchange_oneside(screen, const, var):
-    Match = const
+    Match   = const[0]
+    tickf1  = const[1]
     player1 = var[0]
     player2 = var[1]
     c1 = len(player1.card_list)
@@ -402,8 +416,12 @@ def draw_exchange_oneside(screen, const, var):
 
     Match_text = NS[24].render(f"Match {Match}", True, White)
     Mblit(screen, Match_text, (20, 20), 'TL')
-    screen.blit(Alpha_screen, (0, 0))
 
+    warn_text = NSE[72].render(f"Choose more card.", True, Black).convert_alpha()
+    warn_text.set_alpha(tickf1*255/30)
+    Mblit(Alpha_screen, warn_text, (800, 450))
+
+    screen.blit(Alpha_screen, (0, 0))
     return player1, player2
 
 

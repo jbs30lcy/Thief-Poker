@@ -42,8 +42,9 @@ class Card:
         self.val = val
         self.dd = []
         self.time = 5     # 카드의 수명 얘기 나와서요
+        self.name = self.color + '_' + str(self.val)
         if 1 <= self.val <= 7:
-            self.img = Card_IMGlist[self.color + '_' + str(self.val)]
+            self.img = Card_IMGlist[self.name]
         else:
             self.img = Card_IMGlist['Black']
         self.show = False

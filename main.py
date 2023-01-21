@@ -4,6 +4,7 @@ import sys, time
 from obj import *
 from start import *
 from draw import *
+from spreadsheet import *
 
 WIDTH = 1600
 HEIGHT = 900
@@ -37,6 +38,7 @@ def main():
     Match = 0
     Round = 1
     t, w = 0, -1
+    tf1 = 0 # 조건부 작동되는 tick
     common = None
     Rule = ['Straight', []]
     dd = []
@@ -115,6 +117,11 @@ def main():
             choose = 0
             t, w = 0, -1
             p1, p2, Match = start(Round, (p1, p2, Match))
+            # 전체 카드를 스프레드시트에 업로드 (나중에 적용함)
+            # for i in range(len(p1.card_list)):
+            #     worksheet.update_acell(chr(69+i)+str(p1.key),p1.card_list[i].name)
+            # for i in range(len(p2.card_list)):
+            #     worksheet.update_acell(chr(69+i)+str(p2.key),p2.card_list[i].name)
             mode = 'phase1'
         
         if mode == 'phase1':
@@ -163,11 +170,15 @@ def main():
                                 if len(p1.active_list) > 2:
                                     del p1.active_list[0]
                     if in_rect(pos, (1300 - 90, 750, 90, 60)):
-                        if len(p1.active_list) != 2:
-                            print("Wrong number of cards")
-                            pg.quit()
-                            sys.exit()
+                        if len(p1.active_list) < 2:
+                            tf1 = 30
                         else:
+                            tf = 0
+                            # 시트1에 flop 업데이트 (나중에 적용함)
+                            # worksheet.update_acell('C'+str(p1.key), p1.active_list[0].name)
+                            # worksheet.update_acell('D'+str(p1.key), p1.active_list[1].name)
+                            # worksheet.update_acell('C'+str(p2.key), p2.active_list[0].name)
+                            # worksheet.update_acell('D'+str(p2.key), p2.active_list[1].name)                            
                             if choose == 0:
                                 choose = 0.5
                                 mode = 'phase2'
@@ -180,7 +191,8 @@ def main():
                                 p2.showc = [common] + p2.showc + p2.active_list.copy()
                                 p2.active_list = []
 
-            p1, p2 = draw_play(screen, (Round, Match, choose), (p1, p2))
+            p1, p2 = draw_play(screen, (Round, Match, choose, tf1), (p1, p2))
+            if tf1: tf1 -= 1
 
             if choose == 0.5: choose = 1
             clock.tick(60)
@@ -243,7 +255,7 @@ def main():
                             p2.showc = []
                             if sum(p1.pre[-1]) > 0: mode = 'exchangeD'
                             if sum(p1.pre[-1]) == 0: mode = 'exchangeB'
-                            if sum(p1.pre[-1]) < -1: mode = 'exchangeA'
+                            if sum(p1.pre[-1]) < 0: mode = 'exchangeA'
                 
             if t == 0:
                 for card in p1.showc:
@@ -281,11 +293,10 @@ def main():
                                     if len(p1.active_list) > 1:
                                         del p1.active_list[0]
                         if in_rect(pos, (1300 - 90, 750, 90, 60)):
-                            if len(p1.active_list) != 1:
-                                print("Wrong number of cards")
-                                pg.quit()
-                                sys.exit()
+                            if len(p1.active_list) < 1:
+                                tf1 = 30
                             else:
+                                tf1 = 0
                                 choose = 0.5
                     
                     if choose == 1:
@@ -301,18 +312,18 @@ def main():
                                         del p2.active_list[0]
 
                         if in_rect(pos, (1300 - 90, 750, 90, 60)):
-                            if len(p2.active_list) != 1:
-                                print("Wrong number of cards")
-                                pg.quit()
-                                sys.exit()
+                            if len(p2.active_list) < 1:
+                                tf1 = 30
                             else:
+                                tf1 = 0
                                 mode = 'exchangeR'
                                 i1 = p1.card_list.index(p1.active_list[0])
                                 i2 = p2.card_list.index(p2.active_list[0])
                                 p1.card_list[i1] = p2.active_list[0]
                                 p2.card_list[i2] = p1.active_list[0]
 
-            p1, p2 = draw_exchange(screen, (Match, choose), (p1, p2))
+            p1, p2 = draw_exchange(screen, (Match, choose, tf1), (p1, p2))
+            if tf1: tf1 -= 1
             
             if choose == 0.5: choose = 1
             clock.tick(60)
@@ -337,15 +348,15 @@ def main():
                                 if len(p2.active_list) > 1:
                                     del p2.active_list[0]
                     if in_rect(pos, (1300 - 90, 750, 90, 60)):
-                        if len(p2.active_list) != 1:
-                            print("Wrong number of cards")
-                            pg.quit()
-                            sys.exit()
+                        if len(p2.active_list) < 1:
+                            tf1 = 30
                         else:
+                            tf1 = 0
                             t = 0
                             mode = 'exchangeD'
             
-            p1, p2 = draw_exchange_oneside(screen, Match, (p1, p2))
+            p1, p2 = draw_exchange_oneside(screen, (Match, tf1), (p1, p2))
+            if tf1: tf1 -= 1
 
             clock.tick(60)
             pg.display.update()
