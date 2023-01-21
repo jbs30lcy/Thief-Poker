@@ -307,10 +307,10 @@ def main():
                                 sys.exit()
                             else:
                                 mode = 'exchangeR'
-                                p1.card_list.remove(p1.active_list[0])
-                                p2.card_list.remove(p2.active_list[0])
-                                p1.card_list.append(p2.active_list[0])
-                                p2.card_list.append(p1.active_list[0])
+                                i1 = p1.card_list.index(p1.active_list[0])
+                                i2 = p2.card_list.index(p2.active_list[0])
+                                p1.card_list[i1] = p2.active_list[0]
+                                p2.card_list[i2] = p1.active_list[0]
 
             p1, p2 = draw_exchange(screen, (Match, choose), (p1, p2))
             
@@ -361,17 +361,17 @@ def main():
             if sum(p1.pre[-1]) > 0 and t == 120:
                 mycard   = get_random_exchange(p1)
                 yourcard = get_random_exchange(p2)
-                p1.card_list.remove(mycard)
-                p2.card_list.remove(yourcard)
-                p1.card_list.append(yourcard)
-                p2.card_list.append(mycard)
+                i1 = p1.card_list.index(mycard)
+                i2 = p2.card_list.index(yourcard)
+                p1.card_list[i1] = yourcard
+                p2.card_list[i2] = mycard
                 mode = 'exchangeR'
             if sum(p1.pre[-1]) == 0 and t == 60:
                 mycard = get_random_exchange(p1)
-                p1.card_list.remove(mycard)
-                p2.card_list.remove(p2.active_list[0])
-                p1.card_list.append(p2.active_list[0])
-                p2.card_list.append(mycard)
+                i1 = p1.card_list.index(mycard)
+                i2 = p2.card_list.index(p2.active_list[0])
+                p1.card_list[i1] = p2.active_list[0]
+                p2.card_list[i2] = mycard
                 mode = 'exchangeR'
 
             clock.tick(60)

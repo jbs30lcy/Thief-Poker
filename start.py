@@ -36,17 +36,15 @@ def start(const, var):
 
         if Match == 1:
             player1.key = random.randint(1, 999)
-            whole_card_list = make_whole()
             while True:
-                player1.card_list = random.sample(whole_card_list, 6)
+                player1.card_list = random.sample(make_whole(), 6)
                 n = 0
                 for i in range(6):
                     if player1.card_list[i].color == 'black': n += 1
                 if n <= 1: break
 
-        whole_card_list = make_whole() # 한 번 선언하고 두 번 써먹으니까 같은색 같은무늬면 아예 같은객체였음
         while True:
-            player2.card_list = random.sample(whole_card_list, 6)
+            player2.card_list = random.sample(make_whole(), 6)
             n = 0
             for i in range(6):
                 if player2.card_list[i].color == 'black': n += 1

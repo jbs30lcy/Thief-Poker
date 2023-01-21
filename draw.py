@@ -207,9 +207,7 @@ def draw_play(screen, const, var):
     Mblit(screen, Next_Button, (1300, 750), 'TR')
     pg.draw.rect(screen, Grey3, (1000, 200, 160, 40))
     for i in range(max(2, len(player2.pre) - 5), len(player2.pre)):
-        print(player2.pre)
         k = sum(player2.pre[i-1])
-        print(k)
         if k == 2: color = Green
         if k == 1: color = GreenG
         if k == 0: color = Grey1
