@@ -2,7 +2,7 @@ import pygame as pg
 from pygame.locals import *
 import sys, time
 from obj import *
-from start import *
+from set import *
 from draw import *
 from spreadsheet import *
 

@@ -1,5 +1,5 @@
-# start_custom.py : 카드를 나눠주는 작업을 조작하기 위해 만든 파일. (start.py와 구조 비슷함)
-# 사용하지 않는 파일이다.
+# set.py : UI가 표시되지 않고 즉시 넘어가는 mode는 입력을 받지 않기 때문에
+# 따로 파일을 빼 놓았다.
 
 import pygame as pg
 import random
@@ -36,19 +36,19 @@ def start(const, var):
 
         if Match == 1:
             player1.key = random.randint(1, 999)
-            player1.card_list.append(Card('Red', 1))
-            player1.card_list.append(Card('Blue', 3))
-            player1.card_list.append(Card('Yellow', 4))
-            player1.card_list.append(Card('Green', 5))
-            player1.card_list.append(Card('Red', 5))
-            player1.card_list.append(Card('Black'))
-        player2.card_list = []
-        player2.card_list.append(Card('Red', 1))
-        player2.card_list.append(Card('Red', 2))
-        player2.card_list.append(Card('Red', 3))
-        player2.card_list.append(Card('Red', 4))
-        player2.card_list.append(Card('Red', 5))
-        player2.card_list.append(Card('Black'))
+            while True:
+                player1.card_list = random.sample(make_whole(), 6)
+                n = 0
+                for i in range(6):
+                    if player1.card_list[i].color == 'black': n += 1
+                if n <= 1: break
+
+        while True:
+            player2.card_list = random.sample(make_whole(), 6)
+            n = 0
+            for i in range(6):
+                if player2.card_list[i].color == 'black': n += 1
+            if n <= 1: break
 
     return (player1, player2, Match)
 
