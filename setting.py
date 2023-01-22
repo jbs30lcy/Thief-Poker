@@ -1,4 +1,4 @@
-# set.py : UI가 표시되지 않고 즉시 넘어가는 mode는 입력을 받지 않기 때문에
+# setting.py : UI가 표시되지 않고 즉시 넘어가는 mode는 입력을 받지 않기 때문에
 # 따로 파일을 빼 놓았다.
 
 import pygame as pg
@@ -35,7 +35,6 @@ def start(const, var):
         player2.key = random.randint(1, 999)
 
         if Match == 1:
-            player1.key = random.randint(1, 999)
             while True:
                 player1.card_list = random.sample(make_whole(), 6)
                 n = 0

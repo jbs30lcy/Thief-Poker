@@ -4,6 +4,11 @@
 import pygame as pg
 import os
 
+WIDTH = 1600
+HEIGHT = 900
+W = WIDTH // 100
+H = HEIGHT // 100
+
 White  = (255, 255, 255)
 Black  = (0, 0, 0)
 Red    = (240, 26, 0)
@@ -36,6 +41,8 @@ for color in ("Red", "Yellow", "Blue", "Green"):
 Card_IMGlist["Black"] = pg.transform.scale(pg.image.load(img_dir_path + "Black.png"), (180, 270))
 Card_IMGlist["Hide"] = pg.transform.scale(pg.image.load(img_dir_path + "Hide.png"), (180, 270))
 
+def in_rect(pos, rect):
+    return rect[0] <= pos[0] <= rect[0] + rect[2] and rect[1] <= pos[1] <= rect[1] + rect[3]
 class Card:
     def __init__(self, color, val = 0):
         self.color = color

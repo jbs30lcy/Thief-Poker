@@ -4,10 +4,10 @@ import sys, time
 from obj import *
 from setting import *
 from draw import *
+from draw_new import *
+from eventing import *
 from spreadsheet import *
 
-WIDTH = 1600
-HEIGHT = 900
 pg.init()
 screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.set_caption("도둑 포커")
@@ -38,7 +38,7 @@ def main():
     Match = 0
     Round = 1
     t, w = 0, -1
-    tf1 = 0 # 조건부 작동되는 tick
+    tf1, tf2 = 0, 0 # 조건부 작동되는 tick
     common = None
     Rule = ['Straight', []]
     dd = []
@@ -54,12 +54,23 @@ def main():
                     pg.quit()
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
-                    pos = pg.mouse.get_pos()
-                    if in_rect(pos, (800 - 150, 640 - 50, 300, 100)):
-                        mode = 'chooseRank'
+                    mode = mouse_main((mode, p1))
             
-            draw_begin(screen)
+            n_draw_main(screen)
 
+            clock.tick(60)
+            pg.display.update()
+
+        if mode == 'choose_key':
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+                if event.type == KEYDOWN:
+                    p1, tf1, tf2 = key_choose_key(event, (p1, tf1, tf2))
+            
+            tf1, tf2 = n_draw_choose_key(screen, p1, (tf1, tf2))
+            
             clock.tick(60)
             pg.display.update()
 
