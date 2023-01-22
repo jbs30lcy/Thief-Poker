@@ -2,7 +2,7 @@ import pygame as pg
 from pygame.locals import *
 import sys, time
 from obj import *
-from set import *
+from setting import *
 from draw import *
 from spreadsheet import *
 
@@ -378,6 +378,7 @@ def main():
                 p1.card_list[i1] = yourcard
                 p2.card_list[i2] = mycard
                 choose = 0
+                t = 0
                 mode = 'exchangeR'
             if sum(p1.pre[-1]) == 0 and t == 60:
                 mycard = get_random_exchange(p1)
@@ -386,6 +387,7 @@ def main():
                 p1.card_list[i1] = p2.active_list[0]
                 p2.card_list[i2] = mycard
                 choose = 0
+                t = 0
                 mode = 'exchangeR'
 
             clock.tick(60)
