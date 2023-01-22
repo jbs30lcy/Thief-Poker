@@ -74,7 +74,7 @@ def phase2(var):
     player2.active_list.append(player2.card_list[y])
     return (player1, player2)
 
-def get_common():
+def get_random_card():
     return Card(random.choice(('Red', 'Yellow', 'Blue', 'Green')), random.randint(1, 7))
 
 def get_dd(r2, dd):

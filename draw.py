@@ -425,8 +425,7 @@ def draw_exchange_oneside(screen, const, var):
     return player1, player2
 
 
-# draw_exchange_delay : mode = exchangeD일 때의 UI
-def draw_exchange_delay(screen, const, var):
+def draw_delay(screen, const, var):
     player1 = const
     tick    = var
     c1      = len(player1.card_list)
@@ -452,10 +451,16 @@ def draw_exchange_delay(screen, const, var):
     return tick+1
 
 
+# draw_exchange_delay : mode = exchangeD일 때의 UI
+def draw_exchange_delay(screen, const, var):
+    return draw_delay(screen, const, var)
+
+
 # draw_exchange_result : mode = exchangeR일 때의 UI
 def draw_exchange_result(screen, const, var):
     Match   = const[0]
     player1 = const[1]
+    choose  = const[2]
     tick    = var
     c1 = len(player1.card_list)
 
@@ -466,7 +471,7 @@ def draw_exchange_result(screen, const, var):
         x = 900 - c1*100 + i*200
         Mblit(screen, card.img, (x, 450), 'TM')
     Mblit(screen, text, (800, 70))
-    Mblit(screen, Next_Button, (1300, 750), 'TR')
+    if choose == 1: Mblit(screen, Next_Button, (1300, 750), 'TR')
 
     Match_text = NS[24].render(f"Match {Match}", True, White)
     Mblit(screen, Match_text, (20, 20), 'TL')

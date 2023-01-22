@@ -225,10 +225,10 @@ def main():
             
             t = draw_flop(screen, (Round, Match, p1, p2), t)
             if t == 60:
-                common = get_common()
+                common = get_random_card()
                 if 1 in Rule[1]:
                     while dd[0].color == common.color and dd[0].val == common.val:
-                        common = get_common() # 커뮤니티 카드와 땡잡이 중복 방지
+                        common = get_random_card() # 커뮤니티 카드와 땡잡이 중복 방지
                 p1.common = common
                 p2.common = common
 
@@ -316,6 +316,7 @@ def main():
                                 tf1 = 30
                             else:
                                 tf1 = 0
+                                choose = 0
                                 mode = 'exchangeR'
                                 i1 = p1.card_list.index(p1.active_list[0])
                                 i2 = p2.card_list.index(p2.active_list[0])
@@ -376,6 +377,7 @@ def main():
                 i2 = p2.card_list.index(yourcard)
                 p1.card_list[i1] = yourcard
                 p2.card_list[i2] = mycard
+                choose = 0
                 mode = 'exchangeR'
             if sum(p1.pre[-1]) == 0 and t == 60:
                 mycard = get_random_exchange(p1)
@@ -383,10 +385,11 @@ def main():
                 i2 = p2.card_list.index(p2.active_list[0])
                 p1.card_list[i1] = p2.active_list[0]
                 p2.card_list[i2] = mycard
+                choose = 0
                 mode = 'exchangeR'
 
             clock.tick(60)
-            pg.display.flip()
+            pg.display.update()
 
         if mode == 'exchangeR':
             for event in pg.event.get():
@@ -395,11 +398,40 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
                     pos = pg.mouse.get_pos()
-                    if in_rect(pos, (1300 - 90, 750, 90, 60)):
+                    if choose == 1 and in_rect(pos, (1300 - 90, 750, 90, 60)):
                         t = 0
                         mode = 'getMatch'
 
-            t = draw_exchange_result(screen, (Match, p1), t) # 유령 변수
+            t = draw_exchange_result(screen, (Match, p1, choose), t) # 유령 변수
+            if t == 120:
+                x = 0
+                for card in p1.card_list:
+                    if card.color == 'Black':
+                        x += 1
+                if x == 2:
+                    t = 0
+                    mode = 'delay'
+            if t == 180: choose = 1
+
+            clock.tick(60)
+            pg.display.update()
+
+        if mode == 'delay': # 오직 2조커 처리만을 위함.
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+            
+            t = draw_delay(screen, p1, t)
+
+            if t == 60:
+                for i in range(len(p1.card_list)):
+                    card = p1.card_list[i]
+                    if card.color == 'Black':
+                        p1.card_list[i] = get_random_card()
+                        break
+                choose = 1
+                mode = 'exchangeR'
 
             clock.tick(60)
             pg.display.update()
