@@ -39,3 +39,12 @@ def key_choose_key(const, var):
             player1.key += 8
     
     return player1, tickf1, tickf2
+
+def mouse_choose_key(var):
+    mode = var
+
+    pos = pg.mouse.get_pos()
+    if in_rect(pos, (1350-45, 750-30, 90, 60)):
+        mode = 'chooseRank'
+
+    return mode

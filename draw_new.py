@@ -66,6 +66,7 @@ def n_draw_choose_key(screen, const, var):
     Mblit(screen, team_text, (1200, 700))
     Mblit(screen, class_val_text, (400, 450))
     Mblit(screen, team_val_text, (1200, 450))
+    Mblit(screen, Next_Button, (1350, 750))
 
     pg.draw.polygon(screen, Red, [(400, 360), (380, 370), (420, 370)])
     pg.draw.polygon(screen, Red, [(400, 540), (380, 530), (420, 530)])
