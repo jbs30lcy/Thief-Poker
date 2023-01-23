@@ -25,6 +25,7 @@ Grad3  = (40, 171, 205)
 Grad4  = (40, 137, 205)
 Card_IMGlist = {}
 colors = ("Black", "Red", "Yellow", "Blue", "Green")
+colors_dict = {"Black":0, "Red":1, "Yellow":2, "Blue":3, "Green":4}
 
 file_path = os.path.dirname(os.path.abspath(__file__))
 img_dir_path = file_path + "\\img\\"
@@ -62,11 +63,9 @@ class Card:
             return '==Card Black=='
         else:
             return f'==Card {self.color} {self.val}=='
-
-    def tocell(self):
-        for i,c in enumerate(colors):
-            if c == self.color:
-                return f"{i}{self.val}"
+    
+    def __str__(self):
+        return f'{ colors_dict[self.color] }{self.val}'
 
     @classmethod
     def shrink(cls, surf):
