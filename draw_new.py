@@ -30,11 +30,8 @@ NSE = [pg.font.Font(file_path + '\\NanumSquareNeoOTF-dEb.otf', x) for x in range
 NS.insert(0, 0)
 NSE.insert(0, 0)
 
-Next_Button = pg.Surface((90, 60))
-Next_Button.fill(Brown1)
-Next_Button_text = NS[24].render('Next', True, Black)
-Mblit(Next_Button, Next_Button_text, (45, 30))
-
+Next_button = pg.transform.scale(pg.image.load(img_dir_path + 'Next_button.png'), (90, 60))
+Rank_button = pg.transform.scale(pg.image.load(img_dir_path + 'Rank_button.png'), (90, 60))
 Coin_icon = pg.transform.scale(pg.image.load(img_dir_path + 'coin.png'), (50, 50))
 
 def n_draw_main(screen):
@@ -66,7 +63,7 @@ def n_draw_choose_key(screen, const, var):
     Mblit(screen, team_text, (1200, 700))
     Mblit(screen, class_val_text, (400, 450))
     Mblit(screen, team_val_text, (1200, 450))
-    Mblit(screen, Next_Button, (1350, 750))
+    Mblit(screen, Next_button, (1350, 750))
 
     pg.draw.polygon(screen, Red, [(400, 360), (380, 370), (420, 370)])
     pg.draw.polygon(screen, Red, [(400, 540), (380, 530), (420, 530)])
@@ -76,3 +73,65 @@ def n_draw_choose_key(screen, const, var):
     if tickf1: tickf1 -= 1
     if tickf2: tickf2 -= 1
     return tickf1, tickf2
+
+def n_draw_play_pre(screen, const, var):
+    player1, player2 = const
+    tick = var
+
+    c1 = len(player1.card_list)
+
+    screen.blit(bg2, (0, 0))
+    for i in range(c1):
+        card = player1.card_list[i]
+        x0 = 850 - c1*50
+        if tick <= 5:
+            x, y = x0, 1115
+        if 5 < tick <= 20:
+            x, y = easing((x0, 1115), (x0, 700), m_quadout, tick-5, 15)
+        if 20 < tick <= 30:
+            x, y = x0, 700
+        if 30 < tick <= 45:
+            x, y = easing((x0, 700), (x0 + i*100, 700), m_quadinout, tick-30, 15)
+        if 45 < tick <= 60:
+            x, y = x0 + i*100, 700
+        Mblit(screen, Card.shrink(card.imgo, 1/2), (x, y))
+
+    return tick+1
+
+def n_draw_play(screen, const, var):
+    Round, Match, choose, tf1 = const
+    player1, player2, tick = var
+
+    c1 = len(player1.card_list)
+    c2 = len(player2.card_list)
+    Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
+
+    if choose == 0 or choose == 0.5:
+        title = NS[72].render("카드 두 장을 선택하세요", True, White)
+    if choose == 1:
+        title = NS[72].render("다른 카드 두 장을 선택하세요", True, White)
+    Match_text = NS[24].render(f'Match {Match}', True, White)
+    Round_text = NS[24].render(f'Round {Round}', True, White)
+    team_text = NSE[48].render(str(player2.key%10), True, Black)
+
+    screen.blit(bg2, (0, 0))
+    for i in range(c1):
+        card = player1.card_list[i]
+        x, y = 850 - c1*50 + 100*i, 700
+        Mblit(screen, Card.shrink(card.imgo, 1/2), (x, y))
+        if card in player1.active_list:
+            pg.draw.rect(screen, Red, (x-150, y-225, 300, 450), 4, border_radius = 30)
+    for i in range(c2):
+        card = player2.card_list[i]
+        x, y = 816.6 - c1*16.7 + 33.3*i, 300
+        Mblit(screen, Card.shrink(CI_ori['Hide'], 1/6), (x, y))
+    Mblit(screen, title, (800, 80))
+    Mblit(screen, Match_text, (20, 20), 'TL')
+    Mblit(screen, Round_text, (20, 55), 'TL')
+    Mblit(screen, Next_button, (1580, 20), 'TR')
+
+    pg.draw.rect(screen, Grey1, (150, 280, 210, 40))
+    pg.draw.circle(screen, White, (150, 300), 50)
+    Mblit(screen, team_text, (150, 300))
+
+    return player1, player2, tick+1

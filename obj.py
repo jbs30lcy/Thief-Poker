@@ -24,6 +24,7 @@ Grad2  = (40, 205, 198)
 Grad3  = (40, 171, 205)
 Grad4  = (40, 137, 205)
 Card_IMGlist = {}
+CI_ori = {}
 colors = ("Black", "Red", "Yellow", "Blue", "Green")
 
 file_path = os.path.dirname(os.path.abspath(__file__))
@@ -32,11 +33,18 @@ img_dir_path = file_path + "\\img\\"
 for color in colors[1:]:
     for num in range(1, 8):
         card_name = f"{color}_{num}"
-        card_image = pg.transform.scale(pg.image.load(img_dir_path + card_name + ".png"), (180, 270))
-        Card_IMGlist[card_name] = card_image
-
+        card_image = pg.transform.scale(pg.image.load(img_dir_path + card_name + ".png"), (600, 900))
+        CI_ori[card_name] = card_image
+        Card_IMGlist[card_name] = pg.transform.scale(card_image, (180, 270))
+CI_ori["Black"] = pg.transform.scale(pg.image.load(img_dir_path + "Black.png"), (600, 900))
 Card_IMGlist["Black"] = pg.transform.scale(pg.image.load(img_dir_path + "Black.png"), (180, 270))
+CI_ori["Hide"] = pg.transform.scale(pg.image.load(img_dir_path + "Hide.png"), (600, 900))
 Card_IMGlist["Hide"] = pg.transform.scale(pg.image.load(img_dir_path + "Hide.png"), (180, 270))
+
+# Card_IMGlist[card_name] = card_image
+
+# Card_IMGlist["Black"] = pg.transform.scale(pg.image.load(img_dir_path + "Black.png"), (180, 270))
+# Card_IMGlist["Hide"] = pg.transform.scale(pg.image.load(img_dir_path + "Hide.png"), (180, 270))
 
 def in_rect(pos, rect):
     return rect[0] <= pos[0] <= rect[0] + rect[2] and rect[1] <= pos[1] <= rect[1] + rect[3]
@@ -53,8 +61,10 @@ class Card:
         self.name = self.color + '_' + str(self.val)
         if 1 <= self.val <= 7:
             self.img = Card_IMGlist[self.name]
+            self.imgo = CI_ori[self.name]
         else:
             self.img = Card_IMGlist['Black']
+            self.imgo = CI_ori['Black']
         self.show = False
 
     def __repr__(self):
@@ -69,8 +79,8 @@ class Card:
                 return f"{i}{self.val}"
 
     @classmethod
-    def shrink(cls, surf):
-        return pg.transform.scale(surf, (90, 135))
+    def shrink(cls, surf, rate = 0.5):
+        return pg.transform.scale(surf, (rate * surf.get_width(), rate * surf.get_height()))
 
 class Player:
     def __init__(self):

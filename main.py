@@ -125,7 +125,6 @@ def main():
             t = draw_getmatch(ori_screen, t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
-
             if t == 200:
                 mode = 'init'
 
@@ -136,11 +135,6 @@ def main():
             choose = 0
             t, w = 0, -1
             p1, p2, Match = start(Round, (p1, p2, Match))
-            # 전체 카드를 스프레드시트에 업로드 (나중에 적용함)
-            # for i in range(len(p1.card_list)):
-            #     worksheet.update_acell(chr(69+i)+str(p1.key),p1.card_list[i].name)
-            # for i in range(len(p2.card_list)):
-            #     worksheet.update_acell(chr(69+i)+str(p2.key),p2.card_list[i].name)
             mode = 'phase1'
         
         if mode == 'phase1':
@@ -148,7 +142,7 @@ def main():
             if 1 in r2 or 2 in r2:
                 mode = 'showDD'
             else:
-                mode = 'play'
+                mode = 'play_pre'
 
         if mode == 'showDD':
             for event in pg.event.get():
@@ -161,11 +155,25 @@ def main():
                 p1.dd = dd
                 p2.dd = dd
             if t == 180:
-                mode = 'play'
+                t = -1 # draw_showDD를 지나가면서 t가 0이 되도록. 근데 이렇게 짜는거 진짜 별로다
+                mode = 'play_pre'
             
             t = draw_showDD(ori_screen, dd, t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
+            clock.tick(60)
+            pg.display.update()
+
+        if mode == 'play_pre':
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+            
+            t = n_draw_play_pre(screen, (p1, p2), t)
+            if t == 60:
+                t = 0
+                mode = 'play'
 
             clock.tick(60)
             pg.display.update()
@@ -181,8 +189,10 @@ def main():
                     for i in range(len(p1.card_list)):
                         if p1.card_list[i] in p1.showc:
                             continue
-                        x = 900 - c1*100 + i*200
-                        if in_rect(pos, (x - 90, 450, 180, 270)):
+                        x, y = 850 - c1*50 + 100*i, 700
+                        if i == len(p1.card_list)-1: card_wid = 300
+                        else: card_wid = 100
+                        if in_rect(pos, (x - 150, y - 225, card_wid, 600)):
                             card = p1.card_list[i]
                             if card in p1.active_list:
                                 p1.active_list.remove(card)
@@ -194,12 +204,7 @@ def main():
                         if len(p1.active_list) < 2:
                             tf1 = 30
                         else:
-                            tf = 0
-                            # 시트1에 flop 업데이트 (나중에 적용함)
-                            # worksheet.update_acell('C'+str(p1.key), p1.active_list[0].name)
-                            # worksheet.update_acell('D'+str(p1.key), p1.active_list[1].name)
-                            # worksheet.update_acell('C'+str(p2.key), p2.active_list[0].name)
-                            # worksheet.update_acell('D'+str(p2.key), p2.active_list[1].name)                            
+                            tf = 0         
                             if choose == 0:
                                 choose = 0.5
                                 mode = 'phase2'
@@ -212,7 +217,7 @@ def main():
                                 p2.showc = [common] + p2.showc + p2.active_list.copy()
                                 p2.active_list = []
 
-            p1, p2 = draw_play(screen, (Round, Match, choose, tf1), (p1, p2))
+            p1, p2, t = n_draw_play(screen, (Round, Match, choose, tf1), (p1, p2, t))
             if tf1: tf1 -= 1
 
             if choose == 0.5: choose = 1
