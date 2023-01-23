@@ -10,6 +10,7 @@ from spreadsheet import *
 
 pg.init()
 screen = pg.display.set_mode((WIDTH, HEIGHT))
+ori_screen = pg.Surface((1600, 900))
 pg.display.set_caption("도둑 포커")
 clock = pg.time.Clock()
 
@@ -56,7 +57,8 @@ def main():
                 if event.type == MOUSEBUTTONDOWN:
                     mode = mouse_main((mode, p1))
             
-            n_draw_main(screen)
+            n_draw_main(ori_screen)
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             clock.tick(60)
             pg.display.update()
@@ -71,7 +73,8 @@ def main():
                 if event.type == KEYDOWN:
                     p1, tf1, tf2 = key_choose_key(event, (p1, tf1, tf2))
             
-            tf1, tf2 = n_draw_choose_key(screen, p1, (tf1, tf2))
+            tf1, tf2 = n_draw_choose_key(ori_screen, p1, (tf1, tf2))
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             
             clock.tick(60)
             pg.display.update()
@@ -106,7 +109,8 @@ def main():
                         p2.Rule = Rule
                         mode = 'getMatch'
             
-            draw_chooserank(screen, (Rule, pos))
+            draw_chooserank(ori_screen, (Rule, pos))
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             Rule = [r1, r2]
 
             clock.tick(60)
@@ -118,7 +122,9 @@ def main():
                     pg.quit()
                     sys.exit()
             
-            t = draw_getmatch(screen, t)
+            t = draw_getmatch(ori_screen, t)
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+
 
             if t == 200:
                 mode = 'init'
@@ -157,7 +163,9 @@ def main():
             if t == 180:
                 mode = 'play'
             
-            t = draw_showDD(screen, dd, t)
+            t = draw_showDD(ori_screen, dd, t)
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+
 
             clock.tick(60)
             pg.display.update()

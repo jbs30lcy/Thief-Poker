@@ -4,10 +4,7 @@
 import pygame as pg
 import os
 
-WIDTH = 1600
-HEIGHT = 900
-W = WIDTH // 100
-H = HEIGHT // 100
+WIDTH, HEIGHT = 1600, 900
 
 White  = (255, 255, 255)
 Black  = (0, 0, 0)

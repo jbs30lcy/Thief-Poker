@@ -5,8 +5,8 @@ from moving import *
 import math
 pg.init()
 
-bg1 = pg.transform.scale(pg.image.load(img_dir_path + 'com_bg.png'), (WIDTH, HEIGHT))
-bg2 = pg.transform.scale(pg.image.load(img_dir_path + 'com_bg_2.png'), (WIDTH, HEIGHT))
+bg1 = pg.transform.scale(pg.image.load(img_dir_path + 'com_bg.png'), (1600, 900))
+bg2 = pg.transform.scale(pg.image.load(img_dir_path + 'com_bg_2.png'), (1600, 900))
 
 def Mblit(screen, surf, pos, poscon = 'MM'):
     x, y = pos

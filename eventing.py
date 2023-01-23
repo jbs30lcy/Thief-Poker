@@ -6,7 +6,9 @@ pg.init()
 def mouse_main(var):
     mode, player1 = var
 
-    pos = pg.mouse.get_pos()
+    pos = list(pg.mouse.get_pos())
+    pos[0] *= (1600/WIDTH)
+    pos[1] *= (900/HEIGHT)
     if in_rect(pos, (600, 600, 400, 100)):
         mode = 'choose_key'
         player1.key = 11
@@ -43,7 +45,9 @@ def key_choose_key(const, var):
 def mouse_choose_key(var):
     mode = var
 
-    pos = pg.mouse.get_pos()
+    pos = list(pg.mouse.get_pos())
+    pos[0] *= (1600/WIDTH)
+    pos[1] *= (900/HEIGHT)
     if in_rect(pos, (1350-45, 750-30, 90, 60)):
         mode = 'chooseRank'
 
