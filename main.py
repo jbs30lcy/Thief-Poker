@@ -69,7 +69,7 @@ def main():
                     pg.quit()
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
-                    mode = mouse_choose_key((mode,))
+                    mode = mouse_choose_key(mode)
                 if event.type == KEYDOWN:
                     p1, tf1, tf2 = key_choose_key(event, (p1, tf1, tf2))
             
