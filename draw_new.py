@@ -94,12 +94,12 @@ def n_draw_play_pre(screen, const, var):
             x, y = easing((x0, 700), (x0 + i*100, 700), m_quadinout, tick-30, 15)
         if 45 < tick <= 60:
             x, y = x0 + i*100, 700
-        Mblit(screen, Card.shrink(card.imgo, 1/2), (x, y))
+        Mblit(screen, card.img_half, (x, y))
 
     return tick+1
 
 def n_draw_play(screen, const, var):
-    Round, Match, choose, tf1 = const
+    Round, Match, choose, tickf1 = const
     player1, player2, tick = var
 
     c1 = len(player1.card_list)
@@ -113,12 +113,14 @@ def n_draw_play(screen, const, var):
     Match_text = NS[24].render(f'Match {Match}', True, White)
     Round_text = NS[24].render(f'Round {Round}', True, White)
     team_text = NSE[48].render(str(player2.key%10), True, Black)
+    warn_text = NSE[72].render('Choose more card.', True, Black).convert_alpha()
+    warn_text.set_alpha(tickf1*255/30)
 
     screen.blit(bg2, (0, 0))
     for i in range(c1):
         card = player1.card_list[i]
         x, y = 850 - c1*50 + 100*i, 700
-        Mblit(screen, Card.shrink(card.imgo, 1/2), (x, y))
+        Mblit(screen, card.img_half, (x, y))
         if card in player1.active_list:
             pg.draw.rect(screen, Red, (x-150, y-225, 300, 450), 4, border_radius = 30)
     for i in range(c2):
@@ -133,5 +135,8 @@ def n_draw_play(screen, const, var):
     pg.draw.rect(screen, Grey1, (150, 280, 210, 40))
     pg.draw.circle(screen, White, (150, 300), 50)
     Mblit(screen, team_text, (150, 300))
+    Mblit(Alpha_screen, warn_text, (800, 450))
+
+    screen.blit(Alpha_screen, (0, 0))
 
     return player1, player2, tick+1

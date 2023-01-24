@@ -68,6 +68,9 @@ class Card:
             self.imgo = CI_ori['Black']
         self.show = False
 
+        self.img_half = Card.shrink(self.imgo, 1/2)
+        self.img_onesixth = Card.shrink(self.imgo, 1/6)
+
     def __repr__(self):
         if color == 'Black':
             return '==Card Black=='

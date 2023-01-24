@@ -184,38 +184,7 @@ def main():
                     pg.quit()
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
-                    pos = pg.mouse.get_pos()
-                    c1 = len(p1.card_list)
-                    for i in range(len(p1.card_list)):
-                        if p1.card_list[i] in p1.showc:
-                            continue
-                        x, y = 850 - c1*50 + 100*i, 700
-                        if i == len(p1.card_list)-1: card_wid = 300
-                        else: card_wid = 100
-                        if in_rect(pos, (x - 150, y - 225, card_wid, 600)):
-                            card = p1.card_list[i]
-                            if card in p1.active_list:
-                                p1.active_list.remove(card)
-                            else:
-                                p1.active_list.append(card)
-                                if len(p1.active_list) > 2:
-                                    del p1.active_list[0]
-                    if in_rect(pos, (1300 - 90, 750, 90, 60)):
-                        if len(p1.active_list) < 2:
-                            tf1 = 30
-                        else:
-                            tf = 0         
-                            if choose == 0:
-                                choose = 0.5
-                                mode = 'phase2'
-                                p1.showc = p1.active_list.copy() # p2는 지금 받으면 안됨
-                            if choose == 1:
-                                t = 0
-                                mode = 'result'
-                                p1.showc = [common] + p1.showc + p1.active_list.copy()
-                                p1.active_list = [] # 왜 이걸 여기서 초기화 시키지?
-                                p2.showc = [common] + p2.showc + p2.active_list.copy()
-                                p2.active_list = []
+                    p1, p2, mode, choose, t, tf1 = mouse_play((p1, p2, mode, choose, t, tf1))
 
             p1, p2, t = n_draw_play(screen, (Round, Match, choose, tf1), (p1, p2, t))
             if tf1: tf1 -= 1
