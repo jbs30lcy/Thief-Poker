@@ -87,9 +87,9 @@ def mouse_play(var):
             if choose == 1:
                 tick = 0
                 mode = 'result'
-                player1.showc = [p1.common] + player1.showc + player1.active_list.copy()
+                player1.showc = [player1.common] + player1.showc + player1.active_list.copy()
                 player1.active_list = [] # 왜 이걸 여기서 초기화 시키지?
-                player2.showc = [p1.common] + player2.showc + player2.active_list.copy()
+                player2.showc = [player2.common] + player2.showc + player2.active_list.copy()
                 player2.active_list = []
 
     return player1, player2, mode, choose, tick, tickf1
