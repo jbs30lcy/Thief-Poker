@@ -69,7 +69,7 @@ class Card:
         self.show = False
 
         self.img_half = Card.shrink(self.imgo, 1/2)
-        self.img_onesixth = Card.shrink(self.imgo, 1/6)
+        self.img_ci = Card.shrink(self.imgo, 3/10) # img랑 같음.
 
     def __repr__(self):
         if color == 'Black':
@@ -199,7 +199,7 @@ class Player:
         Is_black = False
         for i in range(5):
             card = self.showc[i]
-            if card.color == 'black':
+            if card.color == 'Black':
                 Is_black = True
                 break
         if not Is_black:
@@ -229,6 +229,47 @@ class Player:
             if tuple(color_arr) == ('Blue', 'Green', 'Red', 'Yellow'):
                 return True
         return False
+
+    # rank2p : 두 장 족보
+    def rank2p(self, arr):
+        n1 = arr[0].val
+        n2 = arr[1].val
+        c1 = arr[0].color
+        c2 = arr[1].color
+
+        if c1 == 'Black':
+            return f'{n2} Black Pair'
+        if c2 == 'Black':
+            return f'{n1} Black Pair'
+        if n1 == n2:
+            return f'{n1} Pair'
+        return f'No rank ({n1+n2})'
+
+    # rank3p : 세 장 족보
+    def rank3p(self, arr):
+        n1 = arr[0].val
+        n2 = arr[1].val
+        n3 = arr[2].val
+        c1 = arr[0].color
+        c2 = arr[1].color
+        c3 = arr[2].color
+
+        if c1 == 'Black':
+            if n2 == n3: return f'{n2} Black Three of a kind'
+            else: return f'{max(n2, n3)} Pair'
+        if c2 == 'Black':
+            if n1 == n3: return f'{n3} Black Three of a kind'
+            else: return f'{max(n1, n3)} Pair'
+        if c3 == 'Black':
+            if n1 == n2: return f'{n1} Black Three of a kind'
+            else: return f'{max(n1, n2)} Pair'
+        if n1 == n2 == n3:
+            return f'{n1} Three of a kind'
+        if n1 == n2 or n1 == n3:
+            return f'{n1} Pair'
+        if n2 == n3:
+            return f'{n2} Pair'
+        return f'No rank ({n1+n2+n3})'
 
 
 if __name__ == '__main__':

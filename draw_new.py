@@ -77,10 +77,9 @@ def n_draw_choose_key(screen, const, var):
 def n_draw_play_pre(screen, const, var):
     player1, player2 = const
     tick = var
-
-    c1 = len(player1.card_list)
-
+    
     screen.blit(bg2, (0, 0))
+    c1 = len(player1.card_list)
     for i in range(c1):
         card = player1.card_list[i]
         x0 = 850 - c1*50
@@ -94,6 +93,7 @@ def n_draw_play_pre(screen, const, var):
             x, y = easing((x0, 700), (x0 + i*100, 700), m_quadinout, tick-30, 15)
         if 45 < tick <= 60:
             x, y = x0 + i*100, 700
+    
         Mblit(screen, card.img_half, (x, y))
 
     return tick+1
@@ -132,7 +132,7 @@ def n_draw_play(screen, const, var):
     Mblit(screen, Round_text, (20, 55), 'TL')
     Mblit(screen, Next_button, (1580, 20), 'TR')
 
-    pg.draw.rect(screen, Grey1, (150, 280, 210, 40))
+    pg.draw.rect(screen, White, (150, 280, 210, 40)) # Grey1
     pg.draw.circle(screen, White, (150, 300), 50)
     Mblit(screen, team_text, (150, 300))
     Mblit(Alpha_screen, warn_text, (800, 450))
@@ -140,3 +140,31 @@ def n_draw_play(screen, const, var):
     screen.blit(Alpha_screen, (0, 0))
 
     return player1, player2, tick+1
+
+def n_draw_flop(screen, const, var):
+    Round, Match, player1, player2 = const
+    tick = var
+
+    Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
+    x1, x2 = 400, 600
+    if 0 <= tick < 40:
+        _, p2card_y = easing((0, -135), (0, 420-135), m_quadout, tick, 40)
+    if tick >= 40:
+        _, p2card_y = 0, 420 - 135
+    p1card_y = 900 - p2card_y
+    if tick <= 80:
+        myrank = NS[30].render(player1.rank2p(player1.showc[-2:]), True, White)
+        yourrank = NS[30].render(player2.rank2p(player2.showc[-2:]), True, White)
+    else:
+        myrank = NS[30].render(player1.rank3p(player1.showc), True, White)
+        yourrank = NS[30].render(player2.rank3p(player2.showc), True, White)
+
+    screen.blit(bg1, (0, 0))
+    Mblit(screen, player1.active_list[0].img_ci, (x1, p1card_y))
+    Mblit(screen, player1.active_list[1].img_ci, (x2, p1card_y))
+    Mblit(screen, player2.active_list[0].img_ci, (x1, p2card_y))
+    Mblit(screen, player2.active_list[1].img_ci, (x2, p2card_y))
+    Mblit(screen, myrank, (800, 600), 'ML')
+    Mblit(screen, yourrank, (800, 300), 'ML')
+
+    return tick+1

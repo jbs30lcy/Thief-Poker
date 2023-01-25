@@ -218,7 +218,7 @@ def main():
                         p1, p2 = phase2((p1, p2))
                         mode = 'play'
             
-            t = draw_flop(screen, (Round, Match, p1, p2), t)
+            t = n_draw_flop(screen, (Round, Match, p1, p2), t)
             if t == 60:
                 common = get_random_card()
                 if 1 in Rule[1]:
@@ -226,6 +226,8 @@ def main():
                         common = get_random_card() # 커뮤니티 카드와 땡잡이 중복 방지
                 p1.common = common
                 p2.common = common
+                p1.showc = [common] + p1.showc
+                p2.showc = [common] + p2.showc
 
             clock.tick(60)
             pg.display.update()
