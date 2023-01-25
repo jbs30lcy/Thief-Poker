@@ -91,17 +91,17 @@ def main():
                         r1 = 'Straight'
                     if in_rect(pos, (850, 200, 200, 120)):
                         r1 = 'Flush'
-                    if in_rect(pos, (250, 600, 200, 120)):
-                        r2 = []
-                    if in_rect(pos, (550, 600, 200, 120)):
-                        if 1 in r2: r2.remove(1)
-                        else: r2.append(1)
-                    if in_rect(pos, (850, 600, 200, 120)):
-                        if 2 in r2: r2.remove(2)
-                        else: r2.append(2)
-                    if in_rect(pos, (1150, 600, 200, 120)):
-                        if 4 in r2: r2.remove(4)
-                        else: r2.append(4)
+                    # if in_rect(pos, (250, 600, 200, 120)):
+                    #     r2 = []
+                    # if in_rect(pos, (550, 600, 200, 120)):
+                    #     if 1 in r2: r2.remove(1)
+                    #     else: r2.append(1)
+                    # if in_rect(pos, (850, 600, 200, 120)):
+                    #     if 2 in r2: r2.remove(2)
+                    #     else: r2.append(2)
+                    # if in_rect(pos, (1150, 600, 200, 120)):
+                    #     if 4 in r2: r2.remove(4)
+                    #     else: r2.append(4)
                     if in_rect(pos, (1300 - 45, 450 - 30, 90, 60)):
                         r2.sort()
                         Rule = [r1, r2]

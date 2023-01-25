@@ -123,6 +123,8 @@ def n_draw_play(screen, const, var):
         Mblit(screen, card.img_half, (x, y))
         if card in player1.active_list:
             pg.draw.rect(screen, Red, (x-150, y-225, 300, 450), 4, border_radius = 30)
+        if choose == 1 and card in player1.showc:
+            pg.draw.rect(screen, Grey3, (x-150, y-225, 300, 450), 10, border_radius = 30)
     for i in range(c2):
         card = player2.card_list[i]
         x, y = 816.6 - c1*16.7 + 33.3*i, 300

@@ -91,31 +91,31 @@ def draw_chooserank(screen, const):
     Mblit(screen, Straight, (550, 200), 'TL')
     Mblit(screen, Flush,    (850, 200), 'TL')
 
-    text = NS[60].render('Choose DDangjabi', True, Black)
-    Mblit(screen, text,   (800, 500))
-    Mblit(screen, NoDD,   (250, 600), 'TL')
-    Mblit(screen, oneDD,  (550, 600), 'TL')
-    Mblit(screen, twoDD,  (850, 600), 'TL')
-    Mblit(screen, fourDD, (1150, 600), 'TL')
+    # text = NS[60].render('Choose DDangjabi', True, Black)
+    # Mblit(screen, text,   (800, 500))
+    # Mblit(screen, NoDD,   (250, 600), 'TL')
+    # Mblit(screen, oneDD,  (550, 600), 'TL')
+    # Mblit(screen, twoDD,  (850, 600), 'TL')
+    # Mblit(screen, fourDD, (1150, 600), 'TL')
 
-    if in_rect(pos, (550, 600, 200, 120)):
-        desc = f"If the rank is 'No Rank' and it contains certain card(randomly selected), it will beat {r1}."
-    elif in_rect(pos, (850, 600, 200, 120)):
-        desc = f"If the rank is 'One Pair' and their colors are same as certain colors(randomly selected), it will beat {r1}."
-    elif in_rect(pos, (1150, 600, 200, 120)):
-        desc = f"If the rank is lower than 'One Pair' and contains all four colors, it will beat {r1}."
-    else:
-        desc = ''
-    desc_surf = NS[28].render(desc, True, Black)
-    Mblit(screen, desc_surf, (800, 850))
+    # if in_rect(pos, (550, 600, 200, 120)):
+    #     desc = f"If the rank is 'No Rank' and it contains certain card(randomly selected), it will beat {r1}."
+    # elif in_rect(pos, (850, 600, 200, 120)):
+    #     desc = f"If the rank is 'One Pair' and their colors are same as certain colors(randomly selected), it will beat {r1}."
+    # elif in_rect(pos, (1150, 600, 200, 120)):
+    #     desc = f"If the rank is lower than 'One Pair' and contains all four colors, it will beat {r1}."
+    # else:
+    #     desc = ''
+    # desc_surf = NS[28].render(desc, True, Black)
+    # Mblit(screen, desc_surf, (800, 850))
 
     if r1 == 'Straight': pg.draw.rect(screen, Red, (550, 200, 200, 120), 3)
     if r1 == 'Flush':    pg.draw.rect(screen, Red, (850, 200, 200, 120), 3)
     
-    if not r2:  pg.draw.rect(screen, Red, (250, 600, 200, 120), 3)
-    if 1 in r2: pg.draw.rect(screen, Red, (550, 600, 200, 120), 3)
-    if 2 in r2: pg.draw.rect(screen, Red, (850, 600, 200, 120), 3)
-    if 4 in r2: pg.draw.rect(screen, Red, (1150, 600, 200, 120), 3)
+    # if not r2:  pg.draw.rect(screen, Red, (250, 600, 200, 120), 3)
+    # if 1 in r2: pg.draw.rect(screen, Red, (550, 600, 200, 120), 3)
+    # if 2 in r2: pg.draw.rect(screen, Red, (850, 600, 200, 120), 3)
+    # if 4 in r2: pg.draw.rect(screen, Red, (1150, 600, 200, 120), 3)
 
     Mblit(screen, Next_Button, (1300, 450))
 
