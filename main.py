@@ -211,7 +211,8 @@ def main():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
-                if t >= 60 and event.type == MOUSEBUTTONDOWN:
+                if t >= 80 and event.type == MOUSEBUTTONDOWN:
+                    mode, p1, p2, t = mouse_flop((mode, p1, p2, t))
                     pos = pg.mouse.get_pos()
                     if in_rect(pos, (1300 - 90, 750, 90, 60)):
                         t = 0

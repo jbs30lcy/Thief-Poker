@@ -1,6 +1,7 @@
 import pygame as pg
 from pygame.locals import *
 from obj import *
+from setting import *
 pg.init()
 
 def mouse_main(var):
@@ -93,3 +94,17 @@ def mouse_play(var):
                 player2.active_list = []
 
     return player1, player2, mode, choose, tick, tickf1
+
+def mouse_flop(var):
+    mode, player1, player2, tick = var
+
+    pos = list(pg.mouse.get_pos())
+    pos[0] *= (1600/WIDTH)
+    pos[1] *= (900/HEIGHT)
+
+    if in_rect(pos, (1580 - 90, 20, 90, 60)):
+        tick = 0
+        player1, player2 = phase2((player1, player2))
+        mode = 'play'
+
+    return mode, player1, player2, tick

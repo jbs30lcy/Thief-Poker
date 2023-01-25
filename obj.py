@@ -256,13 +256,13 @@ class Player:
 
         if c1 == 'Black':
             if n2 == n3: return f'{n2} Black Three of a kind'
-            else: return f'{max(n2, n3)} Pair'
+            else: return f'{max(n2, n3)} Black Pair'
         if c2 == 'Black':
             if n1 == n3: return f'{n3} Black Three of a kind'
-            else: return f'{max(n1, n3)} Pair'
+            else: return f'{max(n1, n3)} Black Pair'
         if c3 == 'Black':
             if n1 == n2: return f'{n1} Black Three of a kind'
-            else: return f'{max(n1, n2)} Pair'
+            else: return f'{max(n1, n2)} Black Pair'
         if n1 == n2 == n3:
             return f'{n1} Three of a kind'
         if n1 == n2 or n1 == n3:

@@ -152,6 +152,17 @@ def n_draw_flop(screen, const, var):
     if tick >= 40:
         _, p2card_y = 0, 420 - 135
     p1card_y = 900 - p2card_y
+
+    if 60 <= tick <= 80:
+        common_surf = pg.Surface((180, 270)).convert_alpha()
+        common_surf.blit(player1.common.img_ci, (0, 0))
+        common_surf.set_alpha((tick-60)*255/20)
+        common_x, common_y = easing((1400, 450), (1200, 450), m_sineout, tick-60, 20)
+    if tick > 80:
+        common_surf = pg.Surface((180, 270), pg.SRCALPHA).convert_alpha()
+        common_surf.blit(player1.common.img_ci, (0, 0))
+        common_x, common_y = 1200, 450
+
     if tick <= 80:
         myrank = NS[30].render(player1.rank2p(player1.showc[-2:]), True, White)
         yourrank = NS[30].render(player2.rank2p(player2.showc[-2:]), True, White)
@@ -160,11 +171,13 @@ def n_draw_flop(screen, const, var):
         yourrank = NS[30].render(player2.rank3p(player2.showc), True, White)
 
     screen.blit(bg1, (0, 0))
-    Mblit(screen, player1.active_list[0].img_ci, (x1, p1card_y))
-    Mblit(screen, player1.active_list[1].img_ci, (x2, p1card_y))
-    Mblit(screen, player2.active_list[0].img_ci, (x1, p2card_y))
-    Mblit(screen, player2.active_list[1].img_ci, (x2, p2card_y))
+    Mblit(screen, player1.showc[-2].img_ci, (x1, p1card_y))
+    Mblit(screen, player1.showc[-1].img_ci, (x2, p1card_y))
+    Mblit(screen, player2.showc[-2].img_ci, (x1, p2card_y))
+    Mblit(screen, player2.showc[-1].img_ci, (x2, p2card_y))
     Mblit(screen, myrank, (800, 600), 'ML')
     Mblit(screen, yourrank, (800, 300), 'ML')
+    if tick >= 60: Mblit(screen, common_surf, (common_x, common_y))
+    if tick > 80: Mblit(screen, Next_button, (1580, 20), 'TR')
 
     return tick+1
