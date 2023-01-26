@@ -79,42 +79,42 @@ def main():
             clock.tick(60)
             pg.display.update()
 
-        if mode == 'chooseRank': # choose one 해서 스트레이트 플러쉬 고민하기
-            pos = pg.mouse.get_pos()
-            r1, r2 = Rule
-            for event in pg.event.get():
-                if event.type == QUIT:
-                    pg.quit()
-                    sys.exit()
-                if event.type == MOUSEBUTTONDOWN:
-                    if in_rect(pos, (550, 200, 200, 120)):
-                        r1 = 'Straight'
-                    if in_rect(pos, (850, 200, 200, 120)):
-                        r1 = 'Flush'
-                    # if in_rect(pos, (250, 600, 200, 120)):
-                    #     r2 = []
-                    # if in_rect(pos, (550, 600, 200, 120)):
-                    #     if 1 in r2: r2.remove(1)
-                    #     else: r2.append(1)
-                    # if in_rect(pos, (850, 600, 200, 120)):
-                    #     if 2 in r2: r2.remove(2)
-                    #     else: r2.append(2)
-                    # if in_rect(pos, (1150, 600, 200, 120)):
-                    #     if 4 in r2: r2.remove(4)
-                    #     else: r2.append(4)
-                    if in_rect(pos, (1300 - 45, 450 - 30, 90, 60)):
-                        r2.sort()
-                        Rule = [r1, r2]
-                        p1.Rule = Rule
-                        p2.Rule = Rule
-                        mode = 'getMatch'
+        # if mode == 'chooseRank': # choose one 해서 스트레이트 플러쉬 고민하기
+        #     pos = pg.mouse.get_pos()
+        #     r1, r2 = Rule
+        #     for event in pg.event.get():
+        #         if event.type == QUIT:
+        #             pg.quit()
+        #             sys.exit()
+        #         if event.type == MOUSEBUTTONDOWN:
+        #             if in_rect(pos, (550, 200, 200, 120)):
+        #                 r1 = 'Straight'
+        #             if in_rect(pos, (850, 200, 200, 120)):
+        #                 r1 = 'Flush'
+        #             # if in_rect(pos, (250, 600, 200, 120)):
+        #             #     r2 = []
+        #             # if in_rect(pos, (550, 600, 200, 120)):
+        #             #     if 1 in r2: r2.remove(1)
+        #             #     else: r2.append(1)
+        #             # if in_rect(pos, (850, 600, 200, 120)):
+        #             #     if 2 in r2: r2.remove(2)
+        #             #     else: r2.append(2)
+        #             # if in_rect(pos, (1150, 600, 200, 120)):
+        #             #     if 4 in r2: r2.remove(4)
+        #             #     else: r2.append(4)
+        #             if in_rect(pos, (1300 - 45, 450 - 30, 90, 60)):
+        #                 r2.sort()
+        #                 Rule = [r1, r2]
+        #                 p1.Rule = Rule
+        #                 p2.Rule = Rule
+        #                 mode = 'getMatch'
             
-            draw_chooserank(ori_screen, (Rule, pos))
-            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
-            Rule = [r1, r2]
+        #     draw_chooserank(ori_screen, (Rule, pos))
+        #     screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+        #     Rule = [r1, r2]
 
-            clock.tick(60)
-            pg.display.update()
+        #     clock.tick(60)
+        #     pg.display.update()
 
         if mode == 'getMatch':  # Finding player - 하는 화면
             for event in pg.event.get():
@@ -139,7 +139,7 @@ def main():
         
         if mode == 'phase1': #뒤지는 놈 2
             p2 = phase1(p2)
-            if 1 in r2 or 2 in r2:
+            if 1 in p1.Rule[1] or 2 in p1.Rule[1]:
                 mode = 'showDD'
             else:
                 mode = 'play_pre'
@@ -213,11 +213,6 @@ def main():
                     sys.exit()
                 if t >= 80 and event.type == MOUSEBUTTONDOWN:
                     mode, p1, p2, t = mouse_flop((mode, p1, p2, t))
-                    pos = pg.mouse.get_pos()
-                    if in_rect(pos, (1300 - 90, 750, 90, 60)):
-                        t = 0
-                        p1, p2 = phase2((p1, p2))
-                        mode = 'play'
             
             t = n_draw_flop(screen, (Round, Match, p1, p2), t)
             if t == 60:
@@ -240,15 +235,10 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
                     mode, Round, t, choose, p1, p2 = mouse_result((mode, Round, t, choose, p1, p2))
-                    print(mode)
                 
             if t == 0:
-                for card in p1.showc:
-                    if not card == common and not card in p1.shown:
-                        p1.shown.append(card)
-                for card in p2.showc:
-                    if not card == common and not card in p2.shown:
-                        p2.shown.append(card)
+                p1.set_shown()
+                p2.set_shown()
                 w = win(p1, p2)
                 if w == 0:
                     p1.coin += 5
@@ -268,58 +258,15 @@ def main():
                 clock.tick(60)
                 pg.display.update()
             
-        if mode == 'exchangeA': # 2패시 카드 고르는 단계
+        if mode == 'exchange_lose': # 2패시 카드 고르는 단계
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
-                    pos = pg.mouse.get_pos()
-                    c1 = len(p1.card_list)
-                    s2 = len(p2.shown)
-                    if choose == 0:
-                        for i in range(c1):
-                            x = 900 - c1*100 + i*200
-                            if in_rect(pos, (x - 90, 450, 180, 270)):
-                                card = p1.card_list[i]
-                                if card in p1.active_list:
-                                    p1.active_list.remove(card)
-                                else:
-                                    p1.active_list.append(card)
-                                    if len(p1.active_list) > 1:
-                                        del p1.active_list[0]
-                        if in_rect(pos, (1300 - 90, 750, 90, 60)):
-                            if len(p1.active_list) < 1:
-                                tf1 = 30
-                            else:
-                                tf1 = 0
-                                choose = 0.5
-                    
-                    if choose == 1:
-                        for i in range(s2):
-                            x = 900 - s2*100 + i*200
-                            if in_rect(pos, (x - 90, 400 - 270, 180, 270)):
-                                card = p2.shown[i]
-                                if card in p2.active_list:
-                                    p2.active_list.remove(card)
-                                else:
-                                    p2.active_list.append(card)
-                                    if len(p2.active_list) > 1:
-                                        del p2.active_list[0]
+                    mode, choose, tf1, p1, p2 = mouse_exchange_lose((mode, choose, tf1, p1, p2))
 
-                        if in_rect(pos, (1300 - 90, 750, 90, 60)):
-                            if len(p2.active_list) < 1:
-                                tf1 = 30
-                            else:
-                                tf1 = 0
-                                choose = 0
-                                mode = 'exchangeR'
-                                i1 = p1.card_list.index(p1.active_list[0])
-                                i2 = p2.card_list.index(p2.active_list[0])
-                                p1.card_list[i1] = p2.active_list[0]
-                                p2.card_list[i2] = p1.active_list[0]
-
-            p1, p2 = draw_exchange(screen, (Match, choose, tf1), (p1, p2))
+            p1, p2 = n_draw_exchange_lose(screen, (Match, choose, tf1), (p1, p2))
             if tf1: tf1 -= 1
             
             if choose == 0.5: choose = 1
@@ -385,7 +332,6 @@ def main():
                 choose = 0
                 t = 0
                 mode = 'exchangeR'
-
             clock.tick(60)
             pg.display.update()
 
@@ -394,13 +340,13 @@ def main():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
-                if event.type == MOUSEBUTTONDOWN:
+                if t >= 180 and event.type == MOUSEBUTTONDOWN:
                     pos = pg.mouse.get_pos()
                     if choose == 1 and in_rect(pos, (1300 - 90, 750, 90, 60)):
                         t = 0
                         mode = 'getMatch'
 
-            t = draw_exchange_result(screen, (Match, p1, choose), t) # 유령 변수
+            t = draw_exchange_result(screen, (Match, p1, choose), t)
             if t == 120:
                 x = 0
                 for card in p1.card_list:

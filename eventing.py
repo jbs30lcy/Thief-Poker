@@ -50,7 +50,7 @@ def mouse_choose_key(var):
     pos[0] *= (1600/WIDTH)
     pos[1] *= (900/HEIGHT)
     if in_rect(pos, (1350-45, 750-30, 90, 60)):
-        mode = 'chooseRank'
+        mode = 'getMatch'
 
     return mode
 
@@ -103,7 +103,7 @@ def mouse_flop(var):
     pos[1] *= (900/HEIGHT)
 
     if in_rect(pos, (1580 - 90, 20, 90, 60)):
-        tick = 0
+        tick = -1
         player1, player2 = phase2((player1, player2))
         mode = 'play'
 
@@ -122,13 +122,66 @@ def mouse_result(var):
         if Round == 3:
             Round = 1
             choose = 0
-            tick = 0
+            tick = -1
             player1.active_list = []
             player2.active_list = []
             player1.showc = []
             player2.showc = []
             if sum(player1.pre[-1]) > 0: mode = 'exchangeD'
             if sum(player1.pre[-1]) == 0: mode = 'exchangeB'
-            if sum(player1.pre[-1]) < 0: mode = 'exchangeA'
+            if sum(player1.pre[-1]) < 0: mode = 'exchange_lose'
 
-    return mode, Round, choose, tick, player1, player2
+    return mode, Round, tick, choose, player1, player2
+
+def mouse_exchange_lose(var):
+    mode, choose, tickf1, player1, player2 = var
+
+    pos = list(pg.mouse.get_pos())
+    pos[0] *= (1600/WIDTH)
+    pos[1] *= (900/HEIGHT)
+
+    c1 = len(player1.card_list)
+    s2 = len(player2.shown)
+    if choose == 0:
+        for i in range(c1):
+            x = 900 - c1*100 + i*200
+            if in_rect(pos, (x - 90, 480, 180, 270)):
+                card = player1.card_list[i]
+                if card in player1.active_list:
+                    player1.active_list.remove(card)
+                else:
+                    player1.active_list.append(card)
+                    if len(player1.active_list) > 1:
+                        del player1.active_list[0]
+        if in_rect(pos, (1580 - 90, 20, 90, 60)):
+            if len(player1.active_list) < 1:
+                tickf1 = 30
+            else:
+                tickf1 = 0
+                choose = 0.5
+    
+    if choose == 1:
+        for i in range(s2):
+            x = 900 - s2*100 + i*200
+            if in_rect(pos, (x - 90, 150, 180, 270)):
+                card = player2.shown[i]
+                if card in player2.active_list:
+                    player2.active_list.remove(card)
+                else:
+                    player2.active_list.append(card)
+                    if len(player2.active_list) > 1:
+                        del player2.active_list[0]
+
+        if in_rect(pos, (1580 - 90, 20, 90, 60)):
+            if len(player2.active_list) < 1:
+                tickf1 = 30
+            else:
+                tickf1 = 0
+                choose = 0
+                mode = 'exchangeR'
+                i1 = player1.card_list.index(player1.active_list[0])
+                i2 = player2.card_list.index(player2.active_list[0])
+                player1.card_list[i1] = player2.active_list[0]
+                player2.card_list[i2] = player1.active_list[0]
+
+    return mode, choose, tickf1, player1, player2

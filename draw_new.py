@@ -38,7 +38,7 @@ def str2Kr(s):
     if 'Three of a kind' in s:
         return f'{s[0]} 트리플'
     if 'Two pair' in s:
-        return f'{s[0]} 투 페어'
+        return f'{s[:3]} 투 페어'
     if 'Pair' in s:
         return f'{s[0]} 원 페어'
     return f'족보 없음 {s[8:]}'
@@ -133,6 +133,7 @@ def n_draw_play(screen, const, var):
     team_text = NSE[48].render(str(player2.key%10), True, Black)
     warn_text = NSE[72].render('Choose more card.', True, Black).convert_alpha()
     warn_text.set_alpha(tickf1*255/30)
+    common_card = player1.common
 
     screen.blit(bg2, (0, 0))
     for i in range(c1):
@@ -147,6 +148,10 @@ def n_draw_play(screen, const, var):
         card = player2.card_list[i]
         x, y = 816.6 - c1*16.7 + 33.3*i, 300
         Mblit(screen, Card.shrink(CI_ori['Hide'], 1/6), (x, y))
+    if choose == 1:
+        Mblit(screen, common_card.img_ci, (1300, 300))
+        pg.draw.rect(screen, Yellow, (1195, 150, 210, 300), 3, border_radius = 15)
+    
     Mblit(screen, title, (800, 80))
     Mblit(screen, Match_text, (20, 20), 'TL')
     Mblit(screen, Round_text, (20, 55), 'TL')
@@ -169,7 +174,7 @@ def n_draw_flop(screen, const, var):
     x1, x2 = 400, 600
     if 0 <= tick < 40:
         _, p2card_y = easing((0, -135), (0, 285), m_quadout, tick, 40)
-    if tick >= 40:
+    else:
         _, p2card_y = 0, 285
     p1card_y = 900 - p2card_y
 
@@ -178,12 +183,12 @@ def n_draw_flop(screen, const, var):
         common_surf.blit(player1.common.img_ci, (0, 0))
         common_surf.set_alpha((tick-60)*255/20)
         common_x, common_y = easing((1400, 450), (1200, 450), m_sineout, tick-60, 20)
-    if tick > 80:
+    if tick > 80 or tick == -1:
         common_surf = pg.Surface((180, 270), pg.SRCALPHA).convert_alpha()
         common_surf.blit(player1.common.img_ci, (0, 0))
         common_x, common_y = 1200, 450
 
-    if tick <= 80:
+    if 0 <= tick <= 80: # mode가 바뀔 때 tick = -1임.
         myrank = NS[30].render(str2Kr(player1.rank2p(player1.showc[-2:])), True, White)
         yourrank = NS[30].render(str2Kr(player2.rank2p(player2.showc[-2:])), True, White)
     else:
@@ -197,8 +202,8 @@ def n_draw_flop(screen, const, var):
     Mblit(screen, player2.showc[-1].img_ci, (x2, p2card_y))
     Mblit(screen, myrank, (800, 600), 'ML')
     Mblit(screen, yourrank, (800, 300), 'ML')
-    if tick >= 60: Mblit(screen, common_surf, (common_x, common_y))
-    if tick > 80: Mblit(screen, Next_button, (1580, 20), 'TR')
+    if tick >= 60 or tick == -1: Mblit(screen, common_surf, (common_x, common_y))
+    if tick > 80 or tick == -1: Mblit(screen, Next_button, (1580, 20), 'TR')
 
     return tick+1
 
@@ -208,15 +213,15 @@ def n_draw_result(screen, const, var):
 
     if 0 <= tick < 40:
         _, p2card_y = easing((0, -135), (0, 285), m_quadout, tick, 40)
-    if tick >= 40:
+    if tick >= 40 or tick == -1:
         _, p2card_y = 0, 285
     p1card_y = 900 - p2card_y
     common = player1.common
 
-    if tick >= 40:
+    if tick >= 40 or tick == -1:
         p1rank_text = NS[32].render(str2Kr(player1.rank()), True, White)
         p2rank_text = NS[32].render(str2Kr(player2.rank()), True, White)
-    if tick >= 70:
+    if tick >= 70 or tick == -1:
         if w == 0: win_text = NSE[96].render('DRAW', True, Black)
         if w == 1: win_text = NSE[96].render('YOU WIN!', True, Black)
         if w == 2: win_text = NSE[96].render('YOU LOSE', True, Black)
@@ -231,11 +236,53 @@ def n_draw_result(screen, const, var):
     Mblit(screen, player2.showc[3].img_ci, (800, p2card_y))
     Mblit(screen, player2.showc[4].img_ci, (1000, p2card_y))
     Mblit(screen, common.img_ci, (1200, 450))
-    if tick >= 40:
+    if tick >= 40 or tick == -1:
         Mblit(screen, p1rank_text, (800, 820))
         Mblit(screen, p2rank_text, (800, 70))
-    if tick >= 70:
+    if tick >= 70 or tick == -1:
         Mblit(screen, win_text, (800, 450))
         Mblit(screen, Next_button, (1580, 20), 'TR')
 
     return player1, player2, tick+1
+
+def n_draw_exchange_lose(screen, const, var):
+    Match, choose, tickf1 = const
+    player1, player2 = var
+
+    c1 = len(player1.card_list)
+    s2 = len(player2.shown)
+    Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
+    if choose == 0 or choose == 0.5:
+        title = NS[72].render("상대에게 줄 카드를 선택하세요", True, White)
+    if choose == 1:
+        title = NS[72].render("상대에게 뺏어올 카드를 선택하세요", True, White)
+    Match_text = NS[24].render(f'Match {Match}', True, White)
+    warn_text = NSE[72].render('Choose more card.', True, Black).convert_alpha()
+    warn_text.set_alpha(tickf1*255/30)
+    # print(tickf1*255/30)
+
+    screen.blit(bg1, (0, 0))
+    for i in range(c1):
+        card = player1.card_list[i]
+        x = 900 - 100*c1 + 200*i
+        Mblit(screen, card.img_ci, (x, 615))
+        if card in player1.active_list:
+            pg.draw.rect(screen, Red, (x - 90, 480, 180, 270), 3, border_radius = 15)
+        if choose == 1:
+            pg.draw.rect(Alpha_screen, GreyA, (x - 90, 480, 180, 270), border_radius = 15)
+    for j in range(s2):
+        card = player2.shown[j]
+        x = 900 - 100*s2 + 200*j
+        Mblit(screen, card.img_ci, (x, 285))
+        if card in player2.active_list:
+            pg.draw.rect(screen, Red, (x - 90, 150, 180, 270), 3, border_radius = 15)
+        if choose == 0:
+            pg.draw.rect(Alpha_screen, GreyA, (x - 90, 150, 180, 270), border_radius = 15)
+    
+    Mblit(screen, title, (800, 80))
+    Mblit(screen, Match_text, (20, 20), 'TL')
+    Mblit(screen, Next_button, (1580, 20), 'TR')
+    Mblit(Alpha_screen, warn_text, (800, 450))
+    
+    screen.blit(Alpha_screen, (0, 0))
+    return player1, player2

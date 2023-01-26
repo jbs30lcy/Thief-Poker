@@ -92,11 +92,11 @@ class Player:
         self.shown = []
         self.coin = 0
         self.common = None
-        self.Rule = []
+        self.Rule = ['Flush', [4]] # 일단 이걸로.
         self.dd = []
         self.Rank = ''
         self.isdd = False
-        # self.key (Client를 구별할 요소)
+        self.key = 0
         self.pre = [0]
 
     # str2score: 족보가 적혀 있는 str을 int로 변환하는 함수.
@@ -270,6 +270,11 @@ class Player:
         if n2 == n3:
             return f'{n2} Pair'
         return f'No rank ({n1+n2+n3})'
+
+    def set_shown(self):
+        for card in self.showc:
+            if not card == self.common and not card in self.shown:
+                self.shown.append(card)
 
 
 if __name__ == '__main__':
