@@ -49,7 +49,7 @@ def main():
     
     # mode 변수에 따라 실행되는 코드가 달라짐
     while True:
-        if mode == 'main':
+        if mode == 'main': # 초록색 게임 시작 화면
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -63,7 +63,7 @@ def main():
             clock.tick(60)
             pg.display.update()
 
-        if mode == 'choose_key':
+        if mode == 'choose_key': # "반과 팀을 선택하세요 하는 화면"
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -79,7 +79,7 @@ def main():
             clock.tick(60)
             pg.display.update()
 
-        if mode == 'chooseRank':
+        if mode == 'chooseRank': # choose one 해서 스트레이트 플러쉬 고민하기
             pos = pg.mouse.get_pos()
             r1, r2 = Rule
             for event in pg.event.get():
@@ -116,7 +116,7 @@ def main():
             clock.tick(60)
             pg.display.update()
 
-        if mode == 'getMatch':
+        if mode == 'getMatch':  # Finding player - 하는 화면
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -131,20 +131,20 @@ def main():
             clock.tick(60)
             pg.display.update()
 
-        if mode == 'init':
+        if mode == 'init':   #뭐노?1 곧 사라질 예정
             choose = 0
             t, w = 0, -1
             p1, p2, Match = start(Round, (p1, p2, Match))
             mode = 'phase1'
         
-        if mode == 'phase1':
+        if mode == 'phase1': #뒤지는 놈 2
             p2 = phase1(p2)
             if 1 in r2 or 2 in r2:
                 mode = 'showDD'
             else:
                 mode = 'play_pre'
 
-        if mode == 'showDD':
+        if mode == 'showDD':  # 땡잡이를 보여주는 화면 (지금 안씀)
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -164,7 +164,7 @@ def main():
             clock.tick(60)
             pg.display.update()
 
-        if mode == 'play_pre':
+        if mode == 'play_pre':  #애니메이션
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -178,7 +178,7 @@ def main():
             clock.tick(60)
             pg.display.update()
         
-        if mode == 'play':
+        if mode == 'play':  # 페이즈 진행
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -193,7 +193,7 @@ def main():
             clock.tick(60)
             pg.display.update()
 
-        if mode == 'phase2':
+        if mode == 'phase2': #잘가~
 
             p2.showc = p2.active_list.copy()
             for card in p1.showc:
@@ -206,7 +206,7 @@ def main():
             t = 0
             mode = 'flop'
         
-        if mode == 'flop':
+        if mode == 'flop': # 카드 내는 애니메이션 
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -233,7 +233,7 @@ def main():
             clock.tick(60)
             pg.display.update()
 
-        if mode == 'result':
+        if mode == 'result': # 라운드별 결과
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -262,13 +262,13 @@ def main():
                     p1.pre[-1].append(-1)
                     p2.pre[-1].append(1)
 
-            if mode == 'result':
+            if mode == 'result': #가끔 씹힐때 있어서 버그처리
                 p1, p2, t = n_draw_result(screen, (Round, Match, w), (p1, p2, t))
                 
                 clock.tick(60)
                 pg.display.update()
             
-        if mode == 'exchangeA':
+        if mode == 'exchangeA': # 2패시 카드 고르는 단계
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -326,7 +326,7 @@ def main():
             clock.tick(60)
             pg.display.update()
 
-        if mode == 'exchangeB':
+        if mode == 'exchangeB': # 1승 1패시 고르는 단계
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -358,7 +358,7 @@ def main():
             clock.tick(60)
             pg.display.update()
         
-        if mode == 'exchangeD':
+        if mode == 'exchangeD':  # 승자의 여유(기다림)
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -389,7 +389,7 @@ def main():
             clock.tick(60)
             pg.display.update()
 
-        if mode == 'exchangeR':
+        if mode == 'exchangeR': #교환 후 결과 보여주는 화면
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
