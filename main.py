@@ -22,8 +22,8 @@ def win(player1, player2):
     p1b = 'Black' in player1.rank()
     p2b = 'Black' in player2.rank()
 
-    if 400 <= score1 <= 500 and player2.isdd: return 2
-    if 400 <= score2 <= 500 and player1.isdd: return 1 # 땡잡이가 스트레이트나 플러시를 잡기
+    if 400 <= score1 and player2.isdd: return 2
+    if 400 <= score2 and player1.isdd: return 1 # 땡잡이가 스트레이트나 플러시를 잡기
     if p1b and 0 < score2 < 100: return 2
     if p2b and 0 < score1 < 100: return 1  # 개패가 검은 족보를 잡기
     if score1 > score2: return 1
@@ -239,21 +239,8 @@ def main():
                     pg.quit()
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
-                    pos = pg.mouse.get_pos()
-                    if t >= 60 and in_rect(pos, (1450 - 90, 750, 90, 60)):
-                        Round += 1
-                        mode = 'init'
-                        if Round == 3:
-                            Round = 1
-                            choose = 0
-                            t = 0
-                            p1.active_list = []
-                            p2.active_list = []
-                            p1.showc = []
-                            p2.showc = []
-                            if sum(p1.pre[-1]) > 0: mode = 'exchangeD'
-                            if sum(p1.pre[-1]) == 0: mode = 'exchangeB'
-                            if sum(p1.pre[-1]) < 0: mode = 'exchangeA'
+                    mode, Round, t, choose, p1, p2 = mouse_result((mode, Round, t, choose, p1, p2))
+                    print(mode)
                 
             if t == 0:
                 for card in p1.showc:
@@ -262,11 +249,22 @@ def main():
                 for card in p2.showc:
                     if not card == common and not card in p2.shown:
                         p2.shown.append(card)
+                w = win(p1, p2)
+                if w == 0:
+                    p1.coin += 5
+                    p1.pre[-1].append(0)
+                    p2.pre[-1].append(0)
+                if w == 1:
+                    p1.coin += 10
+                    p1.pre[-1].append(1)
+                    p2.pre[-1].append(-1)
+                if w == 2:
+                    p1.pre[-1].append(-1)
+                    p2.pre[-1].append(1)
 
-            if mode == 'result': # 또 달아줘야 이벤트로 모드가 바뀌었을 때 나는 오류를 해결함.
-                p1, p2, t = draw_result(screen, (Round, Match, w), (p1, p2, t))
-                if t == 60:
-                    w = win(p1, p2)
+            if mode == 'result':
+                p1, p2, t = n_draw_result(screen, (Round, Match, w), (p1, p2, t))
+                
                 clock.tick(60)
                 pg.display.update()
             

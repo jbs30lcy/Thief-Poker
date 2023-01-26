@@ -86,7 +86,7 @@ def mouse_play(var):
                 mode = 'phase2'
                 player1.showc = player1.active_list.copy() # p2는 지금 받으면 안됨
             if choose == 1:
-                tick = 0
+                tick = -1
                 mode = 'result'
                 player1.showc = player1.showc + player1.active_list.copy()
                 player1.active_list = [] # 왜 이걸 여기서 초기화 시키지?
@@ -108,3 +108,27 @@ def mouse_flop(var):
         mode = 'play'
 
     return mode, player1, player2, tick
+
+def mouse_result(var):
+    mode, Round, tick, choose, player1, player2 = var
+
+    pos = list(pg.mouse.get_pos())
+    pos[0] *= (1600/WIDTH)
+    pos[1] *= (900/HEIGHT)
+
+    if tick >= 70 and in_rect(pos, (1580 - 90, 20, 90, 60)):
+        Round += 1
+        mode = 'init'
+        if Round == 3:
+            Round = 1
+            choose = 0
+            tick = 0
+            player1.active_list = []
+            player2.active_list = []
+            player1.showc = []
+            player2.showc = []
+            if sum(player1.pre[-1]) > 0: mode = 'exchangeD'
+            if sum(player1.pre[-1]) == 0: mode = 'exchangeB'
+            if sum(player1.pre[-1]) < 0: mode = 'exchangeA'
+
+    return mode, Round, choose, tick, player1, player2

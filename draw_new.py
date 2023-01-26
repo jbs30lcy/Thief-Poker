@@ -25,6 +25,24 @@ def Mblit(screen, surf, pos, poscon = 'MM'):
 
     screen.blit(surf, (x, y))
 
+def str2Kr(s):
+    col_kr_dict = {'Red': '빨강', 'Blue': '파랑', 'Yellow': '노랑', 'Green': '초록'}
+    blacks = '검은' if 'Black' in s else ''
+    if 'Four of a kind' in s:
+        return f'{s[0]} 포카드'
+    if 'Straight' in s:
+        return f'{s[0]} 스트레이트'
+    if 'Flush' in s:
+        i = s.find(' ')
+        return f'{col_kr_dict[s[:i]]} 플러시'
+    if 'Three of a kind' in s:
+        return f'{s[0]} 트리플'
+    if 'Two pair' in s:
+        return f'{s[0]} 투 페어'
+    if 'Pair' in s:
+        return f'{s[0]} 원 페어'
+    return f'족보 없음 {s[8:]}'
+
 NS = [pg.font.Font(file_path + '\\NanumSquareNeoOTF-cBd.otf', x) for x in range(1, 100)]
 NSE = [pg.font.Font(file_path + '\\NanumSquareNeoOTF-dEb.otf', x) for x in range(1, 100)]
 NS.insert(0, 0)
@@ -150,13 +168,13 @@ def n_draw_flop(screen, const, var):
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
     x1, x2 = 400, 600
     if 0 <= tick < 40:
-        _, p2card_y = easing((0, -135), (0, 420-135), m_quadout, tick, 40)
+        _, p2card_y = easing((0, -135), (0, 285), m_quadout, tick, 40)
     if tick >= 40:
-        _, p2card_y = 0, 420 - 135
+        _, p2card_y = 0, 285
     p1card_y = 900 - p2card_y
 
     if 60 <= tick <= 80:
-        common_surf = pg.Surface((180, 270)).convert_alpha()
+        common_surf = pg.Surface((180, 270), pg.SRCALPHA).convert_alpha()
         common_surf.blit(player1.common.img_ci, (0, 0))
         common_surf.set_alpha((tick-60)*255/20)
         common_x, common_y = easing((1400, 450), (1200, 450), m_sineout, tick-60, 20)
@@ -166,11 +184,11 @@ def n_draw_flop(screen, const, var):
         common_x, common_y = 1200, 450
 
     if tick <= 80:
-        myrank = NS[30].render(player1.rank2p(player1.showc[-2:]), True, White)
-        yourrank = NS[30].render(player2.rank2p(player2.showc[-2:]), True, White)
+        myrank = NS[30].render(str2Kr(player1.rank2p(player1.showc[-2:])), True, White)
+        yourrank = NS[30].render(str2Kr(player2.rank2p(player2.showc[-2:])), True, White)
     else:
-        myrank = NS[30].render(player1.rank3p(player1.showc), True, White)
-        yourrank = NS[30].render(player2.rank3p(player2.showc), True, White)
+        myrank = NS[30].render(str2Kr(player1.rank3p(player1.showc)), True, White)
+        yourrank = NS[30].render(str2Kr(player2.rank3p(player2.showc)), True, White)
 
     screen.blit(bg1, (0, 0))
     Mblit(screen, player1.showc[-2].img_ci, (x1, p1card_y))
@@ -183,3 +201,41 @@ def n_draw_flop(screen, const, var):
     if tick > 80: Mblit(screen, Next_button, (1580, 20), 'TR')
 
     return tick+1
+
+def n_draw_result(screen, const, var):
+    Round, Match, w = const
+    player1, player2, tick = var
+
+    if 0 <= tick < 40:
+        _, p2card_y = easing((0, -135), (0, 285), m_quadout, tick, 40)
+    if tick >= 40:
+        _, p2card_y = 0, 285
+    p1card_y = 900 - p2card_y
+    common = player1.common
+
+    if tick >= 40:
+        p1rank_text = NS[32].render(str2Kr(player1.rank()), True, White)
+        p2rank_text = NS[32].render(str2Kr(player2.rank()), True, White)
+    if tick >= 70:
+        if w == 0: win_text = NSE[96].render('DRAW', True, Black)
+        if w == 1: win_text = NSE[96].render('YOU WIN!', True, Black)
+        if w == 2: win_text = NSE[96].render('YOU LOSE', True, Black)
+
+    screen.blit(bg1, (0, 0))
+    Mblit(screen, player1.showc[1].img_ci, (400, 615))
+    Mblit(screen, player1.showc[2].img_ci, (600, 615))
+    Mblit(screen, player2.showc[1].img_ci, (400, 285))
+    Mblit(screen, player2.showc[2].img_ci, (600, 285))
+    Mblit(screen, player1.showc[3].img_ci, (800, p1card_y))
+    Mblit(screen, player1.showc[4].img_ci, (1000, p1card_y))
+    Mblit(screen, player2.showc[3].img_ci, (800, p2card_y))
+    Mblit(screen, player2.showc[4].img_ci, (1000, p2card_y))
+    Mblit(screen, common.img_ci, (1200, 450))
+    if tick >= 40:
+        Mblit(screen, p1rank_text, (800, 820))
+        Mblit(screen, p2rank_text, (800, 70))
+    if tick >= 70:
+        Mblit(screen, win_text, (800, 450))
+        Mblit(screen, Next_button, (1580, 20), 'TR')
+
+    return player1, player2, tick+1
