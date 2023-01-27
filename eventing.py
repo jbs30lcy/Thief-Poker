@@ -50,7 +50,7 @@ def mouse_choose_key(var):
     pos[0] *= (1600/WIDTH)
     pos[1] *= (900/HEIGHT)
     if in_rect(pos, (1350-45, 750-30, 90, 60)):
-        mode = 'getMatch'
+        mode = 'get_match'
 
     return mode
 
@@ -223,6 +223,6 @@ def mouse_exchange_result(var):
 
     if in_rect(pos, (1580 - 90, 20, 90, 60)):
         tick = -1
-        mode = 'getMatch'
+        mode = 'get_match'
 
     return mode, tick

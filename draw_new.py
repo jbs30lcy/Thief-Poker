@@ -92,6 +92,23 @@ def n_draw_choose_key(screen, const, var):
     if tickf2: tickf2 -= 1
     return tickf1, tickf2
 
+def n_draw_get_match(screen, var):
+    tick = var
+
+    Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
+    title = NS[72].render("Finding player...", True, Black)
+
+    screen.fill(Grey1)
+    Mblit(screen, title, (800, 150))
+    for i in range(8):
+        x = 800 + 120*math.sin(math.pi * (i + round(tick/5)) / 4)
+        y = 450 + 120*math.cos(math.pi * (i + round(tick/5)) / 4)
+        c = list(Green) + [55 + i*200 / 8]
+        pg.draw.circle(Alpha_screen, c, (x, y), 20)
+
+    screen.blit(Alpha_screen, (0, 0))
+    return tick+1
+
 def n_draw_play_pre(screen, const, var):
     player1, player2 = const
     tick = var
@@ -388,5 +405,20 @@ def n_draw_exchange_result(screen, const, var):
     if tick >= 90:
         Mblit(screen, title, (800, 80))
         Mblit(screen, Next_button, (1580, 20), 'TR')
+
+    return tick+1
+
+def n_draw_delay(screen, var):
+    tick = var
+
+    Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
+    screen.blit(bg1, (0, 0))
+    for i in range(8):
+        x = 800 + 60*math.sin(math.pi * (i + round(tick/5)) / 4)
+        y = 450 + 60*math.cos(math.pi * (i + round(tick/5)) / 4)
+        c = list(Red) + [55 + i*200 / 8]
+        pg.draw.circle(Alpha_screen, c, (x, y), 10)
+
+    screen.blit(Alpha_screen, (0, 0))
 
     return tick+1

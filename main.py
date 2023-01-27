@@ -107,7 +107,7 @@ def main():
         #                 Rule = [r1, r2]
         #                 p1.Rule = Rule
         #                 p2.Rule = Rule
-        #                 mode = 'getMatch'
+        #                 mode = 'get_match'
             
         #     draw_chooserank(ori_screen, (Rule, pos))
         #     screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
@@ -116,13 +116,13 @@ def main():
         #     clock.tick(60)
         #     pg.display.update()
 
-        if mode == 'getMatch':  # Finding player - 하는 화면
+        if mode == 'get_match':  # Finding player - 하는 화면
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
             
-            t = draw_getmatch(ori_screen, t)
+            t = n_draw_get_match(ori_screen, t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             if t == 200:
@@ -144,27 +144,27 @@ def main():
             else:
                 mode = 'play_pre'
 
-        if mode == 'showDD':  # 땡잡이를 보여주는 화면 (지금 안씀)
-            for event in pg.event.get():
-                if event.type == QUIT:
-                    pg.quit()
-                    sys.exit()
+        # if mode == 'showDD':  # 땡잡이를 보여주는 화면 (지금 안씀)
+        #     for event in pg.event.get():
+        #         if event.type == QUIT:
+        #             pg.quit()
+        #             sys.exit()
 
-            if t == 0:
-                dd = get_dd(r2, dd)
-                p1.dd = dd
-                p2.dd = dd
-            if t == 180:
-                t = -1 # draw_showDD를 지나가면서 t가 0이 되도록. 근데 이렇게 짜는거 진짜 별로다
-                mode = 'play_pre'
+        #     if t == 0:
+        #         dd = get_dd(r2, dd)
+        #         p1.dd = dd
+        #         p2.dd = dd
+        #     if t == 180:
+        #         t = -1 # draw_showDD를 지나가면서 t가 0이 되도록. 근데 이렇게 짜는거 진짜 별로다
+        #         mode = 'play_pre'
             
-            t = draw_showDD(ori_screen, dd, t)
-            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+        #     t = draw_showDD(ori_screen, dd, t)
+        #     screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
-            clock.tick(60)
-            pg.display.update()
+        #     clock.tick(60)
+        #     pg.display.update()
 
-        if mode == 'play_pre':  #애니메이션
+        if mode == 'play_pre':  # 카드를 펼치는 애니메이션
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -333,6 +333,18 @@ def main():
 
             clock.tick(60)
             pg.display.update()
+
+        if mode == 'delay': # 대기 화면 (DB에서 갖고오는 동안 등) (아직 사용하고 있지는 않음)
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+            
+            t = n_draw_delay(screen, t)
+
+            clock.tick(60)
+            pg.display.update()
+                
 
 if __name__ == '__main__':
     main()
