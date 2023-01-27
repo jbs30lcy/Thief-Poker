@@ -260,8 +260,12 @@ def n_draw_result(screen, const, var):
     common = player1.common
 
     if tick >= 40 or tick == -1:
-        p1rank_text = NS[32].render(str2Kr(player1.rank()), True, White)
-        p2rank_text = NS[32].render(str2Kr(player2.rank()), True, White)
+        score1 = player1.str2score(player1.rank())
+        score2 = player2.str2score(player2.rank())
+        if 400 <= score1 and player2.isdd: p2rank_text = NS[32].render('땡잡이', True, White)
+        else: p2rank_text = NS[32].render(str2Kr(player2.rank()), True, White)
+        if 400 <= score2 and player1.isdd: p1rank_text = NS[32].render('땡잡이', True, White)
+        else: p1rank_text = NS[32].render(str2Kr(player1.rank()), True, White)
     if tick >= 70 or tick == -1:
         if w == 0: win_text = NSE[96].render('DRAW', True, Black)
         if w == 1: win_text = NSE[96].render('YOU WIN!', True, Black)
@@ -379,7 +383,7 @@ def n_draw_exchange_delay(screen, const, var):
     for i in range(c1):
         card = player1.card_list[i]
         x = 900 - c1*100 + i*200
-        Mblit(screen, card.img, (x, 615))
+        Mblit(screen, card.img_ci, (x, 615))
     for i in range(8):
         x = 800 + 60*math.sin(math.pi * (i + round(tick/5)) / 4)
         y = 450 + 60*math.cos(math.pi * (i + round(tick/5)) / 4)

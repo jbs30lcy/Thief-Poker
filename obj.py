@@ -24,7 +24,6 @@ Grad1  = (40, 205, 147)
 Grad2  = (40, 205, 198)
 Grad3  = (40, 171, 205)
 Grad4  = (40, 137, 205)
-Card_IMGlist = {}
 CI_ori = {}
 colors = ("Black", "Red", "Yellow", "Blue", "Green")
 colors_dict = {"Black":0, "Red":1, "Yellow":2, "Blue":3, "Green":4}
@@ -37,16 +36,9 @@ for color in colors[1:]:
         card_name = f"{color}_{num}"
         card_image = pg.transform.scale(pg.image.load(img_dir_path + card_name + ".png"), (600, 900))
         CI_ori[card_name] = card_image
-        Card_IMGlist[card_name] = pg.transform.scale(card_image, (180, 270))
 CI_ori["Black"] = pg.transform.scale(pg.image.load(img_dir_path + "Black.png"), (600, 900))
-Card_IMGlist["Black"] = pg.transform.scale(pg.image.load(img_dir_path + "Black.png"), (180, 270))
 CI_ori["Hide"] = pg.transform.scale(pg.image.load(img_dir_path + "Hide.png"), (600, 900))
-Card_IMGlist["Hide"] = pg.transform.scale(pg.image.load(img_dir_path + "Hide.png"), (180, 270))
 
-# Card_IMGlist[card_name] = card_image
-
-# Card_IMGlist["Black"] = pg.transform.scale(pg.image.load(img_dir_path + "Black.png"), (180, 270))
-# Card_IMGlist["Hide"] = pg.transform.scale(pg.image.load(img_dir_path + "Hide.png"), (180, 270))
 
 def in_rect(pos, rect):
     return rect[0] <= pos[0] <= rect[0] + rect[2] and rect[1] <= pos[1] <= rect[1] + rect[3]
@@ -61,16 +53,12 @@ class Card:
         self.dd = []
         self.time = 5     # 카드의 수명 얘기 나와서요
         self.name = self.color + '_' + str(self.val)
-        if 1 <= self.val <= 7:
-            self.img = Card_IMGlist[self.name]
-            self.imgo = CI_ori[self.name]
-        else:
-            self.img = Card_IMGlist['Black']
-            self.imgo = CI_ori['Black']
+        if 1 <= self.val <= 7: self.imgo = CI_ori[self.name]
+        else: self.imgo = CI_ori['Black']
         self.show = False
 
         self.img_half = Card.shrink(self.imgo, 1/2)
-        self.img_ci = Card.shrink(self.imgo, 3/10) # img랑 같음.
+        self.img_ci = Card.shrink(self.imgo, 3/10)
 
     def __repr__(self):
         if color == 'Black':

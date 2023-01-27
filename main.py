@@ -3,7 +3,6 @@ from pygame.locals import *
 import sys, time
 from obj import *
 from setting import *
-from draw import *
 from draw_new import *
 from eventing import *
 from spreadsheet import *
@@ -23,7 +22,7 @@ def win(player1, player2):
     p2b = 'Black' in player2.rank()
 
     if 400 <= score1 and player2.isdd: return 2
-    if 400 <= score2 and player1.isdd: return 1 # 땡잡이가 스트레이트나 플러시를 잡기
+    if 400 <= score2 and player1.isdd: return 1 # 땡잡이가 플러시 이상의 족보를 잡기
     if p1b and 0 < score2 < 100: return 2
     if p2b and 0 < score1 < 100: return 1  # 개패가 검은 족보를 잡기
     if score1 > score2: return 1
