@@ -3,7 +3,7 @@ from pygame.locals import *
 import sys, time
 from obj import *
 from setting import *
-from draw_new import *
+from draw import *
 from eventing import *
 from spreadsheet import *
 
@@ -57,7 +57,7 @@ def main():
                 if event.type == MOUSEBUTTONDOWN:
                     mode = mouse_main((mode, p1))
             
-            n_draw_main(ori_screen)
+            draw_main(ori_screen)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             clock.tick(60)
@@ -73,7 +73,7 @@ def main():
                 if event.type == KEYDOWN:
                     p1, tf1, tf2 = key_choose_key(event, (p1, tf1, tf2))
             
-            tf1, tf2 = n_draw_choose_key(ori_screen, p1, (tf1, tf2))
+            tf1, tf2 = draw_choose_key(ori_screen, p1, (tf1, tf2))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             
             clock.tick(60)
@@ -122,7 +122,7 @@ def main():
                     pg.quit()
                     sys.exit()
             
-            t = n_draw_get_match(ori_screen, t)
+            t = draw_get_match(ori_screen, t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             if t == 200:
@@ -167,7 +167,8 @@ def main():
                     pg.quit()
                     sys.exit()
             
-            t = n_draw_play_pre(screen, (p1, p2), t)
+            t = draw_play_pre(ori_screen, (p1, p2), t)
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if t == 60:
                 t = 0
                 mode = 'play'
@@ -183,7 +184,9 @@ def main():
                 if event.type == MOUSEBUTTONDOWN:
                     p1, p2, mode, choose, t, tf1 = mouse_play((p1, p2, mode, choose, t, tf1))
 
-            p1, p2, t = n_draw_play(screen, (Round, Match, choose, tf1), (p1, p2, t))
+            p1, p2, t = draw_play(ori_screen, (Round, Match, choose, tf1), (p1, p2, t))
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+
             if tf1: tf1 -= 1
 
             if choose == 0.5: choose = 1
@@ -198,7 +201,8 @@ def main():
                 if t >= 80 and event.type == MOUSEBUTTONDOWN:
                     mode, p1, p2, t = mouse_flop((mode, p1, p2, t))
             
-            t = n_draw_flop(screen, (Round, Match, p1, p2), t)
+            t = draw_flop(ori_screen, (Round, Match, p1, p2), t)
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if t == 60:
                 common = get_random_card()
                 if 1 in Rule[1]:
@@ -238,7 +242,8 @@ def main():
                     p2.pre[-1].append(1)
 
             if mode == 'result': #가끔 씹힐때 있어서 버그처리
-                p1, p2, t = n_draw_result(screen, (Round, Match, w), (p1, p2, t))
+                p1, p2, t = draw_result(ori_screen, (Round, Match, w), (p1, p2, t))
+                screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
                 
                 clock.tick(60)
                 pg.display.update()
@@ -251,7 +256,8 @@ def main():
                 if event.type == MOUSEBUTTONDOWN:
                     mode, choose, tf1, p1, p2 = mouse_exchange_lose((mode, choose, tf1, p1, p2))
 
-            p1, p2 = n_draw_exchange_lose(screen, (Match, choose, tf1), (p1, p2))
+            p1, p2 = draw_exchange_lose(ori_screen, (Match, choose, tf1), (p1, p2))
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if tf1: tf1 -= 1
             
             if choose == 0.5: choose = 1
@@ -266,7 +272,8 @@ def main():
                 if event.type == MOUSEBUTTONDOWN:
                     mode, t, tf1, p1, p2 = mouse_exchange_draw((mode, t, tf1, p1, p2))
             
-            p1, p2 = n_draw_exchange_draw(screen, (Match, tf1), (p1, p2))
+            p1, p2 = draw_exchange_draw(ori_screen, (Match, tf1), (p1, p2))
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if tf1: tf1 -= 1
 
             clock.tick(60)
@@ -278,7 +285,8 @@ def main():
                     pg.quit()
                     sys.exit()
             
-            t = n_draw_exchange_delay(screen, p1, t)
+            t = draw_exchange_delay(ori_screen, p1, t)
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             if sum(p1.pre[-1]) > 0 and t == 120:
                 mycard   = get_random_exchange(p1)
@@ -314,7 +322,8 @@ def main():
                 p1.card_list[p1.ex_index] = p2.ex_card
                 p2.card_list[p2.ex_index] = p1.ex_card
             
-            t = n_draw_exchange_result(screen, (Match, p1, p2, choose), t)
+            t = draw_exchange_result(ori_screen, (Match, p1, p2, choose), t)
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             clock.tick(60)
             pg.display.update()
@@ -325,11 +334,11 @@ def main():
                     pg.quit()
                     sys.exit()
             
-            t = n_draw_delay(screen, t)
+            t = draw_delay(ori_screen, t)
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             clock.tick(60)
             pg.display.update()
-                
 
 if __name__ == '__main__':
     main()

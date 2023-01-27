@@ -52,7 +52,7 @@ Next_button = pg.transform.scale(pg.image.load(img_dir_path + 'Next_button.png')
 Rank_button = pg.transform.scale(pg.image.load(img_dir_path + 'Rank_button.png'), (90, 60))
 Coin_icon = pg.transform.scale(pg.image.load(img_dir_path + 'coin.png'), (50, 50))
 
-def n_draw_main(screen):
+def draw_main(screen):
     screen.blit(bg1, (0, 0))
 
     title = NSE[96].render("도둑   포커", True, White)
@@ -62,7 +62,7 @@ def n_draw_main(screen):
     pg.draw.rect(screen, Brown1, (600, 600, 400, 100))
     Mblit(screen, start_text, (800, 650))
     
-def n_draw_choose_key(screen, const, var):
+def draw_choose_key(screen, const, var):
     p1 = const
     tickf1, tickf2 = var
 
@@ -94,7 +94,7 @@ def n_draw_choose_key(screen, const, var):
     if tickf2: tickf2 -= 1
     return tickf1, tickf2
 
-def n_draw_get_match(screen, var):
+def draw_get_match(screen, var):
     tick = var
 
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
@@ -111,7 +111,7 @@ def n_draw_get_match(screen, var):
     screen.blit(Alpha_screen, (0, 0))
     return tick+1
 
-def n_draw_play_pre(screen, const, var):
+def draw_play_pre(screen, const, var):
     player1, player2 = const
     tick = var
     
@@ -135,7 +135,7 @@ def n_draw_play_pre(screen, const, var):
 
     return tick+1
 
-def n_draw_play(screen, const, var):
+def draw_play(screen, const, var):
     Round, Match, choose, tickf1 = const
     player1, player2, tick = var
 
@@ -169,15 +169,15 @@ def n_draw_play(screen, const, var):
         for i in range(c2):
             card = player2.card_list[i]
             x, y = 816.6 - c2*16.7 + 33.3*i, 300
-            Mblit(screen, Card.shrink(CI_ori['Hide'], 1/6), (x, y))
+            Mblit(screen, Card.shrink(Card_IMGlist['Hide'], 1/6), (x, y))
     if choose == 1:
-        Mblit(screen, Card.shrink(player2.showc[-2].imgo, 1/6), (816.7 - c2*16.7, 300))
-        Mblit(screen, Card.shrink(player2.showc[-1].imgo, 1/6), (850 - c2*16.7, 300))
+        Mblit(screen, Card.shrink(player2.showc[-2].img, 1/6), (816.7 - c2*16.7, 300))
+        Mblit(screen, Card.shrink(player2.showc[-1].img, 1/6), (850 - c2*16.7, 300))
         for i in range(c2-2):
             card = player2.card_list[i]
             x, y = 883.3 - c2*16.7 + 33.3*i, 300
-            Mblit(screen, Card.shrink(CI_ori['Hide'], 1/6), (x, y))
-        Mblit(screen, common_card.img_ci, (1300, 300))
+            Mblit(screen, Card.shrink(Card_IMGlist['Hide'], 1/6), (x, y))
+        Mblit(screen, common_card.img_std, (1300, 300))
         pg.draw.rect(screen, Yellow, (1195, 150, 210, 300), 3, border_radius = 15)
 
     pg.draw.rect(screen, White, (150, 280, 210, 40))
@@ -204,7 +204,7 @@ def n_draw_play(screen, const, var):
     screen.blit(Alpha_screen, (0, 0))
     return player1, player2, tick+1
 
-def n_draw_flop(screen, const, var):
+def draw_flop(screen, const, var):
     Round, Match, player1, player2 = const
     tick = var
 
@@ -218,12 +218,12 @@ def n_draw_flop(screen, const, var):
 
     if 60 <= tick <= 80:
         common_surf = pg.Surface((180, 270), pg.SRCALPHA).convert_alpha()
-        common_surf.blit(player1.common.img_ci, (0, 0))
+        common_surf.blit(player1.common.img_std, (0, 0))
         common_surf.set_alpha((tick-60)*255/20)
         common_x, common_y = easing((1400, 450), (1200, 450), m_sineout, tick-60, 20)
     if tick > 80 or tick == -1:
         common_surf = pg.Surface((180, 270), pg.SRCALPHA).convert_alpha()
-        common_surf.blit(player1.common.img_ci, (0, 0))
+        common_surf.blit(player1.common.img_std, (0, 0))
         common_x, common_y = 1200, 450
 
     if 0 <= tick <= 80: # mode가 바뀔 때 tick = -1임.
@@ -235,10 +235,10 @@ def n_draw_flop(screen, const, var):
     coin_text = NS[30].render(str(player1.coin), True, White)
 
     screen.blit(bg1, (0, 0))
-    Mblit(screen, player1.showc[-2].img_ci, (x1, p1card_y))
-    Mblit(screen, player1.showc[-1].img_ci, (x2, p1card_y))
-    Mblit(screen, player2.showc[-2].img_ci, (x1, p2card_y))
-    Mblit(screen, player2.showc[-1].img_ci, (x2, p2card_y))
+    Mblit(screen, player1.showc[-2].img_std, (x1, p1card_y))
+    Mblit(screen, player1.showc[-1].img_std, (x2, p1card_y))
+    Mblit(screen, player2.showc[-2].img_std, (x1, p2card_y))
+    Mblit(screen, player2.showc[-1].img_std, (x2, p2card_y))
     Mblit(screen, myrank, (800, 600), 'ML')
     Mblit(screen, yourrank, (800, 300), 'ML')
     Mblit(screen, Coin_icon, (20, 855), 'ML')
@@ -248,7 +248,7 @@ def n_draw_flop(screen, const, var):
 
     return tick+1
 
-def n_draw_result(screen, const, var):
+def draw_result(screen, const, var):
     Round, Match, w = const
     player1, player2, tick = var
 
@@ -273,15 +273,15 @@ def n_draw_result(screen, const, var):
     coin_text = NS[30].render(str(player1.coin), True, White)
 
     screen.blit(bg1, (0, 0))
-    Mblit(screen, player1.showc[1].img_ci, (400, 615))
-    Mblit(screen, player1.showc[2].img_ci, (600, 615))
-    Mblit(screen, player2.showc[1].img_ci, (400, 285))
-    Mblit(screen, player2.showc[2].img_ci, (600, 285))
-    Mblit(screen, player1.showc[3].img_ci, (800, p1card_y))
-    Mblit(screen, player1.showc[4].img_ci, (1000, p1card_y))
-    Mblit(screen, player2.showc[3].img_ci, (800, p2card_y))
-    Mblit(screen, player2.showc[4].img_ci, (1000, p2card_y))
-    Mblit(screen, common.img_ci, (1200, 450))
+    Mblit(screen, player1.showc[1].img_std, (400, 615))
+    Mblit(screen, player1.showc[2].img_std, (600, 615))
+    Mblit(screen, player2.showc[1].img_std, (400, 285))
+    Mblit(screen, player2.showc[2].img_std, (600, 285))
+    Mblit(screen, player1.showc[3].img_std, (800, p1card_y))
+    Mblit(screen, player1.showc[4].img_std, (1000, p1card_y))
+    Mblit(screen, player2.showc[3].img_std, (800, p2card_y))
+    Mblit(screen, player2.showc[4].img_std, (1000, p2card_y))
+    Mblit(screen, common.img_std, (1200, 450))
     if tick >= 40 or tick == -1:
         Mblit(screen, p1rank_text, (800, 820))
         Mblit(screen, p2rank_text, (800, 70))
@@ -293,7 +293,7 @@ def n_draw_result(screen, const, var):
 
     return player1, player2, tick+1
 
-def n_draw_exchange_lose(screen, const, var):
+def draw_exchange_lose(screen, const, var):
     Match, choose, tickf1 = const
     player1, player2 = var
 
@@ -312,7 +312,7 @@ def n_draw_exchange_lose(screen, const, var):
     for i in range(c1):
         card = player1.card_list[i]
         x = 900 - 100*c1 + 200*i
-        Mblit(screen, card.img_ci, (x, 615))
+        Mblit(screen, card.img_std, (x, 615))
         if card in player1.active_list:
             pg.draw.rect(screen, Red, (x - 90, 480, 180, 270), 3, border_radius = 15)
         if choose == 1:
@@ -320,7 +320,7 @@ def n_draw_exchange_lose(screen, const, var):
     for j in range(s2):
         card = player2.shown[j]
         x = 900 - 100*s2 + 200*j
-        Mblit(screen, card.img_ci, (x, 285))
+        Mblit(screen, card.img_std, (x, 285))
         if card in player2.active_list:
             pg.draw.rect(screen, Red, (x - 90, 150, 180, 270), 3, border_radius = 15)
         if choose == 0:
@@ -334,7 +334,7 @@ def n_draw_exchange_lose(screen, const, var):
     screen.blit(Alpha_screen, (0, 0))
     return player1, player2
 
-def n_draw_exchange_draw(screen, const, var):
+def draw_exchange_draw(screen, const, var):
     Match, tickf1 = const
     player1, player2 = var
     
@@ -350,14 +350,14 @@ def n_draw_exchange_draw(screen, const, var):
     for i in range(c1):
         card = player1.card_list[i]
         x = 900 - 100*c1 + 200*i
-        Mblit(screen, card.img_ci, (x, 615))
+        Mblit(screen, card.img_std, (x, 615))
         if card in player1.active_list:
             pg.draw.rect(screen, Red, (x - 90, 480, 180, 270), 3, border_radius = 15)
         pg.draw.rect(Alpha_screen, GreyA, (x - 90, 480, 180, 270), border_radius = 15)
     for j in range(s2):
         card = player2.shown[j]
         x = 900 - 100*s2 + 200*j
-        Mblit(screen, card.img_ci, (x, 285))
+        Mblit(screen, card.img_std, (x, 285))
         if card in player2.active_list:
             pg.draw.rect(screen, Red, (x - 90, 150, 180, 270), 3, border_radius = 15)
     
@@ -370,7 +370,7 @@ def n_draw_exchange_draw(screen, const, var):
 
     return player1, player2
 
-def n_draw_exchange_delay(screen, const, var):
+def draw_exchange_delay(screen, const, var):
     player1 = const
     tick    = var
     c1      = len(player1.card_list)
@@ -383,7 +383,7 @@ def n_draw_exchange_delay(screen, const, var):
     for i in range(c1):
         card = player1.card_list[i]
         x = 900 - c1*100 + i*200
-        Mblit(screen, card.img_ci, (x, 615))
+        Mblit(screen, card.img_std, (x, 615))
     for i in range(8):
         x = 800 + 60*math.sin(math.pi * (i + round(tick/5)) / 4)
         y = 450 + 60*math.cos(math.pi * (i + round(tick/5)) / 4)
@@ -393,16 +393,16 @@ def n_draw_exchange_delay(screen, const, var):
     screen.blit(Alpha_screen, (0, 0))
     return tick+1
 
-def n_draw_exchange_result(screen, const, var):
+def draw_exchange_result(screen, const, var):
     Match, player1, player2, choose = const
     tick = var
 
     c1 = len(player1.card_list)
     mycard_surf = pg.Surface((180, 270), pg.SRCALPHA).convert_alpha()
-    mycard_surf.blit(player1.ex_card.img_ci, (0, 0))
+    mycard_surf.blit(player1.ex_card.img_std, (0, 0))
     mycard_surf.set_alpha((40-tick)*255/30)
     yourcard_surf = pg.Surface((180, 270), pg.SRCALPHA).convert_alpha()
-    yourcard_surf.blit(player2.ex_card.img_ci, (0, 0))
+    yourcard_surf.blit(player2.ex_card.img_std, (0, 0))
     yourcard_surf.set_alpha((tick-60)*255/30)
     if tick >= 90:
         title = NS[72].render('교환  결과', True, White)
@@ -423,14 +423,14 @@ def n_draw_exchange_result(screen, const, var):
             if tick >= 90 or tick == -1:
                 Mblit(screen, yourcard_surf, (x, 615))
             continue
-        Mblit(screen, card.img_ci, (x, 615))
+        Mblit(screen, card.img_std, (x, 615))
     if tick >= 90:
         Mblit(screen, title, (800, 80))
         Mblit(screen, Next_button, (1580, 20), 'TR')
 
     return tick+1
 
-def n_draw_delay(screen, var):
+def draw_delay(screen, var):
     tick = var
 
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
