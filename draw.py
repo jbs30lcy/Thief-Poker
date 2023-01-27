@@ -155,6 +155,18 @@ def draw_play(screen, const, var):
     coin_text = NS[30].render(str(player1.coin), True, White)
     common_card = player1.common
 
+    p2_isblack = False
+    for card in player2.card_list:
+        if card.color == 'Black':
+            p2_isblack = True
+    if p2_isblack:
+        blackcard_text = NSE[24].render("! 조커 있음 !", True, Pink)
+        if tick % 60 < 30:
+            _, blackcard_y = easing((800, 200), (800, 180), m_sineinout, tick%60, 30)
+        else:
+            _, blackcard_y = easing((800, 180), (800, 200), m_sineinout, tick%60 - 30, 30)
+
+
     screen.blit(bg2, (0, 0))
     for i in range(c1):
         card = player1.card_list[i]
@@ -192,7 +204,7 @@ def draw_play(screen, const, var):
         if v == -2: color = Red
         pg.draw.rect(screen, color, (325 - 30*i, 285, 30, 30))
     
-    Mblit(screen, title, (800, 80))
+    Mblit(screen, title, (800, 70))
     Mblit(screen, Match_text, (20, 20), 'TL')
     Mblit(screen, Round_text, (20, 55), 'TL')
     Mblit(screen, Next_button, (1580, 20), 'TR')
@@ -200,6 +212,7 @@ def draw_play(screen, const, var):
     Mblit(screen, coin_text, (80, 855), 'ML')
     Mblit(screen, team_text, (150, 300))
     Mblit(Alpha_screen, warn_text, (800, 450))
+    if p2_isblack: Mblit(screen, blackcard_text, (800, blackcard_y))
 
     screen.blit(Alpha_screen, (0, 0))
     return player1, player2, tick+1
