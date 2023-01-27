@@ -17,6 +17,7 @@ Blue   = (24, 160, 230)
 Grey1  = (200, 200, 200)
 Grey2  = (230, 230, 230)
 Grey3  = (80, 80, 80)
+Grey4  = (127, 127, 127)
 GreyA  = (127, 127, 127, 127)
 Brown1 = (227, 181, 140)
 Grad1  = (40, 205, 147)
@@ -97,6 +98,8 @@ class Player:
         self.Rank = ''
         self.isdd = False
         self.key = 0
+        self.ex_index = 0
+        self.ex_card = None
         self.pre = [0]
 
     # str2score: 족보가 적혀 있는 str을 int로 변환하는 함수.

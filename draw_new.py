@@ -29,18 +29,18 @@ def str2Kr(s):
     col_kr_dict = {'Red': '빨강', 'Blue': '파랑', 'Yellow': '노랑', 'Green': '초록'}
     blacks = '검은' if 'Black' in s else ''
     if 'Four of a kind' in s:
-        return f'{s[0]} 포카드'
+        return f'{blacks} {s[0]} 포카드'
     if 'Straight' in s:
-        return f'{s[0]} 스트레이트'
+        return f'{blacks} {s[0]} 스트레이트'
     if 'Flush' in s:
         i = s.find(' ')
-        return f'{col_kr_dict[s[:i]]} 플러시'
+        return f'{blacks} {col_kr_dict[s[:i]]} 플러시'
     if 'Three of a kind' in s:
-        return f'{s[0]} 트리플'
+        return f'{blacks} {s[0]} 트리플'
     if 'Two pair' in s:
-        return f'{s[:3]} 투 페어'
+        return f'{blacks} {s[:3]} 투 페어'
     if 'Pair' in s:
-        return f'{s[0]} 원 페어'
+        return f'{blacks} {s[0]} 원 페어'
     return f'족보 없음 {s[8:]}'
 
 NS = [pg.font.Font(file_path + '\\NanumSquareNeoOTF-cBd.otf', x) for x in range(1, 100)]
@@ -151,19 +151,28 @@ def n_draw_play(screen, const, var):
     if choose == 1:
         Mblit(screen, common_card.img_ci, (1300, 300))
         pg.draw.rect(screen, Yellow, (1195, 150, 210, 300), 3, border_radius = 15)
+
+    pg.draw.rect(screen, White, (150, 280, 210, 40))
+    pg.draw.circle(screen, White, (150, 300), 50)
+    for i in range(5):
+        if Match < i+2: continue
+        v = sum(player2.pre[-i-2])
+        if v == 2: color = Green
+        if v == 1: color = GreenG
+        if v == 0: color = Grey4
+        if v == -1: color = RedG
+        if v == -2: color = Red
+        pg.draw.rect(screen, color, (325 - 30*i, 285, 30, 30))
     
     Mblit(screen, title, (800, 80))
     Mblit(screen, Match_text, (20, 20), 'TL')
     Mblit(screen, Round_text, (20, 55), 'TL')
     Mblit(screen, Next_button, (1580, 20), 'TR')
 
-    pg.draw.rect(screen, White, (150, 280, 210, 40)) # Grey1
-    pg.draw.circle(screen, White, (150, 300), 50)
     Mblit(screen, team_text, (150, 300))
     Mblit(Alpha_screen, warn_text, (800, 450))
 
     screen.blit(Alpha_screen, (0, 0))
-
     return player1, player2, tick+1
 
 def n_draw_flop(screen, const, var):
@@ -259,7 +268,6 @@ def n_draw_exchange_lose(screen, const, var):
     Match_text = NS[24].render(f'Match {Match}', True, White)
     warn_text = NSE[72].render('Choose more card.', True, Black).convert_alpha()
     warn_text.set_alpha(tickf1*255/30)
-    # print(tickf1*255/30)
 
     screen.blit(bg1, (0, 0))
     for i in range(c1):
@@ -286,3 +294,99 @@ def n_draw_exchange_lose(screen, const, var):
     
     screen.blit(Alpha_screen, (0, 0))
     return player1, player2
+
+def n_draw_exchange_draw(screen, const, var):
+    Match, tickf1 = const
+    player1, player2 = var
+    
+    c1 = len(player1.card_list)
+    s2 = len(player2.shown)
+    Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
+    title = NS[72].render("상대에게 뺏어올 카드를 선택하세요", True, White)
+    Match_text = NS[24].render(f'Match {Match}', True, White)
+    warn_text = NSE[72].render('Choose more card.', True, Black).convert_alpha()
+    warn_text.set_alpha(tickf1*255/30)
+
+    screen.blit(bg1, (0, 0))
+    for i in range(c1):
+        card = player1.card_list[i]
+        x = 900 - 100*c1 + 200*i
+        Mblit(screen, card.img_ci, (x, 615))
+        if card in player1.active_list:
+            pg.draw.rect(screen, Red, (x - 90, 480, 180, 270), 3, border_radius = 15)
+        pg.draw.rect(Alpha_screen, GreyA, (x - 90, 480, 180, 270), border_radius = 15)
+    for j in range(s2):
+        card = player2.shown[j]
+        x = 900 - 100*s2 + 200*j
+        Mblit(screen, card.img_ci, (x, 285))
+        if card in player2.active_list:
+            pg.draw.rect(screen, Red, (x - 90, 150, 180, 270), 3, border_radius = 15)
+    
+    Mblit(screen, title, (800, 80))
+    Mblit(screen, Match_text, (20, 20), 'TL')
+    Mblit(screen, Next_button, (1580, 20), 'TR')
+    Mblit(Alpha_screen, warn_text, (800, 450))
+    
+    screen.blit(Alpha_screen, (0, 0))
+
+    return player1, player2
+
+def n_draw_exchange_delay(screen, const, var):
+    player1 = const
+    tick    = var
+    c1      = len(player1.card_list)
+
+    screen.blit(bg1, (0, 0))
+    Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
+    title = NS[60].render('Please wait...', True, White)
+
+    Mblit(screen, title, (800, 70))
+    for i in range(c1):
+        card = player1.card_list[i]
+        x = 900 - c1*100 + i*200
+        Mblit(screen, card.img, (x, 615))
+    for i in range(8):
+        x = 800 + 60*math.sin(math.pi * (i + round(tick/5)) / 4)
+        y = 450 + 60*math.cos(math.pi * (i + round(tick/5)) / 4)
+        c = list(Red) + [55 + i*200 / 8]
+        pg.draw.circle(Alpha_screen, c, (x, y), 10)
+
+    screen.blit(Alpha_screen, (0, 0))
+    return tick+1
+
+def n_draw_exchange_result(screen, const, var):
+    Match, player1, player2, choose = const
+    tick = var
+
+    c1 = len(player1.card_list)
+    mycard_surf = pg.Surface((180, 270), pg.SRCALPHA).convert_alpha()
+    mycard_surf.blit(player1.ex_card.img_ci, (0, 0))
+    mycard_surf.set_alpha((40-tick)*255/30)
+    yourcard_surf = pg.Surface((180, 270), pg.SRCALPHA).convert_alpha()
+    yourcard_surf.blit(player2.ex_card.img_ci, (0, 0))
+    yourcard_surf.set_alpha((tick-60)*255/30)
+    if tick >= 90:
+        title = NS[72].render('교환 결과', True, White)
+
+    screen.blit(bg1, (0, 0))
+    for i in range(c1):
+        card = player1.card_list[i]
+        x = 900 - c1*100 + i*200
+        if card == player1.ex_card or card == player2.ex_card:
+            if 0 <= tick < 10:
+                Mblit(screen, mycard_surf, (x, 615))
+            if 10 <= tick < 40:
+                x, y = easing((x, 615), (x, 215), m_sinein, tick-10, 30)
+                Mblit(screen, mycard_surf, (x, y))
+            if 60 <= tick < 90:
+                x, y = easing((x, 215), (x, 615), m_sineout, tick-60, 30)
+                Mblit(screen, yourcard_surf, (x, y))
+            if tick >= 90 or tick == -1:
+                Mblit(screen, yourcard_surf, (x, 615))
+            continue
+        Mblit(screen, card.img_ci, (x, 615))
+    if tick >= 90:
+        Mblit(screen, title, (800, 80))
+        Mblit(screen, Next_button, (1580, 20), 'TR')
+
+    return tick+1

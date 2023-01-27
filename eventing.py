@@ -127,8 +127,8 @@ def mouse_result(var):
             player2.active_list = []
             player1.showc = []
             player2.showc = []
-            if sum(player1.pre[-1]) > 0: mode = 'exchangeD'
-            if sum(player1.pre[-1]) == 0: mode = 'exchangeB'
+            if sum(player1.pre[-1]) > 0: mode = 'exchange_delay'
+            if sum(player1.pre[-1]) == 0: mode = 'exchange_draw'
             if sum(player1.pre[-1]) < 0: mode = 'exchange_lose'
 
     return mode, Round, tick, choose, player1, player2
@@ -178,10 +178,51 @@ def mouse_exchange_lose(var):
             else:
                 tickf1 = 0
                 choose = 0
-                mode = 'exchangeR'
-                i1 = player1.card_list.index(player1.active_list[0])
-                i2 = player2.card_list.index(player2.active_list[0])
-                player1.card_list[i1] = player2.active_list[0]
-                player2.card_list[i2] = player1.active_list[0]
+                mode = 'exchange_result'
+                player1.ex_index = player1.card_list.index(player1.active_list[0])
+                player2.ex_index = player2.card_list.index(player2.active_list[0])
+                player1.ex_card = player1.active_list[0]
+                player2.ex_card = player2.active_list[0]
 
     return mode, choose, tickf1, player1, player2
+
+def mouse_exchange_draw(var):
+    mode, tick, tickf1, player1, player2 = var
+
+    pos = list(pg.mouse.get_pos())
+    pos[0] *= (1600/WIDTH)
+    pos[1] *= (900/HEIGHT)
+
+    s2 = len(player2.shown)
+    for i in range(s2):
+        x = 900 - s2*100 + i*200
+        if in_rect(pos, (x - 90, 420 - 270, 180, 270)):
+            card = player2.shown[i]
+            if card in player2.active_list:
+                player2.active_list.remove(card)
+            else:
+                player2.active_list.append(card)
+                if len(player2.active_list) > 1:
+                    del player2.active_list[0]
+    if in_rect(pos, (1580 - 90, 20, 90, 60)):
+        if len(player2.active_list) < 1:
+            tickf1 = 30
+        else:
+            tickf1 = 0
+            tick = 0
+            mode = 'exchange_delay'
+
+    return mode, tick, tickf1, player1, player2
+
+def mouse_exchange_result(var):
+    mode, tick = var
+
+    pos = list(pg.mouse.get_pos())
+    pos[0] *= (1600/WIDTH)
+    pos[1] *= (900/HEIGHT)
+
+    if in_rect(pos, (1580 - 90, 20, 90, 60)):
+        tick = -1
+        mode = 'getMatch'
+
+    return mode, tick
