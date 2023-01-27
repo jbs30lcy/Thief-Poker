@@ -150,6 +150,7 @@ def n_draw_play(screen, const, var):
     team_text = NSE[48].render(str(player2.key%10), True, Black)
     warn_text = NSE[72].render('Choose more card.', True, Black).convert_alpha()
     warn_text.set_alpha(tickf1*255/30)
+    coin_text = NS[30].render(str(player1.coin), True, White)
     common_card = player1.common
 
     screen.blit(bg2, (0, 0))
@@ -185,7 +186,8 @@ def n_draw_play(screen, const, var):
     Mblit(screen, Match_text, (20, 20), 'TL')
     Mblit(screen, Round_text, (20, 55), 'TL')
     Mblit(screen, Next_button, (1580, 20), 'TR')
-
+    Mblit(screen, Coin_icon, (20, 855), 'ML')
+    Mblit(screen, coin_text, (80, 855), 'ML')
     Mblit(screen, team_text, (150, 300))
     Mblit(Alpha_screen, warn_text, (800, 450))
 
@@ -220,6 +222,7 @@ def n_draw_flop(screen, const, var):
     else:
         myrank = NS[30].render(str2Kr(player1.rank3p(player1.showc)), True, White)
         yourrank = NS[30].render(str2Kr(player2.rank3p(player2.showc)), True, White)
+    coin_text = NS[30].render(str(player1.coin), True, White)
 
     screen.blit(bg1, (0, 0))
     Mblit(screen, player1.showc[-2].img_ci, (x1, p1card_y))
@@ -228,6 +231,8 @@ def n_draw_flop(screen, const, var):
     Mblit(screen, player2.showc[-1].img_ci, (x2, p2card_y))
     Mblit(screen, myrank, (800, 600), 'ML')
     Mblit(screen, yourrank, (800, 300), 'ML')
+    Mblit(screen, Coin_icon, (20, 855), 'ML')
+    Mblit(screen, coin_text, (80, 855), 'ML')
     if tick >= 60 or tick == -1: Mblit(screen, common_surf, (common_x, common_y))
     if tick > 80 or tick == -1: Mblit(screen, Next_button, (1580, 20), 'TR')
 
@@ -251,6 +256,7 @@ def n_draw_result(screen, const, var):
         if w == 0: win_text = NSE[96].render('DRAW', True, Black)
         if w == 1: win_text = NSE[96].render('YOU WIN!', True, Black)
         if w == 2: win_text = NSE[96].render('YOU LOSE', True, Black)
+    coin_text = NS[30].render(str(player1.coin), True, White)
 
     screen.blit(bg1, (0, 0))
     Mblit(screen, player1.showc[1].img_ci, (400, 615))
@@ -268,6 +274,8 @@ def n_draw_result(screen, const, var):
     if tick >= 70 or tick == -1:
         Mblit(screen, win_text, (800, 450))
         Mblit(screen, Next_button, (1580, 20), 'TR')
+    Mblit(screen, Coin_icon, (20, 855), 'ML')
+    Mblit(screen, coin_text, (80, 855), 'ML')
 
     return player1, player2, tick+1
 

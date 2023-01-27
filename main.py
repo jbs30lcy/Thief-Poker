@@ -240,6 +240,7 @@ def main():
                 p1.set_shown()
                 p2.set_shown()
                 w = win(p1, p2)
+            if t == 70:
                 if w == 0:
                     p1.coin += 5
                     p1.pre[-1].append(0)
