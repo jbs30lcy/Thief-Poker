@@ -83,13 +83,17 @@ def mouse_play(var):
             tickf1 = 0         
             if choose == 0:
                 choose = 0.5
-                mode = 'phase2'
-                player1.showc = player1.active_list.copy() # p2는 지금 받으면 안됨
+                player1.showc = player1.active_list.copy()
+                player2.showc = player2.active_list.copy()
+                player1.set_shown()
+                player2.set_shown()
+                tick = -1
+                mode = 'flop'
             if choose == 1:
                 tick = -1
                 mode = 'result'
                 player1.showc = player1.showc + player1.active_list.copy()
-                player1.active_list = [] # 왜 이걸 여기서 초기화 시키지?
+                player1.active_list = []
                 player2.showc = player2.showc + player2.active_list.copy()
                 player2.active_list = []
 
@@ -118,7 +122,7 @@ def mouse_result(var):
 
     if tick >= 70 and in_rect(pos, (1580 - 90, 20, 90, 60)):
         Round += 1
-        mode = 'init'
+        mode = 'reset'
         if Round == 3:
             Round = 1
             choose = 0

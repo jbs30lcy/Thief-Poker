@@ -70,6 +70,7 @@ def n_draw_choose_key(screen, const, var):
     team_val  = p1.key % 10
 
     title = NS[80].render("반과  팀을  선택하세요", True, Black)
+    subtitle = NS[48].render("방향키로 작동합니다", True, Black)
     class_text = NS[48].render("반", True, Black)
     team_text = NS[48].render("팀", True, Black)
     class_val_text = NSE[72].render(str(class_val), True, (8*tickf1, 26/30*tickf1, 0))
@@ -77,6 +78,7 @@ def n_draw_choose_key(screen, const, var):
 
     screen.fill(Grey1)
     Mblit(screen, title, (800, 100))
+    Mblit(screen, subtitle, (800, 190))
     Mblit(screen, class_text, (400, 700))
     Mblit(screen, team_text, (1200, 700))
     Mblit(screen, class_val_text, (400, 450))
@@ -162,11 +164,19 @@ def n_draw_play(screen, const, var):
             pg.draw.rect(screen, Red, (x-150, y-225, 300, 450), 4, border_radius = 30)
         if choose == 1 and card in player1.showc:
             pg.draw.rect(screen, Grey3, (x-150, y-225, 300, 450), 10, border_radius = 30)
-    for i in range(c2):
-        card = player2.card_list[i]
-        x, y = 816.6 - c1*16.7 + 33.3*i, 300
-        Mblit(screen, Card.shrink(CI_ori['Hide'], 1/6), (x, y))
+    
+    if choose == 0 or choose == 0.5:
+        for i in range(c2):
+            card = player2.card_list[i]
+            x, y = 816.6 - c2*16.7 + 33.3*i, 300
+            Mblit(screen, Card.shrink(CI_ori['Hide'], 1/6), (x, y))
     if choose == 1:
+        Mblit(screen, Card.shrink(player2.showc[-2].imgo, 1/6), (816.7 - c2*16.7, 300))
+        Mblit(screen, Card.shrink(player2.showc[-1].imgo, 1/6), (833.3 - c2*16.7, 300))
+        for i in range(c2-2):
+            card = player2.card_list[i]
+            x, y = 850 - c2*16.7 + 33.3*i, 300
+            Mblit(screen, Card.shrink(CI_ori['Hide'], 1/6), (x, y))
         Mblit(screen, common_card.img_ci, (1300, 300))
         pg.draw.rect(screen, Yellow, (1195, 150, 210, 300), 3, border_radius = 15)
 
@@ -391,7 +401,7 @@ def n_draw_exchange_result(screen, const, var):
     yourcard_surf.blit(player2.ex_card.img_ci, (0, 0))
     yourcard_surf.set_alpha((tick-60)*255/30)
     if tick >= 90:
-        title = NS[72].render('교환 결과', True, White)
+        title = NS[72].render('교환  결과', True, White)
 
     screen.blit(bg1, (0, 0))
     for i in range(c1):

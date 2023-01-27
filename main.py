@@ -28,6 +28,7 @@ def win(player1, player2):
     if p2b and 0 < score1 < 100: return 1  # 개패가 검은 족보를 잡기
     if score1 > score2: return 1
     if score2 > score1: return 2 # 족보의 높낮이
+    if p1b and p2b: return 0
     if p1b: return 2
     if p2b: return 1 # 동일 족보에서 검은 족보가 짐.
     return 0
@@ -126,23 +127,20 @@ def main():
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             if t == 200:
-                mode = 'init'
+                mode = 'reset'
 
             clock.tick(60)
-            pg.display.update()
+            pg.display.update()   
 
-        if mode == 'init':   #뭐노?1 곧 사라질 예정
+        if mode == 'reset': # 죽일 수 있는 모드인줄 알았는데, 역시 잘 돌아가는 코드는 건들면 안됨. 이름만 init => reset으로 바꿈.
             choose = 0
             t, w = 0, -1
-            p1, p2, Match = start(Round, (p1, p2, Match))
-            mode = 'phase1'
-        
-        if mode == 'phase1': #뒤지는 놈 2
+            p1, p2, Match = start(Round, (p1, p2, Match)) # 이 부분 대신에 DB에서 끌고 와야 하지
             p2 = phase1(p2)
             if 1 in p1.Rule[1] or 2 in p1.Rule[1]:
                 mode = 'showDD'
             else:
-                mode = 'play_pre'
+                mode = 'play_pre' 
 
         # if mode == 'showDD':  # 땡잡이를 보여주는 화면 (지금 안씀)
         #     for event in pg.event.get():
@@ -192,19 +190,6 @@ def main():
             if choose == 0.5: choose = 1
             clock.tick(60)
             pg.display.update()
-
-        if mode == 'phase2': #잘가~
-
-            p2.showc = p2.active_list.copy()
-            for card in p1.showc:
-                if not card in p1.shown:
-                    p1.shown.append(card)
-            for card in p2.showc:
-                if not card in p2.shown:
-                    p2.shown.append(card)
-
-            t = 0
-            mode = 'flop'
         
         if mode == 'flop': # 카드 내는 애니메이션 
             for event in pg.event.get():
