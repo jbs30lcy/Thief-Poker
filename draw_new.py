@@ -172,10 +172,10 @@ def n_draw_play(screen, const, var):
             Mblit(screen, Card.shrink(CI_ori['Hide'], 1/6), (x, y))
     if choose == 1:
         Mblit(screen, Card.shrink(player2.showc[-2].imgo, 1/6), (816.7 - c2*16.7, 300))
-        Mblit(screen, Card.shrink(player2.showc[-1].imgo, 1/6), (833.3 - c2*16.7, 300))
+        Mblit(screen, Card.shrink(player2.showc[-1].imgo, 1/6), (850 - c2*16.7, 300))
         for i in range(c2-2):
             card = player2.card_list[i]
-            x, y = 850 - c2*16.7 + 33.3*i, 300
+            x, y = 883.3 - c2*16.7 + 33.3*i, 300
             Mblit(screen, Card.shrink(CI_ori['Hide'], 1/6), (x, y))
         Mblit(screen, common_card.img_ci, (1300, 300))
         pg.draw.rect(screen, Yellow, (1195, 150, 210, 300), 3, border_radius = 15)
