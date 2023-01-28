@@ -3,6 +3,8 @@ from pygame.locals import *
 from obj import *
 from setting import *
 pg.init()
+NUMBER_OF_GROUPS = 26
+NUMBER_OF_TEAMS = 8
 
 def mouse_main(var):
     mode, player1 = var
@@ -21,26 +23,24 @@ def key_choose_key(const, var):
     player1, tickf1, tickf2 = var
 
     if event.key == K_UP:
-        player1.key += 10
+        player1.group = player1.group % NUMBER_OF_GROUPS + 1
         tickf1 = 30
-        if player1.key > 270:
-            player1.key -= 260
+        
     if event.key == K_DOWN:
-        player1.key -= 10
+        player1.group -= 2 
+        player1.group %= NUMBER_OF_GROUPS
+        player1.group += 1
         tickf1 = 30
-        if player1.key < 10:
-            player1.key += 260
     if event.key == K_RIGHT:
-        player1.key += 1
+        player1.team %= NUMBER_OF_TEAMS
+        player1.team += 1 
         tickf2 = 30
-        if player1.key%10 == 9:
-            player1.key -= 8
+        
     if event.key == K_LEFT:
-        player1.key -= 1
+        player1.team -= 2
+        player1.team %= NUMBER_OF_TEAMS
+        player1.team += 1 
         tickf2 = 30
-        if player1.key%10 == 0:
-            player1.key += 8
-    
     return player1, tickf1, tickf2
 
 def mouse_choose_key(var):
@@ -87,11 +87,11 @@ def mouse_play(var):
                 player2.showc = player2.active_list.copy()
                 player1.set_shown()
                 player2.set_shown()
-                tick = -1
-                mode = 'flop'
+                tick = -1                
+                mode = 'flop_pre'
             if choose == 1:
                 tick = -1
-                mode = 'result'
+                mode = 'flop_pre'
                 player1.showc = player1.showc + player1.active_list.copy()
                 player1.active_list = []
                 player2.showc = player2.showc + player2.active_list.copy()

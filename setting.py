@@ -13,43 +13,45 @@ def make_whole():
             card_list.append(Card(color, num))
     return card_list
 
-def start(const, var):
+def start(const, var): # 이제 안씀
     Round   = const
     player1 = var[0]
-    player2 = var[1]
-    Match   = var[2]
-
+    # player2 = var[1]
+    Match   = var[1]
     player1.active_list = []
     player1.showc       = []
-    player2.active_list = []
-    player2.showc       = []
     player1.Rank = ''
-    player2.Rank = ''
+    
+    # player2.active_list = []
+    # player2.showc       = []
+    # player2.Rank = ''
+    
 
-    if Round == 1:
-        player1.pre.append([])
-        player2.pre.append([]) # 얘는 이제 DB에서 갖고와야 하는 부분.
-        player1.shown = []
-        player2.shown = []
-        Match += 1
-        player2.key = random.randint(1, 999)
+    # if Round == 1:
+    #     player1.pre.append([])
+    #     player2.pre.append([]) # 얘는 이제 DB에서 갖고와야 하는 부분.
+    #     player1.shown = []
+    #     player2.shown = []
+    #     Match += 1
+    #     player2.key = random.randint(1, 999)
 
-        if Match == 1:
-            while True:
-                player1.card_list = random.sample(make_whole(), 6)
-                n = 0
-                for i in range(6):
-                    if player1.card_list[i].color == 'black': n += 1
-                if n <= 1: break
+    #     if Match == 1:
+    #         while True:
+    #             player1.card_list = random.sample(make_whole(), 6)
+    #             n = 0
+    #             for i in range(6):
+    #                 if player1.card_list[i].color == 'black': n += 1
+    #             if n <= 1: break
 
-        while True:
-            player2.card_list = random.sample(make_whole(), 6)
-            n = 0
-            for i in range(6):
-                if player2.card_list[i].color == 'black': n += 1
-            if n <= 1: break
+    #     while True:
+    #         player2.card_list = random.sample(make_whole(), 6)
+    #         n = 0
+    #         for i in range(6):
+    #             if player2.card_list[i].color == 'black': n += 1
+    #         if n <= 1: break
 
-    return (player1, player2, Match)
+    #return (player1, player2, Match)
+    return (player1, Match)
 
 
 def phase1(var):

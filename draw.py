@@ -66,8 +66,8 @@ def draw_choose_key(screen, const, var):
     p1 = const
     tickf1, tickf2 = var
 
-    class_val = p1.key // 10
-    team_val  = p1.key % 10
+    class_val = p1.group
+    team_val  = p1.team
 
     title = NS[80].render("반과  팀을  선택하세요", True, Black)
     subtitle = NS[48].render("방향키로 작동합니다", True, Black)
@@ -194,15 +194,15 @@ def draw_play(screen, const, var):
 
     pg.draw.rect(screen, White, (150, 280, 210, 40))
     pg.draw.circle(screen, White, (150, 300), 50)
-    for i in range(5):
-        if Match < i+2: continue
-        v = sum(player2.pre[-i-2])
-        if v == 2: color = Green
-        if v == 1: color = GreenG
-        if v == 0: color = Grey4
-        if v == -1: color = RedG
-        if v == -2: color = Red
-        pg.draw.rect(screen, color, (325 - 30*i, 285, 30, 30))
+    # for i in range(5):
+    #     if Match < i+2: continue
+    #     v = sum(player2.pre[-i-2])
+    #     if v == 2: color = Green
+    #     if v == 1: color = GreenG
+    #     if v == 0: color = Grey4
+    #     if v == -1: color = RedG
+    #     if v == -2: color = Red
+    #     pg.draw.rect(screen, color, (325 - 30*i, 285, 30, 30))
     
     Mblit(screen, title, (800, 70))
     Mblit(screen, Match_text, (20, 20), 'TL')

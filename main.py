@@ -38,6 +38,7 @@ def main():
     choose = 0
     Match = 0
     Round = 1
+    Phase = 0
     t, w = 0, -1
     tf1, tf2 = 0, 0 # 조건부 작동되는 tick
     common = None
@@ -46,7 +47,8 @@ def main():
 
     p1 = Player()
     p2 = Player()
-    
+    sp = SP()
+
     # mode 변수에 따라 실행되는 코드가 달라짐
     while True:
         if mode == 'main': # 초록색 게임 시작 화면
@@ -70,6 +72,11 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
                     mode = mouse_choose_key(mode)
+                    if mode == "get_match":
+                        #sp = SP(p1.group, p1.team)
+                        # 배포시 수정하도록
+                        sp = SP(0, p1.team)
+                        sp.enroll_player()
                 if event.type == KEYDOWN:
                     p1, tf1, tf2 = key_choose_key(event, (p1, tf1, tf2))
             
@@ -78,7 +85,7 @@ def main():
             
             clock.tick(60)
             pg.display.update()
-
+        '''
         # if mode == 'chooseRank': # choose one 해서 스트레이트 플러쉬 고민하기
         #     pos = pg.mouse.get_pos()
         #     r1, r2 = Rule
@@ -115,6 +122,7 @@ def main():
 
         #     clock.tick(60)
         #     pg.display.update()
+        '''
 
         if mode == 'get_match':  # Finding player - 하는 화면
             for event in pg.event.get():
@@ -125,8 +133,15 @@ def main():
             t = draw_get_match(ori_screen, t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
-            if t == 200:
-                mode = 'reset'
+            if t % 60 == 0:
+                if sp.get_start_permission(Match) :
+                    if Phase % 2 == 0:
+                        p2num = sp.get_opponent(Match) #int(sp.get_acell(sp.col_add(sp.cols['opponent'], Match-1), p1.team))
+                        p2 = Player( p2num, sp.get_hand(p2num) )
+
+
+                    Phase = Phase % 2 + 1
+                    mode = 'reset'
 
             clock.tick(60)
             pg.display.update()   
@@ -134,13 +149,18 @@ def main():
         if mode == 'reset': # 죽일 수 있는 모드인줄 알았는데, 역시 잘 돌아가는 코드는 건들면 안됨. 이름만 init => reset으로 바꿈.
             choose = 0
             t, w = 0, -1
-            p1, p2, Match = start(Round, (p1, p2, Match)) # 이 부분 대신에 DB에서 끌고 와야 하지
-            p2 = phase1(p2)
+            #p1, Match = start(Round, (p1, Match)) # 이 부분 대신에 DB에서 끌고 와야 하지
+            if Match == 1:
+                pl.card_list = sp.get_hand()
+            p1.active_list = []
+            p1.showc = []
+            p1.Rank = ''
+            Match += 1
             if 1 in p1.Rule[1] or 2 in p1.Rule[1]:
                 mode = 'showDD'
             else:
                 mode = 'play_pre' 
-
+        '''
         # if mode == 'showDD':  # 땡잡이를 보여주는 화면 (지금 안씀)
         #     for event in pg.event.get():
         #         if event.type == QUIT:
@@ -160,12 +180,14 @@ def main():
 
         #     clock.tick(60)
         #     pg.display.update()
+        '''
 
         if mode == 'play_pre':  # 카드를 펼치는 애니메이션
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
+
             
             t = draw_play_pre(ori_screen, (p1, p2), t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
@@ -183,7 +205,8 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
                     p1, p2, mode, choose, t, tf1 = mouse_play((p1, p2, mode, choose, t, tf1))
-
+                    if mode == 'flop_pre':
+                        sp.upload_playing( hand_cards = p1.active_list, phase = Phase)
             p1, p2, t = draw_play(ori_screen, (Round, Match, choose, tf1), (p1, p2, t))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
@@ -193,6 +216,28 @@ def main():
             clock.tick(60)
             pg.display.update()
         
+        if mode = 'flop_pre': #여기에 대기시간 화면 필요 -> 페이즈 1 내고 상대 내는거까지 기다리는 시점
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+            
+            t = draw_delay(ori_screen, t)
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+
+            if t % 30 == 0 :
+                if sp.has_conducted(p2.team, Round, Phase)
+                    #p2.active_list = sp.get_playing(p2.team, Phase)
+                    if Phase == 1:
+                        p2.showc = sp.get_playing(p2.team, Phase)
+                        mode = 'flop'
+                    else
+                        p2.showc += sp.get_playing(p2.team, Phase)
+                        mode = "result"
+            
+            clock.tick(60)
+            pg.display.update()
+            
         if mode == 'flop': # 카드 내는 애니메이션 
             for event in pg.event.get():
                 if event.type == QUIT:
@@ -204,10 +249,11 @@ def main():
             t = draw_flop(ori_screen, (Round, Match, p1, p2), t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if t == 60:
-                common = get_random_card()
-                if 1 in Rule[1]:
-                    while dd[0].color == common.color and dd[0].val == common.val:
-                        common = get_random_card() # 커뮤니티 카드와 땡잡이 중복 방지
+                #common = get_random_card()
+                common = sp.get_common(Phase)
+                # if 1 in Rule[1]:
+                #     while dd[0].color == common.color and dd[0].val == common.val:
+                #         common = get_random_card() # 커뮤니티 카드와 땡잡이 중복 방지
                 p1.common = common
                 p2.common = common
                 p1.showc = [common] + p1.showc
@@ -240,7 +286,7 @@ def main():
                 if w == 2:
                     p1.pre[-1].append(-1)
                     p2.pre[-1].append(1)
-
+                sp.update_cell('chips', p1.team, p1.coin)
             if mode == 'result': #가끔 씹힐때 있어서 버그처리
                 p1, p2, t = draw_result(ori_screen, (Round, Match, w), (p1, p2, t))
                 screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
@@ -255,7 +301,11 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
                     mode, choose, tf1, p1, p2 = mouse_exchange_lose((mode, choose, tf1, p1, p2))
-
+                    if mode == "exchange_result" : 
+                        sp.update_cell('changed_index', p1.team+1, p1.ex_index)
+                        sp.update_cell('changed_index', p2.team+1, p2.ex_index)
+                        sp.update_cell("phase", p1.team+1, 3)
+                        sp.update_cell("phase", p2.team+1, 3)
             p1, p2 = draw_exchange_lose(ori_screen, (Match, choose, tf1), (p1, p2))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if tf1: tf1 -= 1
@@ -271,7 +321,9 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
                     mode, t, tf1, p1, p2 = mouse_exchange_draw((mode, t, tf1, p1, p2))
-            
+                    if mode == "exchange_delay":
+                        sp.update_cell("changed_index", p2.team+1, p2.ex_index)
+                        sp.update_cell("phase", p1.team+1, 3)
             p1, p2 = draw_exchange_draw(ori_screen, (Match, tf1), (p1, p2))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if tf1: tf1 -= 1
@@ -288,22 +340,19 @@ def main():
             t = draw_exchange_delay(ori_screen, p1, t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
-            if sum(p1.pre[-1]) > 0 and t == 120:
-                mycard   = get_random_exchange(p1)
-                yourcard = get_random_exchange(p2)
-                p1.ex_index = p1.card_list.index(mycard)
-                p2.ex_index = p2.card_list.index(yourcard)
-                p1.ex_card = mycard
-                p2.ex_card = yourcard
+            if sum(p1.pre[-1]) > 0 and t % 60 == 0 and sp.has_conducted(Round, 3):
+                p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
+                p2.ex_index = int(sp.get_acell('changed_index', p2.team+1))
+                p1.ex_card = p1.card_list[p1.ex_index]
+                p2.ex_card = p2.card_list[p2.ex_index]
                 choose = 0
                 t = 0
                 mode = 'exchange_result'
-            if sum(p1.pre[-1]) == 0 and t == 60:
-                mycard = get_random_exchange(p1)
-                p1.ex_index = p1.card_list.index(mycard)
-                p2.ex_index = p2.card_list.index(p2.active_list[0])
-                p1.ex_card = mycard
-                p2.ex_card = p2.active_list[0]
+            if sum(p1.pre[-1]) == 0 and t % 60 == 0 and sp.has_conducted(p2.team+1, Round, 3):
+            
+                p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
+                p1.ex_card = p2.card_list[p1.ex_index]
+                
                 choose = 0
                 t = 0
                 mode = 'exchange_result'

@@ -3,6 +3,7 @@
 
 import pygame as pg
 import os
+import random
 
 WIDTH, HEIGHT = 1600, 900
 
@@ -30,6 +31,8 @@ CI_half = {}
 CI_std = {}
 colors = ("Black", "Red", "Yellow", "Blue", "Green")
 colors_dict = {"Black":0, "Red":1, "Yellow":2, "Blue":3, "Green":4}
+NUMBER_OF_COLORS = 4
+NUMBER_OF_NUM = 7
 
 file_path = os.path.dirname(os.path.abspath(__file__))
 img_dir_path = file_path + "\\img\\"
@@ -49,8 +52,13 @@ for card in Card_IMGlist:
 def in_rect(pos, rect):
     return rect[0] <= pos[0] <= rect[0] + rect[2] and rect[1] <= pos[1] <= rect[1] + rect[3]
 class Card:
-    def __init__(self, color, val = 0, fromcell=False):
-        if fromcell:
+    def __init__(self, color='00', val = 0, fromcell=False, use_random=False, except_joker=False):
+        if use_random:
+            
+            ran = random.randrange(NUMBER_OF_COLORS * NUMBER_OF_NUM + 1)
+            self.color = colors[(ran-1) // NUMBER_OF_NUM + 1 ]
+            self.val = (ran-1) % NUMBER_OF_NUM + 1
+        elif fromcell:
             self.color = colors[int(color[0]) ]
             self.val = int(color[1])
         else:
@@ -73,13 +81,25 @@ class Card:
     def __str__(self):
         return f'{ colors_dict[self.color] }{self.val}'
 
+    @staticmethod
+    def rand_card(except_joker=False):
+        ran = random.randrange(NUMBER_OF_COLORS * NUMBER_OF_NUM + 1)
+        
+        color = colors[(ran-1) // NUMBER_OF_NUM + 1 ]
+        val = (ran-1) % NUMBER_OF_NUM + 1
+            
+        if except_joker and color == 0:
+            return rand_card(except_joker)
+        else:
+            return f'{color}{val}'
+
     @classmethod
     def shrink(cls, surf, rate = 0.5):
         return pg.transform.scale(surf, (rate * surf.get_width(), rate * surf.get_height()))
 
 class Player:
-    def __init__(self):
-        self.card_list = []
+    def __init__(self, team = 1, card_list = [], group = 1):
+        self.card_list = card_list
         self.active_list = []
         self.showc = []
         self.shown = []
@@ -89,7 +109,8 @@ class Player:
         self.dd = []
         self.Rank = ''
         self.isdd = False
-        self.key = 0
+        self.group = group
+        self.team = team
         self.ex_index = 0
         self.ex_card = None
         self.pre = [0]
