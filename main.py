@@ -48,6 +48,7 @@ def main():
     p1 = Player()
     p2 = Player()
     sp = SP()
+    WAITING_TIME = 300
 
     # mode 변수에 따라 실행되는 코드가 달라짐
     while True:
