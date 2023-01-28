@@ -71,7 +71,10 @@ class Director():
 
         print(share_cards)
         shares = [ '|'.join(x) for x in share_cards ]
+        if self.num_players == 2 :
+            opps = [x[0] for x in opps]
         
+
         return opps, shares
     
     def ck_match(self, match):
