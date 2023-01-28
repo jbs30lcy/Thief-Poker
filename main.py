@@ -134,7 +134,7 @@ def main():
             t = draw_get_match(ori_screen, t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
-            if t % 60 == 0:
+            if t % WAITING_TIME == 0:
                 if sp.get_start_permission(Match) :
                     if Phase % 2 == 0:
                         Match += 1 
@@ -227,7 +227,7 @@ def main():
             t = draw_delay(ori_screen, t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
-            if t % 30 == 0 :
+            if t % WAITING_TIME == 0 :
                 if sp.has_conducted(p2.team, Round, Phase):
                     #p2.active_list = sp.get_playing(p2.team, Phase)
                     if Phase == 1:
@@ -342,7 +342,7 @@ def main():
             t = draw_exchange_delay(ori_screen, p1, t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
-            if sum(p1.pre[-1]) > 0 and t % 60 == 0 and sp.has_conducted(Round, 3):
+            if sum(p1.pre[-1]) > 0 and t % WAITING_TIME == 0 and sp.has_conducted(Round, 3):
                 p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
                 p2.ex_index = int(sp.get_acell('changed_index', p2.team+1))
                 p1.ex_card = p1.card_list[p1.ex_index]
@@ -350,7 +350,7 @@ def main():
                 choose = 0
                 t = 0
                 mode = 'exchange_result'
-            if sum(p1.pre[-1]) == 0 and t % 60 == 0 and sp.has_conducted(p2.team+1, Round, 3):
+            if sum(p1.pre[-1]) == 0 and t % WAITING_TIME == 0 and sp.has_conducted(p2.team+1, Round, 3):
             
                 p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
                 p1.ex_card = p2.card_list[p1.ex_index]
