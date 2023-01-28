@@ -136,7 +136,8 @@ def main():
             if t % 60 == 0:
                 if sp.get_start_permission(Match) :
                     if Phase % 2 == 0:
-                        p2num = sp.get_opponent(Match) #int(sp.get_acell(sp.col_add(sp.cols['opponent'], Match-1), p1.team))
+                        Match += 1 
+                        p2num = sp.get_opponent(Match) 
                         p2 = Player( p2num, sp.get_hand(p2num) )
 
 
@@ -151,7 +152,7 @@ def main():
             t, w = 0, -1
             #p1, Match = start(Round, (p1, Match)) # 이 부분 대신에 DB에서 끌고 와야 하지
             if Match == 1:
-                pl.card_list = sp.get_hand()
+                p1.card_list = sp.get_hand()
             p1.active_list = []
             p1.showc = []
             p1.Rank = ''
@@ -216,7 +217,7 @@ def main():
             clock.tick(60)
             pg.display.update()
         
-        if mode = 'flop_pre': #여기에 대기시간 화면 필요 -> 페이즈 1 내고 상대 내는거까지 기다리는 시점
+        if mode == 'flop_pre': #여기에 대기시간 화면 필요 -> 페이즈 1 내고 상대 내는거까지 기다리는 시점
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
@@ -226,12 +227,12 @@ def main():
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             if t % 30 == 0 :
-                if sp.has_conducted(p2.team, Round, Phase)
+                if sp.has_conducted(p2.team, Round, Phase):
                     #p2.active_list = sp.get_playing(p2.team, Phase)
                     if Phase == 1:
                         p2.showc = sp.get_playing(p2.team, Phase)
                         mode = 'flop'
-                    else
+                    else:
                         p2.showc += sp.get_playing(p2.team, Phase)
                         mode = "result"
             

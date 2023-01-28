@@ -52,10 +52,12 @@ class SP:
         col = self.cols['hand']
         team += 1
         hand = []
+        i = 0
         while True:
-            card = self.ws.get(f'{self.col_add(col+i)}{team}')
+            card = self.get_acell(self.col_add(col,i),team)
             if self.cell_is_empty(card) : break
             hand.append(Card(card, fromcell=True))
+            i += 1
         return hand
 
     def upload_hand(self, team = 0, hand_cards = []): #플레이어의 번호와 카드 리스트를 받아서 스프레드시트에 업로드
@@ -74,7 +76,7 @@ class SP:
         hand_cards = [str(x) for x in hand_cards]
         card_text = "|".join(hand_cards)
         self.update_cell(col, team, card_text)
-        self.update_cell('phase',team, phase)
+        self.update_cell(f'phase{phase}',team, phase)
 
     def upload_step(self, step="round", text = "", team = 0):
         if team==0 : team=self.team
@@ -113,7 +115,8 @@ class SP:
 
     def get_opponent(self, match, team=0) :
         if team == 0 : team = self.team
-        cell = cell = self.get_acell( self.col_add(self.cols_dir['opponents'], match-1), team+1, use_player_sheet=False )
+        cell = self.get_acell( self.col_add(self.cols_dir['opponents'], match-1), team+1, use_player_sheet=False )
+        
         return 0 if self.cell_is_empty(cell) else int(cell)
 
     
@@ -172,7 +175,7 @@ class SP:
         self.ws.update(table_range, texts) if use_player_sheet else self.ws_dir.update(table_range, texts)
 
 
-    def update_cell(self, col, row, text):
+    def update_cell(self, col, row, text, use_player_sheet=True):
         if type(col) == type(1):
             col = self.num_to_col(col)
         if len(col) > 2:

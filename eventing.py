@@ -14,7 +14,8 @@ def mouse_main(var):
     pos[1] *= (900/HEIGHT)
     if in_rect(pos, (600, 600, 400, 100)):
         mode = 'choose_key'
-        player1.key = 11
+        player1.group = 1
+        player1.team = 1
     
     return mode
 

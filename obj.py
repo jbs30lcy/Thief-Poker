@@ -59,8 +59,16 @@ class Card:
             self.color = colors[(ran-1) // NUMBER_OF_NUM + 1 ]
             self.val = (ran-1) % NUMBER_OF_NUM + 1
         elif fromcell:
-            self.color = colors[int(color[0]) ]
-            self.val = int(color[1])
+            #print(color)
+            if type(color) == type(1):
+                self.color = colors[color//10]
+                self.val = int(color%10)
+            elif len(color) <= 2: 
+                self.color = colors[int(color[0]) ]
+                self.val = int(color[1])
+            else:
+                self.color = color[:-1]
+                self.val = int(color[-1])
         else:
             self.color = color
             self.val = val
@@ -103,7 +111,7 @@ class Player:
         self.active_list = []
         self.showc = []
         self.shown = []
-        self.coin = 0
+        self.coin = 100
         self.common = None
         self.Rule = ['Flush', [4]] # 일단 이걸로.
         self.dd = []

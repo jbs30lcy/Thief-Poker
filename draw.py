@@ -149,7 +149,7 @@ def draw_play(screen, const, var):
         title = NS[72].render("다른 카드 두 장을 선택하세요", True, White)
     Match_text = NS[24].render(f'Match {Match}', True, White)
     Round_text = NS[24].render(f'Round {Round}', True, White)
-    team_text = NSE[48].render(str(player2.key%10), True, Black)
+    team_text = NSE[48].render(str(player2.group), True, Black)
     warn_text = NSE[72].render('Choose more card.', True, Black).convert_alpha()
     warn_text.set_alpha(tickf1*255/30)
     coin_text = NS[30].render(str(player1.coin), True, White)

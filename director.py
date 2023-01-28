@@ -23,12 +23,12 @@ class Director():
         share_cards = [copy.deepcopy([0]*(self.num_players-1)) for x in range(self.num_players) ]
         
         q = []
-        for i in range(8):
-            for j in range(i+1,8):
+        for i in range(self.num_players):
+            for j in range(i+1,self.num_players):
                 q.append((i,j))
         tmpq = []
         i = 0
-        while i < 28:
+        while i < len(q):
             a, b = q[i]
             
             if i % 4 == 0 :
@@ -47,7 +47,7 @@ class Director():
             i += 1
         #print(q)
         #print(opps)
-        for i in range(28):
+        for i in range(len(q)):
             a = i // 4 
             b = i % 4 
             
@@ -69,7 +69,7 @@ class Director():
         #             share_cards[oppo-1][i-1] = cd
                 #print(opps)
 
-        #print(share_cards)
+        print(share_cards)
         shares = [ '|'.join(x) for x in share_cards ]
         
         return opps, shares
@@ -124,7 +124,7 @@ class Director():
         
 
 if __name__ == "__main__" :
-    d = Director(num_players=8)
+    d = Director(num_players=int(input("플레이어 수 입력 : ")))
     d.clear_game()
 
     d.game_setting(test=True)
@@ -132,5 +132,10 @@ if __name__ == "__main__" :
     while True:
         a = int(input("match 값 입력하기 : "))
         if a == 0: break
-        d.match_setting(a)
+        if a == -2 : 
+            d.clear_game()
+        elif a == -1:
+            d.game_setting(test=True)
+        else:
+            d.match_setting(a)
 
