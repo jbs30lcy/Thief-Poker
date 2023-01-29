@@ -287,7 +287,7 @@ class SP_DB(SP):
         self.cur.execute(f"SELECT {col} FROM player WHERE mykey={mykey};")
         return self.cur.fetchall()[0][0]
 
-    def update_cell(mykey, col, val):
+    def update_cell(self, mykey, col, val):
         if isinstance(val, str):
             self.cur.execute(f"UPDATE player SET {col}=\"{val}\" WHERE mykey={mykey};")
         else:
