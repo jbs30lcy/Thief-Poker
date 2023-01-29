@@ -296,6 +296,10 @@ class Player:
         return f'No rank ({n1+n2+n3})'
 
     def set_shown(self):
+        self.shown = self.showc[1:]
+
+        return
+        
         for card in self.showc:
             if not card == self.common and not card in self.shown:
                 self.shown.append(card)

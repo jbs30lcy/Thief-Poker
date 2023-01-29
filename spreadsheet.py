@@ -69,14 +69,14 @@ class SP:
         else:
             self.update_cell(self.col_add(col,i+1),team, "")
     
-    def upload_playing(self, team=0, hand_cards = [], phase=1):
+    def upload_playing(self, team=0, hand_cards = [], match=0, round=0, phase=1):
         if team == 0 : team = self.team
         col = self.cols[f'phase{phase}']
         team += 1
         hand_cards = [str(x) for x in hand_cards]
         card_text = "|".join(hand_cards)
         self.update_cell(col, team, card_text)
-        self.update_cell(f'phase{phase}',team, phase)
+        self.update_cell_range('match', 3, team, 1, [match, round, phase], use_player_sheet=False)
 
     def upload_step(self, step="round", text = "", team = 0):
         if team==0 : team=self.team
@@ -84,9 +84,14 @@ class SP:
         col = self.cols_dir[step]
         self.update_cell(col, team, text)
 
-    def get_common(self, phase=1):
-        cell = self.get_acell(f"common{phase}", self.team+1, use_player_sheet=True)
-        return Card(cell)
+    def get_common(self, round=1):
+        cell = self.get_acell(f"common{round}", self.team+1, use_player_sheet=True)
+        #print(cell)
+        #print(Card(cell, fromcell=True))
+        return Card(cell, fromcell=True)
+    
+    def clear_phase(self):
+        self.update_cell_range('phase1', 2, self.team+1, 1, ["" for x in range(2)])
 
     def get_playing(self, team=0, phase=1):
         if team == 0 : team = self.team
@@ -97,14 +102,16 @@ class SP:
         if cards == "" : return [] #혹시나 비어있을 경우 에러 처리
 
         cards = cards.split("|")
-
+        print(cards)
         cards = [Card(x, fromcell=True) for x in cards]
 
         return cards
         
     def has_conducted(self, team = 0, round = 0, phase=1) -> bool : #해당 팀이 해당 라운드 및 페이즈를 진행했는지 확인. eg. sp.has_conducted(1,1,1) : 1팀이 1라운드 첫 조합을 냈는 지 확인
         if team == 0 : team = self.team
-        return self.get_round(team) == round and self.get_phase(team) == phase
+        r, p = map(int, self.get_cell_range('round', 2, team + 1, 1, use_player_sheet=False))
+        
+        return r == round and p == phase
 
     def get_match(self, team = 0) -> int:
         # ValueError: invalid literal for int() with base 10: '' 

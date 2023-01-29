@@ -87,8 +87,9 @@ class Director():
     
     def get_share_cards(self, match=1):
         cells = self.sp.get_cell_range('share_cards', 1, 2, self.num_players, use_player_sheet=False)
-        return [x.split("|")[match-1].split(",") for x in cells]
-
+        res = [x.split("|")[match-1].split(",") for x in cells]
+        print(res)
+        return res
 
     def match_setting(self, match = 0, test=False):
         if test or self.ck_match(match) :
@@ -112,6 +113,7 @@ class Director():
             self.sp.update_cell_range('match', 3, 2, self.num_players, [ [0,2,3] for x in range(self.num_players)  ], use_player_sheet=False )
             self.sp.update_cell_range("team", 1, 2, self.num_players, list(range(1,self.num_players+1)), False)
             self.sp.update_cell_range("match_permission", 1, 2, self.num_players, [0] * self.num_players, False)
+            self.match_setting(1, test)
         else:
             print("Not Enough Players")
 
@@ -130,7 +132,7 @@ if __name__ == "__main__" :
     d = Director(num_players=int(input("플레이어 수 입력 : ")))
     d.clear_game()
 
-    d.game_setting(test=True)
+    #d.game_setting(test=True)
 
     while True:
         a = int(input("match 값 입력하기 : "))

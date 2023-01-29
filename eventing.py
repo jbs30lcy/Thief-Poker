@@ -85,7 +85,7 @@ def mouse_play(var):
             if choose == 0:
                 choose = 0.5
                 player1.showc = player1.active_list.copy()
-                player2.showc = player2.active_list.copy()
+                #player2.showc = player2.active_list.copy()
                 player1.set_shown()
                 player2.set_shown()
                 tick = -1                
@@ -94,9 +94,9 @@ def mouse_play(var):
                 tick = -1
                 mode = 'flop_pre'
                 player1.showc = player1.showc + player1.active_list.copy()
-                player1.active_list = []
-                player2.showc = player2.showc + player2.active_list.copy()
-                player2.active_list = []
+                
+                #player2.showc = player2.showc + player2.active_list.copy()
+                
 
     return player1, player2, mode, choose, tick, tickf1
 

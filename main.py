@@ -48,7 +48,7 @@ def main():
     p1 = Player()
     p2 = Player()
     sp = SP()
-    WAITING_TIME = 300
+    WAITING_TIME = 600
 
     # mode 변수에 따라 실행되는 코드가 달라짐
     while True:
@@ -135,14 +135,15 @@ def main():
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             if t % WAITING_TIME == 0:
-                if sp.get_start_permission(Match) :
+                if sp.get_start_permission(Match+1) :
                     if Phase % 2 == 0:
                         Match += 1 
                         p2num = sp.get_opponent(Match) 
                         p2 = Player( p2num, sp.get_hand(p2num) )
 
 
-                    Phase = Phase % 2 + 1
+                    #Phase = Phase % 2 + 1
+                    #print(Phase)
                     mode = 'reset'
 
             clock.tick(60)
@@ -157,7 +158,9 @@ def main():
             p1.active_list = []
             p1.showc = []
             p1.Rank = ''
-            Match += 1
+            p1.pre.append([])
+            p2.pre.append([])
+            #Match += 1
             if 1 in p1.Rule[1] or 2 in p1.Rule[1]:
                 mode = 'showDD'
             else:
@@ -208,7 +211,10 @@ def main():
                 if event.type == MOUSEBUTTONDOWN:
                     p1, p2, mode, choose, t, tf1 = mouse_play((p1, p2, mode, choose, t, tf1))
                     if mode == 'flop_pre':
-                        sp.upload_playing( hand_cards = p1.active_list, phase = Phase)
+                        Phase = Phase % 2 + 1
+                        sp.upload_playing( hand_cards = p1.active_list, match = Match, round = Round, phase = Phase)
+                        p1.active_list = []
+                        p2.active_list = []
             p1, p2, t = draw_play(ori_screen, (Round, Match, choose, tf1), (p1, p2, t))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
@@ -233,10 +239,13 @@ def main():
                     if Phase == 1:
                         p2.showc = sp.get_playing(p2.team, Phase)
                         mode = 'flop'
+                        t = 0
                     else:
                         p2.showc += sp.get_playing(p2.team, Phase)
                         mode = "result"
-            
+                        t = 0 
+                    print(p2.showc)
+                    #Phase = Phase % 2 + 1
             clock.tick(60)
             pg.display.update()
             
@@ -252,7 +261,7 @@ def main():
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if t == 60:
                 #common = get_random_card()
-                common = sp.get_common(Phase)
+                common = sp.get_common(Round)
                 # if 1 in Rule[1]:
                 #     while dd[0].color == common.color and dd[0].val == common.val:
                 #         common = get_random_card() # 커뮤니티 카드와 땡잡이 중복 방지
@@ -277,18 +286,20 @@ def main():
                 p2.set_shown()
                 w = win(p1, p2)
             if t == 70:
-                if w == 0:
+                if w == 0: #무승부
                     p1.coin += 5
                     p1.pre[-1].append(0)
                     p2.pre[-1].append(0)
-                if w == 1:
+                if w == 1: #승리
                     p1.coin += 10
                     p1.pre[-1].append(1)
                     p2.pre[-1].append(-1)
-                if w == 2:
+                if w == 2: #패배
                     p1.pre[-1].append(-1)
                     p2.pre[-1].append(1)
-                sp.update_cell('chips', p1.team, p1.coin)
+                sp.update_cell('chips', p1.team+1, p1.coin)
+                
+                sp.clear_phase()
             if mode == 'result': #가끔 씹힐때 있어서 버그처리
                 p1, p2, t = draw_result(ori_screen, (Round, Match, w), (p1, p2, t))
                 screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
@@ -342,7 +353,7 @@ def main():
             t = draw_exchange_delay(ori_screen, p1, t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
-            if sum(p1.pre[-1]) > 0 and t % WAITING_TIME == 0 and sp.has_conducted(Round, 3):
+            if sum(p1.pre[-1]) > 0 and t % WAITING_TIME == 0 and sp.has_conducted(2, 3):
                 p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
                 p2.ex_index = int(sp.get_acell('changed_index', p2.team+1))
                 p1.ex_card = p1.card_list[p1.ex_index]
@@ -350,10 +361,10 @@ def main():
                 choose = 0
                 t = 0
                 mode = 'exchange_result'
-            if sum(p1.pre[-1]) == 0 and t % WAITING_TIME == 0 and sp.has_conducted(p2.team+1, Round, 3):
+            if sum(p1.pre[-1]) == 0 and t % WAITING_TIME == 0 and sp.has_conducted(p2.team+1, 2, 3):
             
                 p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
-                p1.ex_card = p2.card_list[p1.ex_index]
+                p1.ex_card = p1.card_list[p1.ex_index]
                 
                 choose = 0
                 t = 0
