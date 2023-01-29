@@ -290,6 +290,8 @@ class SP_DB(SP):
     def update_cell(self, mykey, col, val):
         if isinstance(val, str):
             self.cur.execute(f"UPDATE player SET {col}=\"{val}\" WHERE mykey={mykey};")
+        elif val is None:
+            self.cur.execute(f"UPDATE player SET {col}=NULL WHERE mykey={mykey};")
         else:
             self.cur.execute(f"UPDATE player SET {col}={val} WHERE mykey={mykey};")
         self.conn.commit()
