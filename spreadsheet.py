@@ -1,6 +1,7 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from obj import Card
+import pymysql
 class SP:
     def __init__(self, num = 0, team=0): # num : 반 번호
         scope = [
@@ -270,3 +271,25 @@ if __name__ == '__main__': #테스트
     print(sp.get_cell_range(1,3,2,4))
     print(sp.get_cell_range("B",3,2,4))    
     sp.update_cell_range(4,4,2,2, [a,a])
+
+class SP_DB(SP):
+    def __init__(self):
+        self.host = 'jeonsaegi23.c5hjdgv5b9uj.ap-northeast-2.rds.amazonaws.com'
+        self.port = 3306
+        self.user = 'jeonsaegi23'
+        self.password = 'jeonsaegi23' # host, password는 보안 문제가 있어서, 나중에 파일을 따로 빼자
+        self.database = 'player_info'
+
+        self.conn = pymysql.connect(host = self.host, port = self.port, user = self.user, password = self.password, database = self.database)
+        self.cur = conn.cursor()
+    
+    def get_acell(self, mykey, col):
+        self.cur.execute(f"SELECT {col} FROM player WHERE mykey={mykey};")
+        return self.cur.fetchall()[0][0]
+
+    def update_cell(mykey, col, val):
+        if isinstance(val, str):
+            self.cur.execute(f"UPDATE player SET {col}=\"{val}\" WHERE mykey={mykey};")
+        else:
+            self.cur.execute(f"UPDATE player SET {col}={val} WHERE mykey={mykey};")
+        self.conn.commit()

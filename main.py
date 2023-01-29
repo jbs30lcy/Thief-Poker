@@ -158,6 +158,7 @@ def main():
             p1.active_list = []
             p1.showc = []
             p1.Rank = ''
+            p2.Rank = ''
             p1.pre.append([])
             p2.pre.append([])
             #Match += 1
