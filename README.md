@@ -14,6 +14,7 @@ git clone https://github.com/jbs30lcy/Thief-Poker
 pip install pygame
 pip install --upgrade oauth2client
 pip install gspread
+pip install pymysql
 ```
 5. main.py 프로그램을 실행한다.
 6. 개발 환경을 구축하기 위해, 다음 명령어를 폴더 내에서 입력해준다. (확실하진 않음 ㅋㅋㄹ)
