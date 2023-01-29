@@ -159,8 +159,9 @@ def main():
             p1.showc = []
             p1.Rank = ''
             p2.Rank = ''
-            p1.pre.append([])
-            p2.pre.append([])
+            if Round == 1:
+                p1.pre.append([])
+                p2.pre.append([])
             #Match += 1
             if 1 in p1.Rule[1] or 2 in p1.Rule[1]:
                 mode = 'showDD'
