@@ -231,7 +231,7 @@ class SP:
         return self.num_to_col(self.col_to_num(col)+n)
 
     def cell_is_empty(self, cell):
-        return cell==[] or cell == ""
+        return cell==[] or cell == "" or cell is None
 
     def update_cols_dict(self, use_player_sheet=True):
         cols = {}
@@ -310,11 +310,13 @@ class SP_DB(SP):
         q = f"UPDATE {table} SET {col}=%s WHERE mykey={mykey};"
         print("UPDATE_CELL")
         print(q)
+        print("UPDATE CELL | ", q, text)
         self.execute(q , [text])
 
     def update_cell_range(self, col_start, num_cols, row_start, num_rows, texts, use_player_sheet=True):
         if num_cols == 1:
             texts = [ [x] for x in texts ]
+
         if num_rows == 1:
             texts = [  texts  ]
         
@@ -326,7 +328,8 @@ class SP_DB(SP):
         print(col_start)
         insert = self.col_to_num_db(col_start,use_player_sheet, num_cols)
         print(insert)
-        middle_text = [" {} = %s ".format(x) for x in insert] 
+        if num_cols == 1 : insert = [insert]
+        middle_text = [" {} = %s ".format(x) for x in insert]
         print("UPDATE_CELL_RANGE")
         print(middle_text)
         for mk in range(num_rows):
@@ -340,6 +343,7 @@ class SP_DB(SP):
         table = table = 'player' if use_player_sheet else "director"
         mykey = self.group * 100 + row_start - 1
         ins = self.col_to_num_db(col_start, use_player_sheet, num_cols)
+        if num_cols == 1 : ins = [ins]
         q = "SELECT "
         middle_text = " , ".join([f"{x}" for x in ins ]) 
         q += middle_text + f" FROM {table} "
@@ -347,6 +351,7 @@ class SP_DB(SP):
         print("GET_CELL_RANGE_QUERY | ",q, ins)
         fetch = self.execute(q)
         print(fetch)
+
         ret = [ [ row[r] for r in row ] for row in fetch  ]
         print(ret)
         if num_cols == 1:

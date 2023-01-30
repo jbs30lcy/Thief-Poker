@@ -16,7 +16,8 @@ class Director():
             pass
         else:
             for i in range(self.num_players):
-                res.append([ Card(use_random=True) for x in range(6)])
+                res.append("|".join([ str(Card(use_random=True)) for x in range(6)]))
+
         return res
 
     def mk_opponents(self):
@@ -57,7 +58,7 @@ class Director():
             cd = Card.rand_card(True) + "," + Card.rand_card(True)
             share_cards[b*2][a] = cd 
             share_cards[b*2+1][a] = cd
-        opps = [ "|".join(x)  for x in opps ]
+        opps = [ "|".join( map(str, x) )  for x in opps ]
 
         # for i in range(1,self.num_players):
         #     for j in range(1,self.num_players+1):
@@ -106,11 +107,11 @@ class Director():
     def game_setting(self, test=False):
         if test or self.sp.ck_players(self.num_players) : 
             print("GAME START")
-            self.sp.update_cell_range(self.sp.cols['hand'], 6, 2, self.num_players, self.init_hands())
-            self.sp.update_cell_range(self.sp.cols['chips'], 1, 2, self.num_players, [100] * self.num_players)
+            self.sp.update_cell_range('hand',1,  2, self.num_players,  self.init_hands())
+            self.sp.update_cell_range('chips', 1, 2, self.num_players, [100] * self.num_players)
             opps, shares = self.mk_opponents()
 
-            self.sp.update_cell('opponents', 2, opps, use_player_sheet=False)
+            self.sp.update_cell_range('opponents',1, 2, self.num_players, opps, use_player_sheet=False)
             self.sp.update_cell_range('share_cards', 1, 2, self.num_players, shares, False)
             self.sp.update_cell_range('match', 3, 2, self.num_players, [ [0,2,3] for x in range(self.num_players)  ], use_player_sheet=False )
             self.sp.update_cell_range("team", 1, 2, self.num_players, list(range(1,self.num_players+1)), False)
@@ -131,7 +132,7 @@ class Director():
         
 
 if __name__ == "__main__" :
-    d = Director(num_players=int(input("플레이어 수 입력 : ")))
+    d = Director(1, num_players=int(input("플레이어 수 입력 : ")))
     d.clear_game()
 
     #d.game_setting(test=True)
