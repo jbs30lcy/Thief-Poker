@@ -56,6 +56,7 @@ class Director():
             cd = Card.rand_card(True) + "," + Card.rand_card(True)
             share_cards[b*2][a] = cd 
             share_cards[b*2+1][a] = cd
+        opps = [ "|".join(x)  for x in opps ]
 
         # for i in range(1,self.num_players):
         #     for j in range(1,self.num_players+1):
@@ -108,7 +109,7 @@ class Director():
             self.sp.update_cell_range(self.sp.cols['chips'], 1, 2, self.num_players, [100] * self.num_players)
             opps, shares = self.mk_opponents()
 
-            self.sp.update_cell_range('opponents', self.num_players-1, 2, self.num_players, opps, use_player_sheet=False)
+            self.sp.update_cell('opponents', 2, opps, use_player_sheet=False)
             self.sp.update_cell_range('share_cards', 1, 2, self.num_players, shares, False)
             self.sp.update_cell_range('match', 3, 2, self.num_players, [ [0,2,3] for x in range(self.num_players)  ], use_player_sheet=False )
             self.sp.update_cell_range("team", 1, 2, self.num_players, list(range(1,self.num_players+1)), False)

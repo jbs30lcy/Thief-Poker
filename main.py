@@ -51,7 +51,7 @@ def main():
 
     p1 = Player()
     p2 = Player()
-    sp = SP()
+    sp = SP_DB()
     WAITING_TIME = 3600
 
     # mode 변수에 따라 실행되는 코드가 달라짐
@@ -78,9 +78,8 @@ def main():
                 if event.type == MOUSEBUTTONDOWN:
                     mode = mouse_choose_key(mode)
                     if mode == "get_match":
-                        #sp = SP(p1.group, p1.team)
-                        # 배포시 수정하도록
-                        sp = SP(0, p1.team)
+                        sp = SP_DB(p1.group, p1.team)
+                        
                         sp.enroll_player()
                 if event.type == KEYDOWN:
                     p1, tf1, tf2 = key_choose_key(event, (p1, tf1, tf2))
