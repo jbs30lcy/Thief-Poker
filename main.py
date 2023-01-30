@@ -390,6 +390,7 @@ def main():
 
                     if mode == "get_match":
                         sp.upload_hand(hand_cards = p1.card_list)
+                        
 
             if t == 50:
                 p1.card_list[p1.ex_index] = p2.ex_card

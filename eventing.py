@@ -188,9 +188,11 @@ def mouse_exchange_lose(var):
 
                 player1.ex_index = player1.card_list.index(player1.active_list[0])
                 player1.ex_card = player1.active_list[0]
-                while i < len(player2.card_list):
+                i = 0
+                while i < len(player2.card_list): #equals 로 교체 필요
                     if str(player2.card_list[i]) == str(player2.active_list[0]):
                         player2.ex_index = i 
+                        break
                     i+=1
                 player2.ex_card = player2.active_list[0]
 

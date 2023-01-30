@@ -46,7 +46,12 @@ class SP:
             self.update_cell(i, team+1, "")
 
     def num_players(self):
-        return len(self.worksheet.get_all_values()) - 1 
+        cells = self.get_cell_range('team', 1, 2, self.num_players)
+        i = 0
+        for c in cells:
+            if c != "" :
+                i += 1
+        return i == self.num_players
 
     def get_hand(self, team = 0):  #return hand cards as list from spreadsheet
         if team == 0 : team = self.team
