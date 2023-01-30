@@ -296,7 +296,8 @@ class Player:
         return f'No rank ({n1+n2+n3})'
 
     def set_shown(self):
-        self.shown = self.showc[1:]
+        print(f"SET shown :  {self.showc}")
+        self.shown = self.showc[1:].copy()
 
         return
         

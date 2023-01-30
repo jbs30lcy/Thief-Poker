@@ -21,6 +21,10 @@ def win(player1, player2):
     p1b = 'Black' in player1.rank()
     p2b = 'Black' in player2.rank()
 
+    print("CHECKING HANDS")
+    print(f"PLAYER 1 : {player1.showc}")
+    print(f"PLAYER 2 : {player2.showc}")
+
     if 400 <= score1 and player2.isdd: return 2
     if 400 <= score2 and player1.isdd: return 1 # 땡잡이가 플러시 이상의 족보를 잡기
     if p1b and 0 < score2 < 100: return 2
@@ -244,7 +248,7 @@ def main():
                         p2.showc += sp.get_playing(p2.team, Phase)
                         mode = "result"
                         t = 0 
-                    print(p2.showc)
+                    print(f"P2.showc :: {p2.showc}")
                     #Phase = Phase % 2 + 1
             clock.tick(60)
             pg.display.update()
@@ -309,7 +313,7 @@ def main():
             
         if mode == 'exchange_lose': # 2패시 카드 고르는 단계
             for event in pg.event.get():
-                if event.type == QUIT:
+                if event.type == QUIT:   
                     pg.quit()
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
@@ -317,8 +321,8 @@ def main():
                     if mode == "exchange_result" : 
                         sp.update_cell('changed_index', p1.team+1, p1.ex_index)
                         sp.update_cell('changed_index', p2.team+1, p2.ex_index)
-                        sp.update_cell("phase", p1.team+1, 3)
-                        sp.update_cell("phase", p2.team+1, 3)
+                        sp.update_cell("phase", p1.team+1, 3, False)
+                        sp.update_cell("phase", p2.team+1, 3, False)
             p1, p2 = draw_exchange_lose(ori_screen, (Match, choose, tf1), (p1, p2))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if tf1: tf1 -= 1
@@ -336,7 +340,7 @@ def main():
                     mode, t, tf1, p1, p2 = mouse_exchange_draw((mode, t, tf1, p1, p2))
                     if mode == "exchange_delay":
                         sp.update_cell("changed_index", p2.team+1, p2.ex_index)
-                        sp.update_cell("phase", p1.team+1, 3)
+                        sp.update_cell("phase", p1.team+1, 3, False)
             p1, p2 = draw_exchange_draw(ori_screen, (Match, tf1), (p1, p2))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if tf1: tf1 -= 1
@@ -352,23 +356,23 @@ def main():
             
             t = draw_exchange_delay(ori_screen, p1, t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
-
-            if sum(p1.pre[-1]) > 0 and t % WAITING_TIME == 0 and sp.has_conducted(2, 3):
-                p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
-                p2.ex_index = int(sp.get_acell('changed_index', p2.team+1))
-                p1.ex_card = p1.card_list[p1.ex_index]
-                p2.ex_card = p2.card_list[p2.ex_index]
-                choose = 0
-                t = 0
-                mode = 'exchange_result'
-            if sum(p1.pre[-1]) == 0 and t % WAITING_TIME == 0 and sp.has_conducted(p2.team+1, 2, 3):
-            
-                p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
-                p1.ex_card = p1.card_list[p1.ex_index]
+            if t % WAITING_TIME == 0 and sp.has_conducted(p2.team+1, 2, 3):
+                if sum(p1.pre[-1]) > 0 :
+                    p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
+                    p2.ex_index = int(sp.get_acell('changed_index', p2.team+1))
+                    p1.ex_card = p1.card_list[p1.ex_index]
+                    p2.ex_card = p2.card_list[p2.ex_index]
+                    choose = 0
+                    t = 0
+                    mode = 'exchange_result'
+                if sum(p1.pre[-1]) == 0:
                 
-                choose = 0
-                t = 0
-                mode = 'exchange_result'
+                    p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
+                    p1.ex_card = p1.card_list[p1.ex_index]
+                    
+                    choose = 0
+                    t = 0
+                    mode = 'exchange_result'
             clock.tick(60)
             pg.display.update()
 

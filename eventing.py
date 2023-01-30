@@ -147,6 +147,7 @@ def mouse_exchange_lose(var):
 
     c1 = len(player1.card_list)
     s2 = len(player2.shown)
+    print(f"MOUSE_EXCHANGE_LOSE : \nc1 {player1.card_list}\ns2 {player2.shown}")
     if choose == 0:
         for i in range(c1):
             x = 900 - c1*100 + i*200
@@ -184,9 +185,13 @@ def mouse_exchange_lose(var):
                 tickf1 = 0
                 choose = 0
                 mode = 'exchange_result'
+
                 player1.ex_index = player1.card_list.index(player1.active_list[0])
-                player2.ex_index = player2.card_list.index(player2.active_list[0])
                 player1.ex_card = player1.active_list[0]
+                while i < len(player2.card_list):
+                    if str(player2.card_list[i]) == str(player2.active_list[0]):
+                        player2.ex_index = i 
+                    i+=1
                 player2.ex_card = player2.active_list[0]
 
     return mode, choose, tickf1, player1, player2

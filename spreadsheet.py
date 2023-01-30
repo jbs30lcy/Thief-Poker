@@ -102,7 +102,7 @@ class SP:
         if cards == "" : return [] #혹시나 비어있을 경우 에러 처리
 
         cards = cards.split("|")
-        print(cards)
+        print(f"get_playing : {cards}")
         cards = [Card(x, fromcell=True) for x in cards]
 
         return cards
