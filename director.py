@@ -1,11 +1,12 @@
 from spreadsheet import SP
 from obj import Card
 import copy
+from spreadsheet import SP_DB
 
 class Director():
     def __init__(self, num = 0, num_players = 8):
         self.num = num #반번호
-        self.sp = SP(num)
+        self.sp = SP_DB(num)
         self.num_players = num_players
 
     def init_hands(self, use_setting=False, order_players = []):
@@ -122,7 +123,7 @@ class Director():
     def clear_game(self):
         #게임 초기화하기
         # 게임 결과를 엑셀로 저장할까?    
-        tmp = 15
+        tmp = 6
         l = [ ['']*tmp for x in range(self.num_players)]
         
         self.sp.update_cell_range(1, tmp, 2, self.num_players, l)

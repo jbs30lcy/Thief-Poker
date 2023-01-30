@@ -31,8 +31,7 @@ class SP:
         return True
 
     def get_start_permission(self, match=0):
-        col = self.cols_dir['match_permission']
-        cell = self.get_acell(col=col, row=self.team+1, use_player_sheet=False)
+        cell = self.get_acell(col='match_permission', row=self.team+1, use_player_sheet=False)
         if self.cell_is_empty(cell) :
             return False
         else:
