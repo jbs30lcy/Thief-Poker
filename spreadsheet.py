@@ -347,7 +347,7 @@ class SP_DB(SP):
         q = "SELECT "
         middle_text = " , ".join([f"{x}" for x in ins ]) 
         q += middle_text + f" FROM {table} "
-        q += f" WHERE mykey BETWEEN {mykey-1} AND {mykey+num_rows}" if num_rows > 1 else f" WHERE mykey = {mykey}" 
+        q += f" WHERE mykey > {mykey-1} AND mykey < {mykey+num_rows}" if num_rows > 1 else f" WHERE mykey = {mykey}"
         print("GET_CELL_RANGE_QUERY | ",q, ins)
         fetch = self.execute(q)
         print(fetch)
