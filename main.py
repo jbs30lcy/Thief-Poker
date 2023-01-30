@@ -163,6 +163,8 @@ def main():
             p1.showc = []
             p1.Rank = ''
             p2.Rank = ''
+            p1.isdd = False
+            p2.isdd = False
             if Round == 1:
                 p1.pre.append([])
                 p2.pre.append([])
@@ -358,7 +360,7 @@ def main():
             
             t = draw_exchange_delay(ori_screen, p1, t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
-            if t % WAITING_TIME == 0 and sp.has_conducted(p2.team+1, 2, 3):
+            if t % WAITING_TIME == 0 and sp.has_conducted(p2.team, 2, 3):
                 if sum(p1.pre[-1]) > 0 :
                     p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
                     p2.ex_index = int(sp.get_acell('changed_index', p2.team+1))
@@ -385,6 +387,9 @@ def main():
                     sys.exit()
                 if t >= 90 and event.type == MOUSEBUTTONDOWN:
                     mode, t = mouse_exchange_result((mode, t))
+
+                    if mode == "get_match":
+                        sp.upload_hand(hand_cards = p1.card_list)
 
             if t == 50:
                 p1.card_list[p1.ex_index] = p2.ex_card

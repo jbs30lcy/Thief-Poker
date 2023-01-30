@@ -57,7 +57,7 @@ class Card:
             
             ran = random.randrange(NUMBER_OF_COLORS * NUMBER_OF_NUM + 1)
             self.color = colors[(ran-1) // NUMBER_OF_NUM + 1 ]
-            self.val = (ran-1) % NUMBER_OF_NUM + 1
+            self.val = (ran-1) % NUMBER_OF_NUM + 1 if ran > 0 else 0
         elif fromcell:
             #print(color)
             if type(color) == type(1):
@@ -80,6 +80,8 @@ class Card:
         self.img_half = CI_half[self.name]
         self.img_std = CI_std[self.name]
 
+    def equals(self, o):
+        return str(self) == str(o)
     def __repr__(self):
         if color == 'Black':
             return '==Card Black=='
@@ -91,15 +93,12 @@ class Card:
 
     @staticmethod
     def rand_card(except_joker=False):
-        ran = random.randrange(NUMBER_OF_COLORS * NUMBER_OF_NUM + 1)
+        ran = random.randrange(1 if except_joker else 0, NUMBER_OF_COLORS * NUMBER_OF_NUM + 1)
         
         color = colors[(ran-1) // NUMBER_OF_NUM + 1 ]
-        val = (ran-1) % NUMBER_OF_NUM + 1
+        val = (ran-1) % NUMBER_OF_NUM + 1 if ran > 0 else 0
             
-        if except_joker and color == 0:
-            return rand_card(except_joker)
-        else:
-            return f'{color}{val}'
+        return f'{color}{val}'
 
     @classmethod
     def shrink(cls, surf, rate = 0.5):
@@ -296,14 +295,18 @@ class Player:
         return f'No rank ({n1+n2+n3})'
 
     def set_shown(self):
+        #2페이즈에 낸걸로 뽑기
         print(f"SET shown :  {self.showc}")
         self.shown = self.showc[1:].copy()
 
         return
         
-        for card in self.showc:
-            if not card == self.common and not card in self.shown:
-                self.shown.append(card)
+        #냈던 카드 전부 뽑기
+        for card in self.showc[1:]:
+            for c2 in self.shown:
+                if card.equals(c2):
+                    break
+            else: self.shown.append(card)
 
 
 if __name__ == '__main__':

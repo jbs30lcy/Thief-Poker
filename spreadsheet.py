@@ -53,23 +53,19 @@ class SP:
         col = self.cols['hand']
         team += 1
         hand = []
-        i = 0
-        while True:
-            card = self.get_acell(self.col_add(col,i),team)
-            if self.cell_is_empty(card) : break
+        cards = self.get_cell_range('hand', 10, team, 1)
+        for card in cards:
+            if self.cell_is_empty(card):break
             hand.append(Card(card, fromcell=True))
-            i += 1
+
         return hand
 
     def upload_hand(self, team = 0, hand_cards = []): #플레이어의 번호와 카드 리스트를 받아서 스프레드시트에 업로드
-        if team == 0 : team = self.team
-        col = self.cols['hand']
+        if team == 0 : 
+            team = self.team
         team += 1
-        for i, card in enumerate(hand_cards):
-            self.update_cell(self.col_add(col,i),team, str(card))
-        else:
-            self.update_cell(self.col_add(col,i+1),team, "")
-    
+        self.update_cell_range('hand', len(hand_cards)+1, team, 1, hand_cards+[''] )
+
     def upload_playing(self, team=0, hand_cards = [], match=0, round=0, phase=1):
         if team == 0 : team = self.team
         col = self.cols[f'phase{phase}']
@@ -189,11 +185,9 @@ class SP:
         if len(col) > 2:
             col = self.cols[col] if use_player_sheet else self.cols_dir[col]
 
-
-
         text = str(text)
 
-        self.ws.update_acell(f"{col}{row}", text)
+        self.ws.update_acell(f"{col}{row}", text) if use_player_sheet else self.ws_dir.update_acell(f"{col}{row}", text)
 
     def get_acell(self, col, row, use_player_sheet = True):
         if type(col) == type(1): # 열 값으로 숫자로 받아도 되게 처리 eg. 28 -> AA
@@ -263,6 +257,7 @@ if __name__ == '__main__': #테스트
         cards.append(Card(i, fromcell=True))
     sp.upload_hand(1, cards)
     sp.upload_playing(1, [Card('11', fromcell=True),'22'], 1)
+    print(sp.get_hand(1))
     print(sp.get_playing(1,1))
     print(sp.get_round(1))
     print(sp.get_phase(1))

@@ -220,6 +220,7 @@ def mouse_exchange_draw(var):
         else:
             tickf1 = 0
             tick = 0
+            player2.ex_card = player2.active_list[0]
             mode = 'exchange_delay'
 
     return mode, tick, tickf1, player1, player2

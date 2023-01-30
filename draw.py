@@ -352,7 +352,7 @@ def draw_exchange_draw(screen, const, var):
     player1, player2 = var
     
     c1 = len(player1.card_list)
-    s2 = len(player2.showc)
+    s2 = len(player2.shown)
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
     title = NS[72].render("상대에게 뺏어올 카드를 선택하세요", True, White)
     Match_text = NS[24].render(f'Match {Match}', True, White)
@@ -368,7 +368,7 @@ def draw_exchange_draw(screen, const, var):
             pg.draw.rect(screen, Red, (x - 90, 480, 180, 270), 3, border_radius = 15)
         pg.draw.rect(Alpha_screen, GreyA, (x - 90, 480, 180, 270), border_radius = 15)
     for j in range(s2):
-        card = player2.showc[j]
+        card = player2.shown[j]
         x = 900 - 100*s2 + 200*j
         Mblit(screen, card.img_std, (x, 285))
         if card in player2.active_list:
