@@ -273,15 +273,27 @@ if __name__ == '__main__': #테스트
     sp.update_cell_range(4,4,2,2, [a,a])
 
 class SP_DB(SP):
-    def __init__(self):
+    def __init__(self, group = 0, team = 0):
+        
+        '''
+        self.ws = self.doc.worksheet(f'player{num}')
+        self.ws_dir = self.doc.worksheet(f'director{num}')
+        self.cols = self.update_cols_dict(True)
+        self.cols_dir = self.update_cols_dict(False)
+        self.team = team
+        '''
+
         self.host = 'jeonsaegi23.c5hjdgv5b9uj.ap-northeast-2.rds.amazonaws.com'
         self.port = 3306
         self.user = 'jeonsaegi23'
         self.password = 'jeonsaegi23' # host, password는 보안 문제가 있어서, 나중에 파일을 따로 빼자
         self.database = 'player_info'
-
         self.conn = pymysql.connect(host = self.host, port = self.port, user = self.user, password = self.password, database = self.database)
         self.cur = conn.cursor()
+        self.conn.autocommit(True)
+        
+        
+        self.team = team
     
     def get_acell(self, mykey, col):
         self.cur.execute(f"SELECT {col} FROM player WHERE mykey={mykey};")
@@ -295,3 +307,10 @@ class SP_DB(SP):
         else:
             self.cur.execute(f"UPDATE player SET {col}={val} WHERE mykey={mykey};")
         self.conn.commit()
+
+
+    
+
+    def execute(self, query, insert):
+        self.cur.execute(query)
+        return self.cur.fetchall()

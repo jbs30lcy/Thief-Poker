@@ -52,7 +52,7 @@ def main():
     p1 = Player()
     p2 = Player()
     sp = SP()
-    WAITING_TIME = 600
+    WAITING_TIME = 3600
 
     # mode 변수에 따라 실행되는 코드가 달라짐
     while True:
@@ -390,7 +390,7 @@ def main():
 
                     if mode == "get_match":
                         sp.upload_hand(hand_cards = p1.card_list)
-                        
+
 
             if t == 50:
                 p1.card_list[p1.ex_index] = p2.ex_card
