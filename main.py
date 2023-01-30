@@ -80,7 +80,7 @@ def main():
                     if mode == "get_match":
                         #sp = SP(p1.group, p1.team)
                         # 배포시 수정하도록
-                        sp = SP(0, p1.team)
+                        sp = SP_DB()
                         sp.enroll_player()
                 if event.type == KEYDOWN:
                     p1, tf1, tf2 = key_choose_key(event, (p1, tf1, tf2))
