@@ -5,8 +5,7 @@ import pygame as pg
 import os
 import random
 
-WIDTH, HEIGHT = 1600, 900
-
+WIDTH, HEIGHT = 1440, 800
 White  = (255, 255, 255)
 Black  = (0, 0, 0)
 Red    = (240, 26, 0)

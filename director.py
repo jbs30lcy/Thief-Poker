@@ -21,8 +21,8 @@ class Director():
         return res
 
     def mk_opponents(self):
-        opps = [copy.deepcopy([0]*(self.num_players-1)) for x in range(self.num_players) ]
-        share_cards = [copy.deepcopy([0]*(self.num_players-1)) for x in range(self.num_players) ]
+        opps = [copy.deepcopy([0]*(self.num_players-1)*2) for x in range(self.num_players) ]
+        share_cards = [copy.deepcopy([0]*(self.num_players-1)*2) for x in range(self.num_players) ]
         
         q = []
         for i in range(self.num_players):
@@ -48,8 +48,8 @@ class Director():
             #print(tmpq)
             i += 1
         q = q + q
-        print(q)
-        print(opps)
+        print("QUEUE : ",q)
+        print("OPPONENTS : ",opps)
         for i in range(len(q)):
             
             a = i // (self.num_players//2) # match
@@ -62,30 +62,12 @@ class Director():
             share_cards[t1][a] = cd
             share_cards[t2][a] = cd
 
-            # opps[q[i][1]][a] = q[i][0] + 1
-            # opps[q[i][0]][a] = q[i][1] + 1
-            # cd = Card.rand_card(True) + "," + Card.rand_card(True)
-            # share_cards[b*2][a] = cd
-            # share_cards[b*2+1][a] = cd
         opps = [ "|".join( map(str, x) )  for x in opps ]
-
-        # for i in range(1,self.num_players):
-        #     for j in range(1,self.num_players+1):
-        #         oppo = ( i + j - 1) % self.num_players + 1
-        #         #print(oppo)
-        #         if opps[j-1][i-1] == 0 and opps[oppo-1][i-1] == 0 : 
-        #             opps[j-1][i-1] = oppo
-        #             opps[oppo-1][i-1] = j
-        #             cd = Card.rand_card(True) + "," + Card.rand_card(True)
-        #             share_cards[j-1][i-1] = cd
-        #             share_cards[oppo-1][i-1] = cd
-                #print(opps)
         
-        print(share_cards)
+        print("SHARE CARDS",share_cards)
+        print("OPPONENTS : ", opps)
         shares = [ '|'.join(x) for x in share_cards ]
-        if self.num_players == 2 :
-            opps = [x[0] for x in opps]
-        
+
 
         return opps, shares
     
