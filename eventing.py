@@ -89,15 +89,14 @@ def mouse_play(var):
                 player1.set_shown()
                 player2.set_shown()
                 tick = -1                
-                mode = 'flop_pre'
+                mode = 'play_delay'
             if choose == 1:
                 tick = -1
-                mode = 'flop_pre'
+                mode = 'play_delay'
                 player1.showc = player1.showc + player1.active_list.copy()
                 
                 #player2.showc = player2.showc + player2.active_list.copy()
                 
-
     return player1, player2, mode, choose, tick, tickf1
 
 def mouse_flop(var):

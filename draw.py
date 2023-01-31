@@ -192,18 +192,7 @@ def draw_play(screen, const, var):
         Mblit(screen, common_card.img_std, (1300, 300))
         pg.draw.rect(screen, Yellow, (1195, 150, 210, 300), 3, border_radius = 15)
 
-    pg.draw.rect(screen, White, (150, 280, 210, 40))
     pg.draw.circle(screen, White, (150, 300), 50)
-    # for i in range(5):
-    #     if Match < i+2: continue
-    #     v = sum(player2.pre[-i-2])
-    #     if v == 2: color = Green
-    #     if v == 1: color = GreenG
-    #     if v == 0: color = Grey4
-    #     if v == -1: color = RedG
-    #     if v == -2: color = Red
-    #     pg.draw.rect(screen, color, (325 - 30*i, 285, 30, 30))
-    
     Mblit(screen, title, (800, 70))
     Mblit(screen, Match_text, (20, 20), 'TL')
     Mblit(screen, Round_text, (20, 55), 'TL')
@@ -216,6 +205,29 @@ def draw_play(screen, const, var):
 
     screen.blit(Alpha_screen, (0, 0))
     return player1, player2, tick+1
+
+def draw_play_delay(screen, const, var):
+    player1, player2 = const
+    tick = var
+
+    Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
+    c1 = len(player1.card_list)
+    x0 = 850 - c1*50
+
+    screen.blit(bg2, (0, 0))
+    for i in range(c1):
+        card = player1.card_list[i]
+        Mblit(screen, card.img_half, (x0 + i*100, 700))
+        if card in player1.active_list:
+            pg.draw.rect(screen, Red, (x0 + i*100 - 150, 475, 300, 450), 4, border_radius = 30)
+    for i in range(8):
+        x = 800 + 60*math.sin(math.pi * (i + round(tick/5)) / 4)
+        y = 450 + 60*math.cos(math.pi * (i + round(tick/5)) / 4)
+        c = list(Red) + [55 + i*200 / 8]
+        pg.draw.circle(Alpha_screen, c, (x, y), 10)
+
+    screen.blit(Alpha_screen, (0, 0))
+    return tick+1
 
 def draw_flop(screen, const, var):
     Round, Match, player1, player2 = const
