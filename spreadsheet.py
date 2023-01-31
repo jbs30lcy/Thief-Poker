@@ -78,6 +78,7 @@ class SP:
         team += 1
         hand_cards = [str(x) for x in hand_cards]
         card_text = "|".join(hand_cards)
+        print("FDGDSHGS", card_text, col, team)
         self.update_cell(col, team, card_text)
         self.update_cell_range('match', 3, team, 1, [match, round, phase], use_player_sheet=False)
 

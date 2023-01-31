@@ -44,6 +44,8 @@ def set_para(Match):
     Rule = MATCH_PARA[v][:2]
     reward_coin = MATCH_PARA[v][2]
 
+    return Rule[0], Rule[1], reward_coin
+
 def main():
 
     mode = 'main'
@@ -172,7 +174,9 @@ def main():
             if Round == 1:
                 p1.pre.append([])
                 p2.pre.append([])
-            #p1, p2, reward_coin = set_para(Match)
+            r1, r2, reward_coin = set_para(Match)
+            p1.Rule = [r1, r2]
+            p2.Rule = [r1, r2]
             if 1 in p1.Rule[1] or 2 in p1.Rule[1]:
                 mode = 'showDD'
             else:
@@ -205,7 +209,6 @@ def main():
                     pg.quit()
                     sys.exit()
 
-            
             t = draw_play_pre(ori_screen, (p1, p2), t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if t == 60:
@@ -222,7 +225,7 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
                     p1, p2, mode, choose, t, tf1 = mouse_play((p1, p2, mode, choose, t, tf1))
-                    if mode == 'flop_pre':
+                    if mode == 'play_delay':
                         Phase = Phase % 2 + 1
                         sp.upload_playing( hand_cards = p1.active_list, match = Match, round = Round, phase = Phase)
                         p1.active_list = []
@@ -236,13 +239,13 @@ def main():
             clock.tick(60)
             pg.display.update()
         
-        if mode == 'flop_pre': #여기에 대기시간 화면 필요 -> 페이즈 1 내고 상대 내는거까지 기다리는 시점
+        if mode == 'play_delay': #여기에 대기시간 화면 필요 -> 페이즈 1 내고 상대 내는거까지 기다리는 시점
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
             
-            t = draw_delay(ori_screen, t)
+            t = draw_play_delay(ori_screen, (p1, p2), t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             if t % WAITING_TIME == 0 :
@@ -299,11 +302,11 @@ def main():
                 w = win(p1, p2)
             if t == 70:
                 if w == 0: #무승부
-                    p1.coin += 5
+                    p1.coin += (reward_coin // 2)
                     p1.pre[-1].append(0)
                     p2.pre[-1].append(0)
                 if w == 1: #승리
-                    p1.coin += 10
+                    p1.coin += reward_coin
                     p1.pre[-1].append(1)
                     p2.pre[-1].append(-1)
                 if w == 2: #패배
