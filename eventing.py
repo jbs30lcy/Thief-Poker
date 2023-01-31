@@ -223,6 +223,9 @@ def mouse_exchange_draw(var):
             tickf1 = 0
             tick = 0
             player2.ex_card = player2.active_list[0]
+            for i, c in enumerate(player2.card_list):
+                if str(c) == str(player2.ex_card) :
+                    player2.ex_index = i
             mode = 'exchange_delay'
 
     return mode, tick, tickf1, player1, player2

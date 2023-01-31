@@ -47,9 +47,11 @@ class Director():
             #print(q)
             #print(tmpq)
             i += 1
+        q = q + q
         print(q)
         print(opps)
         for i in range(len(q)):
+            
             a = i // (self.num_players//2) # match
             b = i % (self.num_players//2) # team
 
@@ -78,7 +80,7 @@ class Director():
         #             share_cards[j-1][i-1] = cd
         #             share_cards[oppo-1][i-1] = cd
                 #print(opps)
-
+        
         print(share_cards)
         shares = [ '|'.join(x) for x in share_cards ]
         if self.num_players == 2 :
