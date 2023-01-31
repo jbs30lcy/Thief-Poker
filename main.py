@@ -311,7 +311,7 @@ def main():
                     p2.pre[-1].append(1)
                 sp.update_cell('chips', p1.team+1, p1.coin)
                 
-                sp.clear_phase()
+                #sp.clear_phase()
             if mode == 'result': #가끔 씹힐때 있어서 버그처리
                 p1, p2, t = draw_result(ori_screen, (Round, Match, w), (p1, p2, t))
                 screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))

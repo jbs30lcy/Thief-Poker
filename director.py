@@ -2,6 +2,7 @@ from spreadsheet import SP
 from obj import Card
 import copy
 from spreadsheet import SP_DB
+import random
 
 class Director():
     def __init__(self, num = 0, num_players = 8):
@@ -13,7 +14,19 @@ class Director():
         res = []
         except_joker = False
         if use_setting:
-            pass
+            tmp = [ "00|11|23|24|16|47",
+                    "00|41|12|14|35|26",
+                    "00|21|32|13|34|45",
+                    "42|33|34|15|46|37",
+                    "22|14|25|46|37|17",
+                    "31|31|22|13|45|26",
+                    "32|23|44|15|16|27",
+                    "41|12|43|24|36|47"]
+            if order_players == []:
+                order_players = list(range(self.num_players))
+                random.shuffle(order_players)
+            for i in order_players:
+                res.append(tmp[i])
         else:
             for i in range(self.num_players):
                 res.append("|".join([ str(Card(use_random=True)) for x in range(6)]))
@@ -98,7 +111,7 @@ class Director():
     def game_setting(self, test=False):
         if test or self.sp.ck_players(self.num_players) : 
             print("GAME START")
-            self.sp.update_cell_range('hand',1,  2, self.num_players,  self.init_hands())
+            self.sp.update_cell_range('hand',1,  2, self.num_players,  self.init_hands(use_setting=True))
             self.sp.update_cell_range('chips', 1, 2, self.num_players, [100] * self.num_players)
             opps, shares = self.mk_opponents()
 
