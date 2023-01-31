@@ -49,6 +49,13 @@ for card in Card_IMGlist:
     CI_half[card] = pg.transform.scale(Card_IMGlist[card], (300, 450))
     CI_std[card] = pg.transform.scale(Card_IMGlist[card], (180, 270))
 
+MATCH_PARA = [
+    [['Flush'], [], 20],
+    [['Flush'], [4], 30],
+    [['Straight', 'Flush'], [4], 30],
+    [['Straight', 'Flush'], [4], 60]
+]
+
 def in_rect(pos, rect):
     return rect[0] <= pos[0] <= rect[0] + rect[2] and rect[1] <= pos[1] <= rect[1] + rect[3]
 class Card:
@@ -82,6 +89,7 @@ class Card:
 
     def equals(self, o):
         return str(self) == str(o)
+    
     def __repr__(self):
         if color == 'Black':
             return '==Card Black=='
@@ -112,7 +120,7 @@ class Player:
         self.shown = []
         self.coin = 100
         self.common = None
-        self.Rule = ['Flush', [4]] # 일단 이걸로.
+        self.Rule = [['Flush'], []] # 일단 이걸로.
         self.dd = []
         self.Rank = ''
         self.isdd = False
@@ -125,9 +133,9 @@ class Player:
     # str2score: 족보가 적혀 있는 str을 int로 변환하는 함수.
     def str2score(self, s):
         if 'Four of a kind' in s:
-            return 500 + 10 * int(s[0])
+            return 600 + 10 * int(s[0])
         if 'Straight' in s:
-            return 400 + int(s[0])
+            return 500 + int(s[0])
         if 'Flush' in s:
             return 400
         if 'Three of a kind' in s:
@@ -155,9 +163,9 @@ class Player:
 
         if n1 == n2 == n3 == n4:
             return f"{n1} {blacks} Four of a kind"
-        if self.Rule[0] == 'Straight' and n1+3 == n2+2 == n3+1 == n4:
+        if 'Straight' in self.Rule[0] and n1+3 == n2+2 == n3+1 == n4:
             return f"{n4} {blacks} Straight"
-        if self.Rule[0] == 'Flush' and c1 == c2 == c3 == c4:
+        if 'Flush' in self.Rule[0] and c1 == c2 == c3 == c4:
             return f"{c1} {blacks} Flush"
         if n1 == n2 == n3:
             return f"{n1} {blacks} Three of a kind"

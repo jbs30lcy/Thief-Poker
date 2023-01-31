@@ -12,8 +12,8 @@ def make_whole():
 epoch = 20000
 p1 = Player()
 p2 = Player()
-p1.Rule = ['Flush', [4]]
-p2.Rule = ['Flush', [4]]
+p1.Rule = [['Flush'], [4]]
+p2.Rule = [['Flush'], [4]]
 CL = make_whole()
 x, y = 0, 0
 for i in range(epoch):

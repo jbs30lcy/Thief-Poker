@@ -25,8 +25,8 @@ def win(player1, player2):
     print(f"PLAYER 1 : {player1.showc}")
     print(f"PLAYER 2 : {player2.showc}")
 
-    if 400 <= score1 and player2.isdd: return 2
-    if 400 <= score2 and player1.isdd: return 1 # 땡잡이가 플러시 이상의 족보를 잡기
+    if 400 <= score1 < 600 and player2.isdd: return 2
+    if 400 <= score2 < 600 and player1.isdd: return 1 # 땡잡이가 플러시 이상의 족보를 잡기
     if p1b and 0 < score2 < 100: return 2
     if p2b and 0 < score1 < 100: return 1  # 개패가 검은 족보를 잡기
     if score1 > score2: return 1
@@ -35,6 +35,14 @@ def win(player1, player2):
     if p1b: return 2
     if p2b: return 1 # 동일 족보에서 검은 족보가 짐.
     return 0
+
+def set_para(Match):
+    if 1 <= Match <= 3: v = 0
+    if 4 <= Match <= 7: v = 1
+    if 8 <= Match <= 10: v = 2
+    if 11 <= Match <= 14: v = 3
+    Rule = MATCH_PARA[v][:2]
+    reward_coin = MATCH_PARA[v][2]
 
 def main():
 
@@ -46,7 +54,7 @@ def main():
     t, w = 0, -1
     tf1, tf2 = 0, 0 # 조건부 작동되는 tick
     common = None
-    Rule = ['Straight', []]
+    Rule = [['Straight'], []]
     dd = []
 
     p1 = Player()
@@ -142,12 +150,9 @@ def main():
                     if Phase % 2 == 0:
                         Match += 1 
                         p2num = sp.get_opponent(Match) 
-                        p2 = Player( p2num, sp.get_hand(p2num) )
-
-
-                    #Phase = Phase % 2 + 1
-                    #print(Phase)
+                        p2 = Player(p2num, sp.get_hand(p2num))
                     mode = 'reset'
+                    # Phase = Phase%2 + 1
 
             clock.tick(60)
             pg.display.update()   
@@ -167,7 +172,7 @@ def main():
             if Round == 1:
                 p1.pre.append([])
                 p2.pre.append([])
-            #Match += 1
+            p1, p2, reward_coin = set_para(Match)
             if 1 in p1.Rule[1] or 2 in p1.Rule[1]:
                 mode = 'showDD'
             else:

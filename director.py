@@ -124,11 +124,11 @@ class Director():
     def clear_game(self):
         #게임 초기화하기
         # 게임 결과를 엑셀로 저장할까?    
-        tmp = 6
-        l = [ ['']*tmp for x in range(self.num_players)]
-        
-        self.sp.update_cell_range(1, tmp, 2, self.num_players, l)
-        self.sp.update_cell_range(1, tmp, 2, self.num_players, l, False)
+
+        player_l = [ ['']*9 for x in range(self.num_players)]
+        director_l = [ ['']*6 for x in range(self.num_players)]
+        self.sp.update_cell_range(1, 9, 2 + (self.num-1)*8, self.num_players, player_l)
+        self.sp.update_cell_range(2, 6, 2 + (self.num-1)*8, self.num_players, director_l, False)
         
 
 if __name__ == "__main__" :
@@ -140,7 +140,7 @@ if __name__ == "__main__" :
     while True:
         a = int(input("match 값 입력하기 : "))
         if a == 0: break
-        if a == -2 : 
+        if a == -2: 
             d.clear_game()
         elif a == -1:
             d.game_setting(test=True)
