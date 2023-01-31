@@ -33,13 +33,13 @@ class Director():
         while i < len(q):
             a, b = q[i]
             
-            if i % 4 == 0 :
+            if len(tmpq) == self.num_players :
                 tmpq = []
             
             if a in tmpq or b in tmpq:
                 q.remove((a,b))
                 q.append((a,b))
-                #print(f"불가능 ({a},{b})")
+                print(f"불가능 ({a},{b})", q)
                 continue
             
             tmpq.append(a)
@@ -47,17 +47,24 @@ class Director():
             #print(q)
             #print(tmpq)
             i += 1
-        #print(q)
-        #print(opps)
+        print(q)
+        print(opps)
         for i in range(len(q)):
-            a = i // 4 
-            b = i % 4 
-            
-            opps[q[i][1]][a] = q[i][0] + 1
-            opps[q[i][0]][a] = q[i][1] + 1
+            a = i // (self.num_players//2) # match
+            b = i % (self.num_players//2) # team
+
+            t1, t2 = q[i]
+            opps[t1][a] = t2+1
+            opps[t2][a] = t1+1
             cd = Card.rand_card(True) + "," + Card.rand_card(True)
-            share_cards[b*2][a] = cd 
-            share_cards[b*2+1][a] = cd
+            share_cards[t1][a] = cd
+            share_cards[t2][a] = cd
+
+            # opps[q[i][1]][a] = q[i][0] + 1
+            # opps[q[i][0]][a] = q[i][1] + 1
+            # cd = Card.rand_card(True) + "," + Card.rand_card(True)
+            # share_cards[b*2][a] = cd
+            # share_cards[b*2+1][a] = cd
         opps = [ "|".join( map(str, x) )  for x in opps ]
 
         # for i in range(1,self.num_players):

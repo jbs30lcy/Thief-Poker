@@ -172,7 +172,7 @@ def main():
             if Round == 1:
                 p1.pre.append([])
                 p2.pre.append([])
-            p1, p2, reward_coin = set_para(Match)
+            #p1, p2, reward_coin = set_para(Match)
             if 1 in p1.Rule[1] or 2 in p1.Rule[1]:
                 mode = 'showDD'
             else:
