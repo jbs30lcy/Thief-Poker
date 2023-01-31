@@ -123,9 +123,10 @@ class Director():
             self.sp.update_cell_range("team", 1, 2, self.num_players, list(range(1,self.num_players+1)), False)
             self.sp.update_cell_range("match_permission", 1, 2, self.num_players, [0] * self.num_players, False)
             self.match_setting(1, test)
+            return True
         else:
             print("Not Enough Players")
-
+            return False
 
     def clear_game(self):
         #게임 초기화하기
@@ -160,8 +161,8 @@ if __name__ == "__main__" :
                     d.clear_game()
                     rec += 1
                 elif rec == -1:
-                    d.game_setting(test=True)
-                    rec += 1
+                    if d.game_setting(test=False):
+                        rec += 1
                 else:
                     if d.match_setting(rec):
                         rec += 1      
