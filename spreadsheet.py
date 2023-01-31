@@ -37,12 +37,13 @@ class SP:
         else:
             return int(cell) == match
 
-    def enroll_player(self):
+    def enroll_player(self, initialize_row=False):
         team = self.team
         self.update_cell(1, team+1, team)
         self.update_cell(1, team+1, team, False)
-        for i in range(2,10):
-            self.update_cell(i, team+1, "")
+        if initialize_row:
+            for i in range(2,10):
+                self.update_cell(i, team+1, "")
 
     def num_players(self):
         cells = self.get_cell_range('team', 1, 2, self.num_players)

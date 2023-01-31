@@ -3,7 +3,7 @@ from obj import Card
 import copy
 from spreadsheet import SP_DB
 import random
-
+import time
 class Director():
     def __init__(self, num = 0, num_players = 8):
         self.num = num #반번호
@@ -105,8 +105,10 @@ class Director():
             self.sp.update_cell_range("phase1", 2, 2, self.num_players, [["",""] for x in range(self.num_players)] )
             
             print(f"{match}번 매치 시작")
+            return True
         else:
             print("아직 경기가 끝나지 않았습니다.")
+            return False
 
     def game_setting(self, test=False):
         if test or self.sp.ck_players(self.num_players) : 
@@ -140,7 +142,7 @@ if __name__ == "__main__" :
     d.clear_game()
 
     #d.game_setting(test=True)
-
+    rec = -5
     while True:
         a = int(input("match 값 입력하기 : "))
         if a == 0: break
@@ -148,6 +150,22 @@ if __name__ == "__main__" :
             d.clear_game()
         elif a == -1:
             d.game_setting(test=True)
+        elif a == -3:
+            if rec == -5 : 
+                rec = -2
+            while True:
+                if rec == 0:
+                    rec = 2
+                if rec == -2: 
+                    d.clear_game()
+                    rec += 1
+                elif rec == -1:
+                    d.game_setting(test=True)
+                    rec += 1
+                else:
+                    if d.match_setting(rec):
+                        rec += 1      
+                time.sleep(1)      
         else:
             d.match_setting(a)
-
+        rec = a
