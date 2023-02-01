@@ -1,6 +1,6 @@
 import pygame as pg
 from pygame.locals import *
-import sys, time
+import sys, time, random
 from obj import *
 from setting import *
 from draw import *
@@ -54,6 +54,7 @@ def main():
     Round = 1
     Phase = 0
     t, w = 0, -1
+    connect_mode = 'Single'
     tf1, tf2 = 0, 0 # 조건부 작동되는 tick
     common = None
     Rule = [['Straight'], []]
@@ -72,7 +73,7 @@ def main():
                     pg.quit()
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
-                    mode = mouse_main((mode, p1))
+                    mode, connect_mode, p1 = mouse_main((mode, connect_mode, p1))
             
             draw_main(ori_screen)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
@@ -89,7 +90,6 @@ def main():
                     mode = mouse_choose_key(mode)
                     if mode == "get_match":
                         sp = SP_DB(p1.group, p1.team)
-                        
                         sp.enroll_player()
                 if event.type == KEYDOWN:
                     p1, tf1, tf2 = key_choose_key(event, (p1, tf1, tf2))
@@ -147,7 +147,13 @@ def main():
             t = draw_get_match(ori_screen, t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
-            if t % WAITING_TIME == 0:
+            if connect_mode == 'Single' and t == 60:
+                if Phase % 2 == 0:
+                    Match += 1
+                    p2 = Player(0, random.sample(make_whole(), 6))
+                mode = 'reset'
+
+            if connect_mode == 'Multi' and t % WAITING_TIME == 0:
                 if sp.get_start_permission(Match+1) :
                     if Phase % 2 == 0:
                         Match += 1 
@@ -164,7 +170,8 @@ def main():
             t, w = 0, -1
             #p1, Match = start(Round, (p1, Match)) # 이 부분 대신에 DB에서 끌고 와야 하지
             if Match == 1:
-                p1.card_list = sp.get_hand()
+                if connect_mode == 'Single': p1.card_list = random.sample(make_whole(), 6)
+                if connect_mode == 'Multi': p1.card_list = sp.get_hand()
             p1.active_list = []
             p1.showc = []
             p1.Rank = ''
@@ -227,9 +234,8 @@ def main():
                     p1, p2, mode, choose, t, tf1 = mouse_play((p1, p2, mode, choose, t, tf1))
                     if mode == 'play_delay':
                         Phase = Phase % 2 + 1
-                        sp.upload_playing( hand_cards = p1.active_list, match = Match, round = Round, phase = Phase)
-                        p1.active_list = []
-                        p2.active_list = []
+                        if connect_mode == 'Multi':
+                            sp.upload_playing( hand_cards = p1.active_list, match = Match, round = Round, phase = Phase)
             p1, p2, t = draw_play(ori_screen, (Round, Match, choose, tf1), (p1, p2, t))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
@@ -248,7 +254,22 @@ def main():
             t = draw_play_delay(ori_screen, (p1, p2), t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
-            if t % WAITING_TIME == 0 :
+            if connect_mode == 'Single' and t == 60:
+                if Phase == 1:
+                    p2.showc = random.sample(p2.card_list, 2)
+                    mode = 'flop'
+                    t = 0
+                else:
+                    while True:
+                        add_showc = random.sample(p2.card_list, 2)
+                        if not add_showc[0] in p2.showc and not add_showc[1] in p2.showc: break
+                    p2.showc += add_showc
+                    mode = "result"
+                    t = 0
+                p1.active_list = []
+                p2.active_list = []
+            
+            if connect_mode == 'Multi' and t % WAITING_TIME == 0 :
                 if sp.has_conducted(p2.team, Round, Phase):
                     #p2.active_list = sp.get_playing(p2.team, Phase)
                     if Phase == 1:
@@ -259,6 +280,8 @@ def main():
                         p2.showc += sp.get_playing(p2.team, Phase)
                         mode = "result"
                         t = 0 
+                    p1.active_list = []
+                    p2.active_list = []
                     print(f"P2.showc :: {p2.showc}")
                     #Phase = Phase % 2 + 1
             clock.tick(60)
@@ -275,11 +298,8 @@ def main():
             t = draw_flop(ori_screen, (Round, Match, p1, p2), t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if t == 60:
-                #common = get_random_card()
-                common = sp.get_common(Round)
-                # if 1 in Rule[1]:
-                #     while dd[0].color == common.color and dd[0].val == common.val:
-                #         common = get_random_card() # 커뮤니티 카드와 땡잡이 중복 방지
+                if connect_mode == 'Single': common = get_random_card()
+                if connect_mode == 'Multi': common = sp.get_common(Round)                
                 p1.common = common
                 p2.common = common
                 p1.showc = [common] + p1.showc
@@ -329,7 +349,7 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
                     mode, choose, tf1, p1, p2 = mouse_exchange_lose((mode, choose, tf1, p1, p2))
-                    if mode == "exchange_result" : 
+                    if connect_mode == 'Multi' and mode == "exchange_result" : 
                         sp.update_cell('changed_index', p1.team+1, p1.ex_index)
                         sp.update_cell('changed_index', p2.team+1, p2.ex_index)
                         sp.update_cell("phase", p1.team+1, 3, False)
@@ -349,7 +369,7 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
                     mode, t, tf1, p1, p2 = mouse_exchange_draw((mode, t, tf1, p1, p2))
-                    if mode == "exchange_delay":
+                    if connect_mode == 'Multi' and mode == "exchange_delay":
                         sp.update_cell("changed_index", p2.team+1, p2.ex_index)
                         sp.update_cell("phase", p1.team+1, 3, False)
             p1, p2 = draw_exchange_draw(ori_screen, (Match, tf1), (p1, p2))
@@ -367,7 +387,24 @@ def main():
             
             t = draw_exchange_delay(ori_screen, p1, t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
-            if t % WAITING_TIME == 0 and sp.has_conducted(p2.team, 2, 3):
+
+            if connect_mode == 'Single' and t == 60:
+                if sum(p1.pre[-1]) > 0:
+                    p1.ex_index = random.randint(0, len(p1.card_list)) # shown 정책 적용안해
+                    p2.ex_index = random.randint(0, len(p2.card_list))
+                    p1.ex_card = p1.card_list[p1.ex_index]
+                    p2.ex_card = p2.card_list[p2.ex_index]
+                    choose = 0
+                    t = 0
+                    mode = 'exchange_result'
+                if sum(p1.pre[-1]) == 0:
+                    p1.ex_index = random.randint(0, len(p1.card_list))
+                    p1.ex_card = p1.card_list[p1.ex_index]
+                    choose = 0
+                    t = 0
+                    mode = 'exchange_result'
+
+            if connect_mode == 'Multi' and t % WAITING_TIME == 0 and sp.has_conducted(p2.team, 2, 3):
                 if sum(p1.pre[-1]) > 0 :
                     p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
                     p2.ex_index = int(sp.get_acell('changed_index', p2.team+1))
@@ -377,10 +414,8 @@ def main():
                     t = 0
                     mode = 'exchange_result'
                 if sum(p1.pre[-1]) == 0:
-                
                     p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
                     p1.ex_card = p1.card_list[p1.ex_index]
-                    
                     choose = 0
                     t = 0
                     mode = 'exchange_result'
@@ -394,10 +429,8 @@ def main():
                     sys.exit()
                 if t >= 90 and event.type == MOUSEBUTTONDOWN:
                     mode, t = mouse_exchange_result((mode, t))
-
-                    if mode == "get_match":
+                    if connect_mode == 'Multi' and mode == "get_match":
                         sp.upload_hand(hand_cards = p1.card_list)
-
 
             if t == 50:
                 p1.card_list[p1.ex_index] = p2.ex_card

@@ -7,17 +7,25 @@ NUMBER_OF_GROUPS = 26
 NUMBER_OF_TEAMS = 8
 
 def mouse_main(var):
-    mode, player1 = var
+    mode, connect_mode, player1 = var
 
     pos = list(pg.mouse.get_pos())
     pos[0] *= (1600/WIDTH)
     pos[1] *= (900/HEIGHT)
-    if in_rect(pos, (600, 600, 400, 100)):
+    if in_rect(pos, (330, 600, 300, 100)):
+        mode = 'get_match'
+        player1.group = 1
+        player1.team = 1
+        connect_mode = 'Single'
+    if in_rect(pos, (650, 600, 300, 100)):
         mode = 'choose_key'
         player1.group = 1
         player1.team = 1
+        connect_mode = 'Multi'
+    if in_rect(pos, (980, 600, 300, 100)):
+        pass # 리줌 만들어 ㅃㄹ!!@!@!
     
-    return mode
+    return mode, connect_mode, player1
 
 def key_choose_key(const, var):
     event = const

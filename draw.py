@@ -43,8 +43,8 @@ def str2Kr(s):
         return f'{blacks} {s[0]} 원 페어'
     return f'족보 없음 {s[8:]}'
 
-NS = [pg.font.Font(file_path + '\\NanumSquareNeoOTF-cBd.otf', x) for x in range(1, 100)]
-NSE = [pg.font.Font(file_path + '\\NanumSquareNeoOTF-dEb.otf', x) for x in range(1, 100)]
+NS = [pg.font.Font(file_path + '/NanumSquareNeoOTF-cBd.otf', x) for x in range(1, 100)]
+NSE = [pg.font.Font(file_path + '/NanumSquareNeoOTF-dEb.otf', x) for x in range(1, 100)]
 NS.insert(0, 0)
 NSE.insert(0, 0)
 
@@ -56,11 +56,17 @@ def draw_main(screen):
     screen.blit(bg1, (0, 0))
 
     title = NSE[96].render("도둑   포커", True, White)
-    start_text = NS[56].render("게임   시작", True, Black)
+    single_text = NS[40].render("싱글 모드", True, Black)
+    multi_text  = NS[40].render("멀티 모드", True, Black)
+    resume_text = NS[40].render("재접속 모드", True, Black)
     
     Mblit(screen, title, (800, 250))
-    pg.draw.rect(screen, Brown1, (600, 600, 400, 100))
-    Mblit(screen, start_text, (800, 650))
+    pg.draw.rect(screen, Brown1, (320, 600, 300, 100))
+    pg.draw.rect(screen, Brown1, (650, 600, 300, 100))
+    pg.draw.rect(screen, Brown1, (980, 600, 300, 100))
+    Mblit(screen, single_text, (470, 650))
+    Mblit(screen, multi_text, (800, 650))
+    Mblit(screen, resume_text, (1130, 650))
     
 def draw_choose_key(screen, const, var):
     p1 = const

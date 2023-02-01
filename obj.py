@@ -5,7 +5,7 @@ import pygame as pg
 import os
 import random
 
-WIDTH, HEIGHT = 1440, 800
+WIDTH, HEIGHT = 1600, 900
 White  = (255, 255, 255)
 Black  = (0, 0, 0)
 Red    = (240, 26, 0)
@@ -34,7 +34,7 @@ NUMBER_OF_COLORS = 4
 NUMBER_OF_NUM = 7
 
 file_path = os.path.dirname(os.path.abspath(__file__))
-img_dir_path = file_path + "\\img\\"
+img_dir_path = file_path + "/img/"
 
 for color in colors[1:]:
     for num in range(1, 8):
