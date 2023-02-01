@@ -57,15 +57,14 @@ MATCH_PARA = [
 
 def in_rect(pos, rect):
     return rect[0] <= pos[0] <= rect[0] + rect[2] and rect[1] <= pos[1] <= rect[1] + rect[3]
+
 class Card:
     def __init__(self, color='00', val = 0, fromcell=False, use_random=False, except_joker=False):
         if use_random:
-            
             ran = random.randrange(NUMBER_OF_COLORS * NUMBER_OF_NUM + 1)
             self.color = colors[(ran-1) // NUMBER_OF_NUM + 1 ]
             self.val = (ran-1) % NUMBER_OF_NUM + 1 if ran > 0 else 0
         elif fromcell:
-            #print(color)
             if type(color) == type(1):
                 self.color = colors[color//10]
                 self.val = int(color%10)
@@ -79,7 +78,6 @@ class Card:
             self.color = color
             self.val = val
         self.dd = []
-        self.time = 5     # 카드의 수명 얘기 나와서요
         if self.color == 'Black': self.name = 'Black'
         else: self.name = self.color + '_' + str(self.val)
         self.img = Card_IMGlist[self.name]
@@ -148,72 +146,53 @@ class Player:
     
     # _rrank: Card 객체 4개가 담긴 list인 arr을 확인해 str 형태의 족보로 반환하는 함수.
     def _rrank(self, arr, black):
-        new_arr = arr.copy()
-        new_arr.sort(key = lambda x: x.val)
-        n1 = new_arr[0].val
-        n2 = new_arr[1].val
-        n3 = new_arr[2].val
-        n4 = new_arr[3].val
-        c1 = new_arr[0].color
-        c2 = new_arr[1].color
-        c3 = new_arr[2].color
-        c4 = new_arr[3].color
-        blacks = 'Black' if black == True else ''
-
-        if n1 == n2 == n3 == n4:
-            return f"{n1} {blacks} Four of a kind"
-        if 'Straight' in self.Rule[0] and n1+3 == n2+2 == n3+1 == n4:
-            return f"{n4} {blacks} Straight"
-        if 'Flush' in self.Rule[0] and c1 == c2 == c3 == c4:
-            return f"{c1} {blacks} Flush"
-        if n1 == n2 == n3:
-            return f"{n1} {blacks} Three of a kind"
-        if n1 == n2 == n4:
-            return f"{n1} {blacks} Three of a kind"
-        if n1 == n3 == n4:
-            return f"{n1} {blacks} Three of a kind"
-        if n2 == n3 == n4:
-            return f"{n2} {blacks} Three of a kind"
-        if n1 == n2 and n3 == n4:
-            return f"{max(n1, n3)}-{min(n1, n3)} {blacks} Two pair"
-        if n1 == n3 and n2 == n4:
-            return f"{max(n1, n2)}-{min(n1, n2)} {blacks} Two pair"
-        if n1 == n4 and n2 == n3:
-            return f"{max(n1, n2)}-{min(n1, n2)} {blacks} Two pair"
-        if n1 == n2 or n1 == n3 or n1 == n4:
-            return f"{n1} {blacks} Pair"
-        if n2 == n3 or n2 == n4:
-            return f"{n2} {blacks} Pair"
-        if n3 == n4:
-            return f"{n3} {blacks} Pair"
-        return f"No rank ({n1+n2+n3+n4})"
+        black_str = 'Black' if black > 0 else ''
+        value_arr = [0]*7
+        value_bool_arr = [0]*7
+        color_arr = [0]*4
+        for card in arr:
+            if card.color == 'Black': continue
+            value_arr[card.val - 1] += 1
+            value_bool_arr[card.val - 1] = 1
+            color_arr[colors_dict[card.color] - 1] += 1
+        
+        if max(value_arr) + black == 4: # 포카드
+            n = ''.join(map(str, value_arr)).rindex(str(max(value_arr)))
+            return f"{int(n)+1} {black_str} Four of a kind"
+        if 'Straight' in self.Rule[0]: # 스트레이트
+            for i in range(3, -1, -1):
+                slice_val_arr = value_bool_arr[i:i+4]
+                if sum(slice_val_arr) + black == 4:
+                    return f"{i+4} {black_str} Straight"
+        if 'Flush' in self.Rule[0] and max(color_arr) + black == 4: # 플러시
+            n = ''.join(map(str, color_arr)).rindex(str(max(color_arr)))
+            return f"{colors[int(n)+1]} {black_str} Flush"
+        if max(value_arr) + black == 3: # 트리플
+            n = ''.join(map(str, value_arr)).rindex(str(max(value_arr)))
+            return f"{int(n)+1} {black_str} Three of a kind"
+        if tuple(sorted(value_arr)) == (0, 0, 0, 0, 0, 2, 2): # 투 페어
+            n1 = ''.join(map(str, value_arr)).rindex('2')
+            n2 = ''.join(map(str, value_arr)).index('2')
+            return f"{n1+1}-{n2+1} Two pair"
+        if max(value_arr) + black == 2: # 원 페어
+            n = ''.join(map(str, value_arr)).rindex(str(max(value_arr)))
+            return f"{int(n)+1} {black_str} Pair"
+        return f"No rank ({sum( [value_arr[i] * (i+1) for i in range(7)] )})" # 개패
 
     # rank: 검정 카드를 포함한 족보를 계산하기 위한, _rrank의 wrapper 함수.
     def rank(self):
         if self.Rank: return self.Rank  # memoization
         R = 'No rank (1)'
         for i in range(5):
-            black_in = False
+            black_in = 0
             new_showc = self.showc.copy()
             del new_showc[i]
             for j in range(4):
                 card = new_showc[j]
-                if card.color == 'Black':
-                    black_in = True
-                    black_i = j
-                    break
-            if black_in:
+                if card.color == 'Black': black_in += 1
+            if black_in > 0:
                 arr = new_showc.copy()
-                max_s = ''
-                max_score = 0
-                for color in ('Red', 'Yellow', 'Blue', 'Green'):
-                    for val in range(1, 8):
-                        arr[black_i] = Card(color, val)
-                        x = self._rrank(arr, black_in)
-                        if self.str2score(x) > max_score:
-                            max_score = self.str2score(x)
-                            max_s = x
-                result_s = max_s
+                result_s = self._rrank(arr, black_in)
                 result_isblack = True
             else:
                 result_s = self._rrank(new_showc, black_in)
