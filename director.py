@@ -4,6 +4,50 @@ import copy
 from spreadsheet import SP_DB
 import random
 import time
+
+OPPO2 = [
+    [(1, 2)]
+]
+OPPO4 = [
+    [(1, 2), (3, 4)],
+    [(1, 3), (2, 4)],
+    [(1, 4), (2, 3)]
+]
+OPPO6 = [
+    [(1, 2), (3, 4), (5, 6)],
+    [(1, 3), (2, 5), (4, 6)],
+    [(1, 4), (2, 6), (3, 5)],
+    [(1, 5), (2, 4), (3, 6)],
+    [(1, 6), (2, 3), (4, 5)]
+]
+OPPO8 = [
+    [(1, 2), (3, 4), (5, 6), (7, 8)],
+    [(1, 3), (2, 4), (5, 7), (6, 8)],
+    [(1, 4), (2, 3), (5, 8), (6, 7)],
+    [(1, 5), (2, 6), (3, 7), (4, 8)],
+    [(1, 6), (2, 5), (3, 8), (4, 7)],
+    [(1, 7), (2, 8), (3, 5), (4, 6)],
+    [(1, 8), (2, 7), (3, 6), (4, 5)]
+]
+OPPO10 = [
+    [(1, 2), (3, 4), (5, 6), (7, 8), (9, 10)],
+    [(1, 3), (2, 4), (5, 7), (6, 9), (8, 10)],
+    [(1, 4), (2, 3), (5, 8), (6, 10), (7, 9)],
+    [(1, 5), (2, 6), (3, 7), (4, 10), (8, 9)],
+    [(1, 6), (2, 5), (3, 8), (4, 9), (7, 10)],
+    [(1, 7), (2, 8), (3, 9), (4, 6), (5, 10)],
+    [(1, 8), (2, 9), (3, 10), (4, 5), (6, 7)],
+    [(1, 9), (2, 10), (3, 5), (4, 7), (6, 8)],
+    [(1, 10), (2, 7), (3, 6), (4, 8), (5, 9)]
+]
+
+def select_two_common():
+    Card_list = []
+    for color in ('Red', 'Blue', 'Yellow', 'Green'):
+        for num in range(1, 8):
+            Card_list.append(Card(color, num))
+    return random.sample(Card_list, 2)
+
 class Director():
     def __init__(self, num = 0, num_players = 8):
         self.num = num #반번호
@@ -34,55 +78,25 @@ class Director():
         return res
 
     def mk_opponents(self):
-        opps = [copy.deepcopy([0]*(self.num_players-1)*2) for x in range(self.num_players) ]
-        share_cards = [copy.deepcopy([0]*(self.num_players-1)*2) for x in range(self.num_players) ]
         
-        q = []
-        for i in range(self.num_players):
-            for j in range(i+1,self.num_players):
-                q.append((i,j))
-        tmpq = []
-        i = 0
-        while i < len(q):
-            a, b = q[i]
-            
-            if len(tmpq) == self.num_players :
-                tmpq = []
-            
-            if a in tmpq or b in tmpq:
-                q.remove((a,b))
-                q.append((a,b))
-                print(f"불가능 ({a},{b})", q)
-                continue
-            
-            tmpq.append(a)
-            tmpq.append(b)
-            #print(q)
-            #print(tmpq)
-            i += 1
-        q = q + q
-        print("QUEUE : ",q)
-        print("OPPONENTS : ",opps)
-        for i in range(len(q)):
-            
-            a = i // (self.num_players//2) # match
-            b = i % (self.num_players//2) # team
+        np = self.num_players
+        opps = ['' for i in range(np)]
+        shares = ['' for i in range(np)]
 
-            t1, t2 = q[i]
-            opps[t1][a] = t2+1
-            opps[t2][a] = t1+1
-            cd = Card.rand_card(True) + "," + Card.rand_card(True)
-            share_cards[t1][a] = cd
-            share_cards[t2][a] = cd
-
-        opps = [ "|".join( map(str, x) )  for x in opps ]
+        for _ in range(2):
+            for match in range(1, np):
+                oppo_list = eval(f'OPPO{np}')[match-1]
+                for n in range(1, np+1):
+                    for i in range(np//2):
+                        if oppo_list[i][0] == n:
+                            card1, card2 = select_two_common()
+                            opps[n-1] += f'{oppo_list[i][1]}|'
+                            opps[oppo_list[i][1]-1] += f'{oppo_list[i][0]}|'
+                            shares[n-1] += f'{card1.color}{card1.val},{card2.color}{card2.val}|'
+                            shares[oppo_list[i][1]-1] += f'{card1.color}{card1.val},{card2.color}{card2.val}|'
+                            
         
-        print("SHARE CARDS",share_cards)
-        print("OPPONENTS : ", opps)
-        shares = [ '|'.join(x) for x in share_cards ]
-
-
-        return opps, shares
+        return list(map(lambda x: x[:-1], opps)), list(map(lambda x: x[:-1], shares))
     
     def ck_match(self, match):
         cells = self.sp.get_cell_range('match', 3, 2, self.num_players, use_player_sheet=False)
