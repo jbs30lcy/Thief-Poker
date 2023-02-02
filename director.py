@@ -180,6 +180,7 @@ if __name__ == "__main__" :
                 else:
                     if d.match_setting(rec):
                         rec += 1      
+                print(rec)
                 time.sleep(1)      
         else:
             d.match_setting(a)
