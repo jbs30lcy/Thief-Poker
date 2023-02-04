@@ -139,7 +139,6 @@ class Director():
             self.sp.update_cell_range('match', 3, 2, self.num_players, [ [0,2,4] for x in range(self.num_players)  ], use_player_sheet=False )
             self.sp.update_cell_range("team", 1, 2, self.num_players, list(range(1,self.num_players+1)), False)
             self.sp.update_cell_range("match_permission", 1, 2, self.num_players, [0] * self.num_players, False)
-            self.match_setting(1, test)
             return True
         else:
             print("Not Enough Players")
@@ -187,9 +186,12 @@ class Director():
         self.sp.update_cell_range('hand', 1, 2, self.num_players, ret)
         return ret 
 
-class DirectorQT(QMainWindow, form_class):
-    DB_connected = False
-    sp = None 
+form_class = uic.loadUiType("DirectorQT.ui")[0]
+
+class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
+    dr = None 
+    num_players = 8
+    EXPLAINED = False
 
     def __init__(self):
         #초기 설정
@@ -198,11 +200,76 @@ class DirectorQT(QMainWindow, form_class):
         self.setWindowTitle("도둑포커 디렉터용 파일")
         
         #버튼에 기능 연결
+        self.btn_matchStart.clicked.connect(self.btn_match_start)
 
-    def btnDBCon(self, group, num_players = 8):
-        self.dr = Director(group, num_players)
+
+    def btn_match_start(self):
+        group = self.get(self.txt_group)
+        match = self.get(self.txt_matchNum)
+        FINAL_MATCH = 15
+        EXPLAIN_INFO = [1,4,8,11]
+
+        if match <= 0:
+            self.dr = Director(group, num_players)
+            self.group = group
+            self.num_players = num_players
+            if match == 0:
+                self.dr.clear_game()
+            self.set_text(self.txt_matchNum, 1)
+        elif match == FINAL_MATCH:
+            self.update_ranking()
+        else:
+            if self.dr is None:
+                self.warning("초기화를 진행해주세요")
+                return
+            if not self.dr.ck_match(match):
+                self.warning("아직 진행되지 않은 팀이 있습니다!")
+                return
+            if match == 1:
+                self.dr.game_setting()
+            
+            if match in EXPLAIN_INFO:
+                if self.EXPLAINED: #바뀌는 룰과 아이템 설명 완료
+
+                else: 
+
+
+            self.update_ranking()
+            
+            self.dr.match_setting(match)
+
+            
+
+    def update_ranking(self):
+        tb = self.table_ranking
+        tb.setColumnCount(2)
+        tb.setRowCount(self.num_players)
+        tb.clear()
+        tb.set_table_ranking()
+
+
+    def set_text(self, ob, ob_type="text", text=""): # 값 설정
+        if ob_type=="text":
+            ob.setText(text)
+            return True
+        elif ob_type=="cbox":
+            return False
+
+    def get(self, ob, ob_type="text", clear=False, toint = True): #값 return
+        if ob_type=="text":
+            s = ob.text().strip()
+        elif ob_type=="cbox":
+            ind = ob.currentIndex()
         
+        if clear==True:
+            ob.clear()
 
+        if toint: s = int(s)
+        return s
+    def warning(self, text = "", title="알림"):
+        QMessageBox.warning(self,'Warning Title','Warning Message')
+
+    def btn
 if __name__ == "__main__" :
     d = Director(1, num_players=int(input("플레이어 수 입력 : ")))
     #d.clear_game()
@@ -216,6 +283,7 @@ if __name__ == "__main__" :
             d.clear_game()
         elif a == -1:
             d.game_setting(test=True)
+            d.match_setting(1)
         elif a == -4:
             d.joker_penalty()
         elif a == -5:
