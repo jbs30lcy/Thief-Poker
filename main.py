@@ -293,7 +293,7 @@ def main():
             #p1, Match = start(Round, (p1, Match)) # 이 부분 대신에 DB에서 끌고 와야 하지
             if Match == 1 and Round == 1:
                 if connect_mode == 'Single': p1.card_list = random.sample(make_whole(), 6)
-                if connect_mode == 'Multi': p1.card_list = sp.get_hand()
+            if connect_mode == 'Multi': p1.card_list = sp.get_hand()
             p1.active_list = []
             p1.showc = []
             p1.Rank = ''

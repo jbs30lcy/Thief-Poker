@@ -3,6 +3,9 @@ from obj import Card
 import copy
 import random
 import time
+import sys
+from PyQt5.QtWidgets import *
+from PyQt5 import uic
 
 OPPO2 = [
     [(1, 2)]
@@ -152,6 +155,54 @@ class Director():
         self.sp.update_cell_range(2, 6, 2 + (self.num-1)*8, self.num_players, director_l, False)
         
 
+    def joker_penalty(self):
+        teams = list(range(1,self.num_players+1))
+        chips = list(map(int, self.sp.get_cell_range('chips', 1, 2, self.num_players)))
+        hands = self.sp.get_cell_range("hand", 1, 2, self.num_players)
+        
+        res = []
+        for i in range(self.num_players):
+            c = int(chips[i] * ( 0.8 ** ((hands[i].count('0') // 2) + (hands[i].count('Black'))))    )
+            res.append( c )
+        
+        self.sp.update_cell_range( "chips", 1, 2, self.num_players, res )
+
+    def get_ranking(self):
+        teams = list(range(1,self.num_players+1))
+        chips = list(map(int, self.sp.get_cell_range('chips', 1, 2, self.num_players)))
+
+        ranking = sorted( [ [x, y] for x, y in zip(teams, chips) ], key = lambda x : x[1]  )      
+        print("RANKING : ")
+        print(ranking)
+        print("-"*50)
+        return ranking
+
+    def making_hand_reversed(self):
+        cards = self.sp.get_cell_range('hand', 1, 2, self.num_players)
+        print("cards "*5)
+        print(cards)
+        
+        ret = [  "|".join([ ((x[:-1] + f"{x[1]}") if  (x[-1] == '0' or x[-1].find('Black') > -1)  else (x[:-1] +  f"{8 - int(x[-1])}")) for x in c.split('|') ]) for c in cards ]
+        print("returned"*10)
+        self.sp.update_cell_range('hand', 1, 2, self.num_players, ret)
+        return ret 
+
+class DirectorQT(QMainWindow, form_class):
+    DB_connected = False
+    sp = None 
+
+    def __init__(self):
+        #초기 설정
+        super().__init__()
+        self.setupUi(self)
+        self.setWindowTitle("도둑포커 디렉터용 파일")
+        
+        #버튼에 기능 연결
+
+    def btnDBCon(self, group, num_players = 8):
+        self.dr = Director(group, num_players)
+        
+
 if __name__ == "__main__" :
     d = Director(1, num_players=int(input("플레이어 수 입력 : ")))
     #d.clear_game()
@@ -165,6 +216,12 @@ if __name__ == "__main__" :
             d.clear_game()
         elif a == -1:
             d.game_setting(test=True)
+        elif a == -4:
+            d.joker_penalty()
+        elif a == -5:
+            print(d.get_ranking()) 
+        elif a == -6:
+            print(d.making_hand_reversed())
         elif a == -3:
             if rec == -5 : 
                 rec = -2
