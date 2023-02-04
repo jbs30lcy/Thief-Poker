@@ -232,7 +232,7 @@ def main():
                     Match += 1
                     p2 = Player(0, random.sample(make_whole(), 6))
                 mode = 'reset'
-
+            
             if connect_mode == 'Multi' and t % WAITING_TIME == 0:
                 if sp.get_start_permission(Match+1) :
                     if Phase % 2 == 0:
@@ -249,7 +249,7 @@ def main():
             choose = 0
             t, w = 0, -1
             #p1, Match = start(Round, (p1, Match)) # 이 부분 대신에 DB에서 끌고 와야 하지
-            if Match == 1:
+            if Match == 1 and Round == 1:
                 if connect_mode == 'Single': p1.card_list = random.sample(make_whole(), 6)
                 if connect_mode == 'Multi': p1.card_list = sp.get_hand()
             p1.active_list = []
@@ -473,15 +473,15 @@ def main():
 
             if connect_mode == 'Single' and t == 60:
                 if sum(p1.pre[-1]) > 0:
-                    p1.ex_index = random.randint(0, len(p1.card_list)) # shown 정책 적용안해
-                    p2.ex_index = random.randint(0, len(p2.card_list))
+                    p1.ex_index = random.randint(0, len(p1.card_list)-1) # shown 정책 적용안해
+                    p2.ex_index = random.randint(0, len(p2.card_list)-1)
                     p1.ex_card = p1.card_list[p1.ex_index]
                     p2.ex_card = p2.card_list[p2.ex_index]
                     choose = 0
                     t = 0
                     mode = 'exchange_result'
                 if sum(p1.pre[-1]) == 0:
-                    p1.ex_index = random.randint(0, len(p1.card_list))
+                    p1.ex_index = random.randint(0, len(p1.card_list)-1)
                     p1.ex_card = p1.card_list[p1.ex_index]
                     choose = 0
                     t = 0
