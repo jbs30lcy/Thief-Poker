@@ -167,19 +167,20 @@ def draw_choose_key(screen, const, var):
     if tickf2: tickf2 -= 1
     return tickf1, tickf2
 
-def draw_get_match(screen, var):
+def draw_get_match(screen, const, var):
+    player1 = const
     tick = var
 
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
-    title = NS[72].render("Finding player...", True, Black)
+    title = NS[72].render("게임 준비 중...", True, Black)
 
     screen.fill(Grey1)
     Mblit(screen, title, (800, 150))
-    for i in range(8):
-        x = 800 + 120*math.sin(math.pi * (i + round(tick/5)) / 4)
-        y = 450 + 120*math.cos(math.pi * (i + round(tick/5)) / 4)
-        c = list(Green) + [55 + i*200 / 8]
-        pg.draw.circle(Alpha_screen, c, (x, y), 20)
+    for i in range(5):
+        num_text = NS[18].render(str(player1.item[i]), True, Black)
+        Mblit(screen, Item_IMGlist[i], (100 + 200*i, 750))
+        Mblit(screen, num_text, (170 + 200*i, 860))
+        if player1.using_item == i: Mrect(screen, Red, (100 + 200*i, 750, 160, 240), 3)
 
     screen.blit(Alpha_screen, (0, 0))
     return tick+1

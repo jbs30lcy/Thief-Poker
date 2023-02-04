@@ -146,12 +146,14 @@ class Director():
 
     def clear_game(self):
         #게임 초기화하기
-        # 게임 결과를 엑셀로 저장할까?    
-
-        player_l = [ ['']*11 for x in range(self.num_players)]
-        director_l = [ ['']*6 for x in range(self.num_players)]
-        self.sp.update_cell_range(1, 11, 2 + (self.num-1)*8, self.num_players, player_l)
-        self.sp.update_cell_range(2, 6, 2 + (self.num-1)*8, self.num_players, director_l, False)
+        # 게임 결과를 엑셀로 저장할까?
+          
+        player_table_col = 13
+        director_table_col = 6
+        player_l = [ [''] * player_table_col for x in range(self.num_players)]
+        director_l = [ [''] * director_table_col for x in range(self.num_players)]
+        self.sp.update_cell_range(1, player_table_col, 2 + (self.num-1)*8, self.num_players, player_l)
+        self.sp.update_cell_range(2, director_table_col, 2 + (self.num-1)*8, self.num_players, director_l, False)
         
 
     def joker_penalty(self):

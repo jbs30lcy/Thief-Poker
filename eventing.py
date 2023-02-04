@@ -104,6 +104,20 @@ def mouse_choose_key(screen_size, var):
 
     return mode
 
+def mouse_get_match(screen_size, var):
+    WIDTH, HEIGHT = screen_size
+    player1 = var
+
+    pos = list(pg.mouse.get_pos())
+    pos[0] *= (1600/WIDTH)
+    pos[1] *= (900/HEIGHT)
+
+    for i in range(1, 5):
+        if in_rect(pos, (20+200*i, 630, 160, 240)) and player1.item[i] > 0:
+            player1.using_item = i
+
+    return player1
+
 def mouse_play(screen_size, var):
     WIDTH, HEIGHT = screen_size
     player1, player2, mode, choose, tick, tickf1 = var
