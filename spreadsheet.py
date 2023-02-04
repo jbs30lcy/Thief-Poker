@@ -178,6 +178,14 @@ class SP:
         if team == 0 : team = self.team
         cell = self.get_acell( 'phase', team+1, use_player_sheet=False )
         return 0 if self.cell_is_empty(cell) else int(cell)
+
+    
+    def upload_item(self, player):
+        item_str = '|'.join(map(str, player.item))
+        self.update_cell('item', self.team+1, item_str)
+        self.update_cell('using_item', self.team+1, str(player.using_item))
+
+
     # 보조 메소드들
     def encoding_list(self, l = [], dimension = 1):
         if dimension == 1:

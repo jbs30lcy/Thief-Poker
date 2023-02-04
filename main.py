@@ -221,56 +221,18 @@ def main():
             clock.tick(60)
             pg.display.update()
 
-
-        '''
-        # if mode == 'chooseRank': # choose one 해서 스트레이트 플러쉬 고민하기
-        #     pos = pg.mouse.get_pos()
-        #     r1, r2 = Rule
-        #     for event in pg.event.get():
-        #         if event.type == QUIT:
-        #             pg.quit()
-        #             sys.exit()
-        #         if event.type == MOUSEBUTTONDOWN:
-        #             if in_rect(pos, (550, 200, 200, 120)):
-        #                 r1 = 'Straight'
-        #             if in_rect(pos, (850, 200, 200, 120)):
-        #                 r1 = 'Flush'
-        #             # if in_rect(pos, (250, 600, 200, 120)):
-        #             #     r2 = []
-        #             # if in_rect(pos, (550, 600, 200, 120)):
-        #             #     if 1 in r2: r2.remove(1)
-        #             #     else: r2.append(1)
-        #             # if in_rect(pos, (850, 600, 200, 120)):
-        #             #     if 2 in r2: r2.remove(2)
-        #             #     else: r2.append(2)
-        #             # if in_rect(pos, (1150, 600, 200, 120)):
-        #             #     if 4 in r2: r2.remove(4)
-        #             #     else: r2.append(4)
-        #             if in_rect(pos, (1300 - 45, 450 - 30, 90, 60)):
-        #                 r2.sort()
-        #                 Rule = [r1, r2]
-        #                 p1.Rule = Rule
-        #                 p2.Rule = Rule
-        #                 mode = 'get_match'
-            
-        #     draw_chooserank(ori_screen, (Rule, pos))
-        #     screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
-        #     Rule = [r1, r2]
-
-        #     clock.tick(60)
-        #     pg.display.update()
-        '''
-
         if mode == 'get_match':  # Finding player - 하는 화면
             for event in pg.event.get():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
+                if event.type == MOUSEBUTTONDOWN and not is_esc:
+                    p1 = mouse_get_match((WIDTH, HEIGHT), p1)
             
-            t = draw_get_match(ori_screen, t)
+            t = draw_get_match(ori_screen, p1, t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
-            if connect_mode == 'Single' and t == 60:
+            if connect_mode == 'Single' and t == 180:
                 if Phase % 2 == 0:
                     Match += 1
                     p2 = Player(0, random.sample(make_whole(), 6))
@@ -289,6 +251,11 @@ def main():
             pg.display.update()   
 
         if mode == 'reset': # 죽일 수 있는 모드인줄 알았는데, 역시 잘 돌아가는 코드는 건들면 안됨. 이름만 init => reset으로 바꿈.
+
+            # 이쯤.. sp.get_hand가 실행되기 전에 적용해야 하는 아이템 효과가 있으므로
+            if p1.using_item >= 0: p1.item[p1.using_item] -= 1
+            sp.upload_item(p1)
+
             choose = 0
             t, w = 0, -1
             #p1, Match = start(Round, (p1, Match)) # 이 부분 대신에 DB에서 끌고 와야 하지

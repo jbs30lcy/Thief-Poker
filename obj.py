@@ -53,6 +53,15 @@ MATCH_PARA = [
     [['Straight', 'Flush', 'S-F'], [4], 60]
 ]
 
+Item_desc = [
+    '?'
+    '필요없는 카드 두 장을 랜덤한 카드 두 장으로 교체합니다.'
+    '상대가 보유한 카드 중 랜덤으로 두 장을 엿볼 수 있습니다.'
+    '이 매치에서 획득하는 코인이 두 배가 됩니다.'
+    '다른 사람들이 가지고 있던 카드가 하나씩 전부 바뀝니다.'
+]
+Item_IMGlist = [pg.transform.scale(pg.image.load(img_dir_path + f"Item_{x}.png"), (160, 240)) for x  in range(5)]
+
 def in_rect(pos, rect):
     return rect[0] <= pos[0] <= rect[0] + rect[2] and rect[1] <= pos[1] <= rect[1] + rect[3]
 
@@ -124,6 +133,8 @@ class Player:
         self.ex_index = 0
         self.ex_card = None
         self.pre = []
+        self.item = [1, 1, 1, 1, 1]
+        self.using_item = -1
 
     # str2score: 족보가 적혀 있는 str을 int로 변환하는 함수.
     def str2score(self, s):
@@ -299,9 +310,10 @@ class Player:
                     break
             else: self.shown.append(card)
 
-class Item: # 이거 밤새서 만들각인데.
-    def __init__(self):
-        pass
+class Item:
+    def __init__(self, num):
+        self.num = num
+        self.desc = Item_desc[num]
 
 if __name__ == '__main__':
     print("This File is not executable file. please run main.py.")
