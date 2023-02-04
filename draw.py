@@ -25,6 +25,20 @@ def Mblit(screen, surf, pos, poscon = 'MM'):
 
     screen.blit(surf, (x, y))
 
+def Mrect(screen, color, rect, width = 0, rectcon = 'MM', border_radius = 0):
+    x, y, w, h = rect
+    r, c = rectcon
+    if r == 'T': y = y
+    elif r == 'M': y = y - h/2
+    elif r == 'B': y = y - h
+    else: raise NameError('Wrong condition')
+    if   c == 'L': x = x
+    elif c == 'M': x = x - w/2
+    elif c == 'R': x = x - w
+    else: raise NameError('Wrong condition')
+
+    pg.draw.rect(screen, color, (x, y, w, h), width, border_radius = border_radius)
+
 def str2Kr(s):
     col_kr_dict = {'Red': '빨강', 'Blue': '파랑', 'Yellow': '노랑', 'Green': '초록'}
     blacks = '검은' if 'Black' in s else ''

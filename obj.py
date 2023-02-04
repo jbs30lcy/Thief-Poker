@@ -203,13 +203,7 @@ class Player:
             elif rs == Rs and not result_isblack:
                 R = result_s
 
-        Is_black = False
-        for i in range(5):
-            card = self.showc[i]
-            if card.color == 'Black':
-                Is_black = True
-                break
-        if not Is_black:
+        if self.str2score(R) < 200:
             for i in range(5):
                 new_showc = self.showc.copy()
                 del new_showc[i]
@@ -280,10 +274,7 @@ class Player:
 
     def set_shown(self):
         #2페이즈에 낸걸로 뽑기
-        print(f"SET shown :  {self.showc}")
         # self.shown = self.showc[1:].copy()
-
-        # return
         
         #냈던 카드 전부 뽑기
         for card in self.showc[1:]:
