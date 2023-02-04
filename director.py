@@ -1,13 +1,12 @@
 from spreadsheet import SP
 from obj import Card
 import copy
-from spreadsheet import SP_DB
 import random
 import time
 class Director():
     def __init__(self, num = 0, num_players = 8):
         self.num = num #반번호
-        self.sp = SP_DB(num)
+        self.sp = SP(num)
         self.num_players = num_players
 
     def init_hands(self, use_setting=False, order_players = []):
@@ -87,7 +86,7 @@ class Director():
     def ck_match(self, match):
         cells = self.sp.get_cell_range('match', 3, 2, self.num_players, use_player_sheet=False)
         for steps in cells : 
-            if steps[0] != str(match-1) or steps[1] != "2" or steps[2] != "3" :
+            if steps[0] != str(match-1) or steps[1] != "2" or steps[2] != "4" :
                 print(steps)
                 return False
         return True
@@ -103,7 +102,8 @@ class Director():
             self.sp.update_cell_range('match_permission', 1, 2, self.num_players, [match]*self.num_players, use_player_sheet=False)
             self.sp.update_cell_range('common1', 2, 2, self.num_players, self.get_share_cards(match) )
             self.sp.update_cell_range("phase1", 2, 2, self.num_players, [["",""] for x in range(self.num_players)] )
-            
+            self.sp.update_cell_range("pre", 1, 2, self.num_players, [""] * self.num_players, True )
+
             print(f"{match}번 매치 시작")
             return True
         else:
@@ -119,7 +119,7 @@ class Director():
 
             self.sp.update_cell_range('opponents',1, 2, self.num_players, opps, use_player_sheet=False)
             self.sp.update_cell_range('share_cards', 1, 2, self.num_players, shares, False)
-            self.sp.update_cell_range('match', 3, 2, self.num_players, [ [0,2,3] for x in range(self.num_players)  ], use_player_sheet=False )
+            self.sp.update_cell_range('match', 3, 2, self.num_players, [ [0,2,4] for x in range(self.num_players)  ], use_player_sheet=False )
             self.sp.update_cell_range("team", 1, 2, self.num_players, list(range(1,self.num_players+1)), False)
             self.sp.update_cell_range("match_permission", 1, 2, self.num_players, [0] * self.num_players, False)
             self.match_setting(1, test)
@@ -132,9 +132,9 @@ class Director():
         #게임 초기화하기
         # 게임 결과를 엑셀로 저장할까?    
 
-        player_l = [ ['']*9 for x in range(self.num_players)]
+        player_l = [ ['']*11 for x in range(self.num_players)]
         director_l = [ ['']*6 for x in range(self.num_players)]
-        self.sp.update_cell_range(1, 9, 2 + (self.num-1)*8, self.num_players, player_l)
+        self.sp.update_cell_range(1, 11, 2 + (self.num-1)*8, self.num_players, player_l)
         self.sp.update_cell_range(2, 6, 2 + (self.num-1)*8, self.num_players, director_l, False)
         
 

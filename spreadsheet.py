@@ -1,27 +1,31 @@
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 from obj import Card
 import pymysql
+'''
+#import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+'''
+
 class SP:
     def __init__(self, num = 0, team=0): # num : 반 번호
-        scope = [
-            'https://spreadsheets.google.com/feeds',
-            'https://www.googleapis.com/auth/drive',
-        ]
+        pass
+        # scope = [
+        #     'https://spreadsheets.google.com/feeds',
+        #     'https://www.googleapis.com/auth/drive',
+        # ]
 
-        json_file_name = 'thief-poker-346a3342e123.json'
+        # json_file_name = 'thief-poker-346a3342e123.json'
 
-        credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scope)
-        gc = gspread.authorize(credentials)
+        # credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scope)
+        # gc = gspread.authorize(credentials)
 
-        spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1l7bGqQjoqhLUXDCAhGzFqPZHfkKuFDiO7b7UYIaFOh0/edit?usp=sharing'
+        # spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1l7bGqQjoqhLUXDCAhGzFqPZHfkKuFDiO7b7UYIaFOh0/edit?usp=sharing'
 
-        self.doc = gc.open_by_url(spreadsheet_url)
-        self.ws = self.doc.worksheet(f'player{num}')
-        self.ws_dir = self.doc.worksheet(f'director{num}')
-        self.cols = self.update_cols_dict(True)
-        self.cols_dir = self.update_cols_dict(False)
-        self.team = team
+        # self.doc = gc.open_by_url(spreadsheet_url)
+        # self.ws = self.doc.worksheet(f'player{num}')
+        # self.ws_dir = self.doc.worksheet(f'director{num}')
+        # self.cols = self.update_cols_dict(True)
+        # self.cols_dir = self.update_cols_dict(False)
+        # self.team = team
 
     def ck_players(self, num_players=8):
         teams = self.get_cell_range(self.cols['team'], 1, 2, num_players)
@@ -88,6 +92,17 @@ class SP:
         team += 1
         col = self.cols_dir[step]
         self.update_cell(col, team, text)
+    
+    def get_MRP(self):
+        return map(int, self.get_cell_range('match', 3, self.team+1, 1, False))
+
+    def get_shown(self, team = 0):
+        if team == 0 : team = self.team
+        txt = self.get_acell('shown', team+1)
+        return [Card(x, fromcell =True) for x in txt.split("|")]
+    
+    def upload_shown(self, shown = []):
+        self.update_cell('shown', self.team+1, self.encoding_list(shown, 1))
 
     def get_common(self, round=1):
         cell = self.get_acell(f"common{round}", self.team+1, use_player_sheet=True)
@@ -97,6 +112,22 @@ class SP:
     
     def clear_phase(self):
         self.update_cell_range('phase1', 2, self.team+1, 1, ["" for x in range(2)])
+
+    def get_pre(self, team = 0):
+        if team == 0 : team = self.team
+        pre = self.get_acell("pre", team+1)
+        print(pre)
+        pre = self.decoding_list(pre, 1, int) 
+        return pre
+
+    def upload_pre(self, pre = [[]], team = 0):
+        if team == 0 : team = self.team
+        pre = self.encoding_list(pre[-1], 1)
+        self.update_cell('pre', team + 1, pre)
+
+    def get_chips(self, team = 0):
+        if team == 0 : team = self.team
+        return int(self.get_acell('chips', team+1))
 
     def get_playing(self, team=0, phase=1):
         if team == 0 : team = self.team
@@ -112,11 +143,11 @@ class SP:
 
         return cards
         
-    def has_conducted(self, team = 0, round = 0, phase=1) -> bool : #해당 팀이 해당 라운드 및 페이즈를 진행했는지 확인. eg. sp.has_conducted(1,1,1) : 1팀이 1라운드 첫 조합을 냈는 지 확인
+    def has_conducted(self, team = 0, match = 0, round = 0, phase=1) -> bool : #해당 팀이 해당 라운드 및 페이즈를 진행했는지 확인. eg. sp.has_conducted(1,1,1) : 1팀이 1라운드 첫 조합을 냈는 지 확인
         if team == 0 : team = self.team
-        r, p = map(int, self.get_cell_range('round', 2, team + 1, 1, use_player_sheet=False))
+        m, r, p = map(int, self.get_cell_range('match', 3, team + 1, 1, use_player_sheet=False))
         
-        return r == round and p == phase
+        return m*100 + r * 10 + p >=  match * 100 + round*10 + phase
 
     def get_match(self, team = 0) -> int:
         # ValueError: invalid literal for int() with base 10: '' 
@@ -129,7 +160,7 @@ class SP:
         if team == 0 : team = self.team
 
         cell = self.get_acell( 'opponents', team+1, use_player_sheet=False)
-        opponent = int(cell.split("|")[match-1])
+        opponent = int(self.decoding_list(cell)[match-1])
 
         return opponent
 
@@ -148,8 +179,29 @@ class SP:
         cell = self.get_acell( 'phase', team+1, use_player_sheet=False )
         return 0 if self.cell_is_empty(cell) else int(cell)
     # 보조 메소드들
-    
+    def encoding_list(self, l = [], dimension = 1):
+        if dimension == 1:
+            ret = "|".join(map(str, l))
+        else:
+            ret = "|".join([ ",".join( map(str,x )  ) for x in l ])
+        
+
+        return ret
+
+    def decoding_list(self, text="", dimension = 1, mapping_func = lambda x:x):
+        if text == "" or text is None:
+            return [] if dimension == 1 else [[]]
+
+        if dimension == 1:
+            ret = list(map(mapping_func, text.split("|")))
+            
+        else:
+            ret = [ list(map(mapping_func, x.split(","))) for x in text.split("|") ] 
+            
+        return ret
+        '''
     def get_cell_range(self, col_start, num_cols, row_start, num_rows, use_player_sheet=True):
+        
         if type(col_start) == type(1):
             col_start = self.num_to_col(col_start)
         if len(col_start) > 2:
@@ -171,8 +223,10 @@ class SP:
         if num_rows == 1:
             res = res[0]
         return res
-    def update_cell_range(self, col_start, num_cols, row_start, num_rows, texts, use_player_sheet=True):
         
+        pass
+    def update_cell_range(self, col_start, num_cols, row_start, num_rows, texts, use_player_sheet=True):
+                
         if type(col_start) == type(1):
             col_start = self.num_to_col(col_start)
         if len(col_start) > 2:
@@ -188,9 +242,11 @@ class SP:
         texts = [self.cards_to_texts(x) for x in texts]
 
         self.ws.update(table_range, texts) if use_player_sheet else self.ws_dir.update(table_range, texts)
-
+        
+        pass
 
     def update_cell(self, col, row, text, use_player_sheet=True):
+        
         if type(col) == type(1):
             col = self.num_to_col(col)
         if len(col) > 2:
@@ -199,8 +255,10 @@ class SP:
         text = str(text)
 
         self.ws.update_acell(f"{col}{row}", text) if use_player_sheet else self.ws_dir.update_acell(f"{col}{row}", text)
-
+        
+        pass
     def get_acell(self, col, row, use_player_sheet = True):
+        
         if type(col) == type(1): # 열 값으로 숫자로 받아도 되게 처리 eg. 28 -> AA
             col = self.num_to_col(col)
         if len(col) > 2:
@@ -214,7 +272,8 @@ class SP:
             data = data[0][0]
 
         return data
-
+        '''
+        pass
     def num_to_col(self, col): #열번호를 숫자로 받아서 알파벳으로 변환 
         col_txt = ""
         while col > 0:
@@ -258,9 +317,6 @@ class SP:
 
 # worksheet 상의 특정 셀의 텍스트를 가져오는 코드
 # cell1 = worksheet.get('B1')
-
-
-class SP_DB(SP):
     def __init__(self, group = 0, team = 0):
         
         '''
@@ -403,6 +459,7 @@ class SP_DB(SP):
             print(ret)
             return ret
     def execute(self, query, insert=""):
+        print("EXECUTE : ", query, insert)
         if insert=="":
             self.cur.execute(query)
         else:
@@ -413,8 +470,9 @@ class SP_DB(SP):
 
 
 if __name__ == '__main__': #테스트
-    sp = SP_DB(1,1)
-    #exit(1)
+    print("NOT EXECUATE FILE")
+    exit(1)
+    sp = SP(1,1)
 
     #sp = SP()
     a = ['11', '21', '31', '41']

@@ -125,7 +125,7 @@ class Player:
         self.team = team
         self.ex_index = 0
         self.ex_card = None
-        self.pre = [0]
+        self.pre = []
 
     # str2score: 족보가 적혀 있는 str을 int로 변환하는 함수.
     def str2score(self, s):
@@ -283,9 +283,9 @@ class Player:
     def set_shown(self):
         #2페이즈에 낸걸로 뽑기
         print(f"SET shown :  {self.showc}")
-        self.shown = self.showc[1:].copy()
+        # self.shown = self.showc[1:].copy()
 
-        return
+        # return
         
         #냈던 카드 전부 뽑기
         for card in self.showc[1:]:
