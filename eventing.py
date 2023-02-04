@@ -6,7 +6,46 @@ pg.init()
 NUMBER_OF_GROUPS = 26
 NUMBER_OF_TEAMS = 8
 
-def mouse_main(var):
+def set_screen_condition(screen, screen_size, ori_screen_size):
+    WIDTH, HEIGHT = screen.get_width(), screen.get_height()
+    CWIDTH, CHEIGHT = screen_size
+    CQWIDTH, CQHEIGHT = ori_screen_size
+    ok_flag = False
+
+    pos = list(pg.mouse.get_pos())
+    pos[0] *= (1600/WIDTH)
+    pos[1] *= (900/HEIGHT)
+    pos[0] -= 600
+    pos[1] -= 100
+
+    if in_rect(pos, (20, 140, 360, 60)):
+        CWIDTH, CHEIGHT = 1920, 1080
+    if in_rect(pos, (20, 210, 360, 60)):
+        CWIDTH, CHEIGHT = 1600, 900
+    if in_rect(pos, (20, 280, 360, 60)):
+        CWIDTH, CHEIGHT = 1440, 810
+    if in_rect(pos, (20, 350, 360, 60)):
+        CWIDTH, CHEIGHT = 1280, 720
+    if in_rect(pos, (5, 480, 90, 90)):
+        CQWIDTH, CQHEIGHT = 1280, 720
+    if in_rect(pos, (105, 480, 90, 90)):
+        CQWIDTH, CQHEIGHT = 1440, 810
+    if in_rect(pos, (205, 480, 90, 90)):
+        CQWIDTH, CQHEIGHT = 1600, 900
+    if in_rect(pos, (305, 480, 90, 90)):
+        CQWIDTH, CQHEIGHT = 1920, 1080
+    if in_rect(pos, (380-90, 680-60, 90, 60)):
+        ok_flag = True
+        # if (WIDTH, HEIGHT) == (pre_WIDTH, pre_HEIGHT) and (QWIDTH, QHEIGHT) == (pre_QWIDTH, pre_QHEIGHT):
+        #     return (WIDTH, HEIGHT), (QWIDTH, QHEIGHT)
+        # else:
+        #     pg.display.quit()
+        #     screen = pg.display.set_mode((WIDTH, HEIGHT))
+        #     return (WIDTH, HEIGHT), (QWIDTH, QHEIGHT)
+    return (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT), ok_flag
+
+def mouse_main(screen_size, var):
+    WIDTH, HEIGHT = screen_size
     mode, connect_mode, player1 = var
 
     pos = list(pg.mouse.get_pos())
@@ -34,7 +73,6 @@ def key_choose_key(const, var):
     if event.key == K_UP:
         player1.group = player1.group % NUMBER_OF_GROUPS + 1
         tickf1 = 30
-        
     if event.key == K_DOWN:
         player1.group -= 2 
         player1.group %= NUMBER_OF_GROUPS
@@ -44,7 +82,6 @@ def key_choose_key(const, var):
         player1.team %= NUMBER_OF_TEAMS
         player1.team += 1 
         tickf2 = 30
-        
     if event.key == K_LEFT:
         player1.team -= 2
         player1.team %= NUMBER_OF_TEAMS
@@ -52,7 +89,8 @@ def key_choose_key(const, var):
         tickf2 = 30
     return player1, tickf1, tickf2
 
-def mouse_choose_key(var):
+def mouse_choose_key(screen_size, var):
+    WIDTH, HEIGHT = screen_size
     mode = var
 
     pos = list(pg.mouse.get_pos())
@@ -63,7 +101,8 @@ def mouse_choose_key(var):
 
     return mode
 
-def mouse_play(var):
+def mouse_play(screen_size, var):
+    WIDTH, HEIGHT = screen_size
     player1, player2, mode, choose, tick, tickf1 = var
 
     pos = list(pg.mouse.get_pos())
@@ -107,7 +146,8 @@ def mouse_play(var):
                 
     return player1, player2, mode, choose, tick, tickf1
 
-def mouse_flop(var):
+def mouse_flop(screen_size, var):
+    WIDTH, HEIGHT = screen_size
     mode, player1, player2, tick = var
 
     pos = list(pg.mouse.get_pos())
@@ -121,7 +161,8 @@ def mouse_flop(var):
 
     return mode, player1, player2, tick
 
-def mouse_result(var):
+def mouse_result(screen_size, var):
+    WIDTH, HEIGHT = screen_size
     mode, Round, tick, choose, player1, player2 = var
 
     pos = list(pg.mouse.get_pos())
@@ -145,7 +186,8 @@ def mouse_result(var):
 
     return mode, Round, tick, choose, player1, player2
 
-def mouse_exchange_lose(var):
+def mouse_exchange_lose(screen_size, var):
+    WIDTH, HEIGHT = screen_size
     mode, choose, tickf1, player1, player2 = var
 
     pos = list(pg.mouse.get_pos())
@@ -205,7 +247,8 @@ def mouse_exchange_lose(var):
 
     return mode, choose, tickf1, player1, player2
 
-def mouse_exchange_draw(var):
+def mouse_exchange_draw(screen_size, var):
+    WIDTH, HEIGHT = screen_size
     mode, tick, tickf1, player1, player2 = var
 
     pos = list(pg.mouse.get_pos())
@@ -237,7 +280,8 @@ def mouse_exchange_draw(var):
 
     return mode, tick, tickf1, player1, player2
 
-def mouse_exchange_result(var):
+def mouse_exchange_result(screen_size, var):
+    WIDTH, HEIGHT = screen_size
     mode, tick = var
 
     pos = list(pg.mouse.get_pos())

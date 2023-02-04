@@ -8,8 +8,6 @@ from eventing import *
 from spreadsheet import *
 
 pg.init()
-screen = pg.display.set_mode((WIDTH, HEIGHT))
-ori_screen = pg.Surface((1600, 900))
 pg.display.set_caption("도둑 포커")
 clock = pg.time.Clock()
 
@@ -48,6 +46,11 @@ def set_para(Match):
 
 def main():
 
+    WIDTH, HEIGHT = 1600, 900
+    QWIDTH, QHEIGHT = 1600, 900
+    screen = pg.display.set_mode((WIDTH, HEIGHT))
+    ori_screen = pg.Surface((QWIDTH, QHEIGHT))
+
     mode = 'main'
     choose = 0
     Match = 0
@@ -59,6 +62,9 @@ def main():
     common = None
     Rule = [['Straight'], []]
     dd = []
+    is_esc = False
+    CWIDTH, CHEIGHT = WIDTH, HEIGHT
+    CQWIDTH, CQHEIGHT = QWIDTH, QHEIGHT
 
     p1 = Player()
     p2 = Player()
@@ -72,11 +78,29 @@ def main():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
-                if event.type == MOUSEBUTTONDOWN:
-                    mode, connect_mode, p1 = mouse_main((mode, connect_mode, p1))
+                if event.type == MOUSEBUTTONDOWN and not is_esc:
+                    mode, connect_mode, p1 = mouse_main((WIDTH, HEIGHT), (mode, connect_mode, p1))
+                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                    is_esc = not is_esc
+                    if is_esc == False:
+                        CWIDTH, CHEIGHT = WIDTH, HEIGHT
+                        CQWIDTH, CQHEIGHT = QWIDTH, QHEIGHT
+                if event.type == MOUSEBUTTONDOWN and is_esc:
+                    (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT), ok_flag = set_screen_condition(screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                    if ok_flag:
+                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass # 진짜 pass임.
+                        else:
+                            WIDTH, HEIGHT = CWIDTH, CHEIGHT
+                            QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
+                            pg.display.quit()
+                            screen = pg.display.set_mode((WIDTH, HEIGHT))
+                        is_esc = False
             
             draw_main(ori_screen)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+            if is_esc:
+                draw_option(ori_screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             clock.tick(60)
             pg.display.update()
@@ -86,16 +110,34 @@ def main():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
-                if event.type == MOUSEBUTTONDOWN:
-                    mode = mouse_choose_key(mode)
+                if event.type == MOUSEBUTTONDOWN and not is_esc:
+                    mode = mouse_choose_key((WIDTH, HEIGHT), mode)
                     if mode == "get_match":
                         sp = SP_DB(p1.group, p1.team)
                         sp.enroll_player()
                 if event.type == KEYDOWN:
                     p1, tf1, tf2 = key_choose_key(event, (p1, tf1, tf2))
+                    if event.key == K_ESCAPE:
+                        is_esc = not is_esc
+                        if is_esc == False:
+                            CWIDTH, CHEIGHT = WIDTH, HEIGHT
+                            CQWIDTH, CQHEIGHT = QWIDTH, QHEIGHT
+                if event.type == MOUSEBUTTONDOWN and is_esc:
+                    (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT), ok_flag = set_screen_condition(screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                    if ok_flag:
+                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass # 진짜 pass임.
+                        else:
+                            WIDTH, HEIGHT = CWIDTH, CHEIGHT
+                            QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
+                            pg.display.quit()
+                            screen = pg.display.set_mode((WIDTH, HEIGHT))
+                        is_esc = False
             
             tf1, tf2 = draw_choose_key(ori_screen, p1, (tf1, tf2))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+            if is_esc:
+                draw_option(ori_screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             
             clock.tick(60)
             pg.display.update()
@@ -230,14 +272,33 @@ def main():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
-                if event.type == MOUSEBUTTONDOWN:
-                    p1, p2, mode, choose, t, tf1 = mouse_play((p1, p2, mode, choose, t, tf1))
+                if event.type == MOUSEBUTTONDOWN and not is_esc:
+                    p1, p2, mode, choose, t, tf1 = mouse_play((WIDTH, HEIGHT), (p1, p2, mode, choose, t, tf1))
                     if mode == 'play_delay':
                         Phase = Phase % 2 + 1
                         if connect_mode == 'Multi':
                             sp.upload_playing( hand_cards = p1.active_list, match = Match, round = Round, phase = Phase)
+                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                    is_esc = not is_esc
+                    if is_esc == False:
+                        CWIDTH, CHEIGHT = WIDTH, HEIGHT
+                        CQWIDTH, CQHEIGHT = QWIDTH, QHEIGHT
+                if event.type == MOUSEBUTTONDOWN and is_esc:
+                    (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT), ok_flag = set_screen_condition(screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                    if ok_flag:
+                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass # 진짜 pass임.
+                        else:
+                            WIDTH, HEIGHT = CWIDTH, CHEIGHT
+                            QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
+                            pg.display.quit()
+                            screen = pg.display.set_mode((WIDTH, HEIGHT))
+                        is_esc = False
+
             p1, p2, t = draw_play(ori_screen, (Round, Match, choose, tf1), (p1, p2, t))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+            if is_esc:
+                draw_option(ori_screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             if tf1: tf1 -= 1
 
@@ -250,6 +311,7 @@ def main():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
+                if event.type == KEYDOWN and event.key == K_ESCAPE: is_esc = not is_esc
             
             t = draw_play_delay(ori_screen, (p1, p2), t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
@@ -283,7 +345,7 @@ def main():
                     p1.active_list = []
                     p2.active_list = []
                     print(f"P2.showc :: {p2.showc}")
-                    #Phase = Phase % 2 + 1
+                
             clock.tick(60)
             pg.display.update()
             
@@ -292,11 +354,30 @@ def main():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
-                if t >= 80 and event.type == MOUSEBUTTONDOWN:
-                    mode, p1, p2, t = mouse_flop((mode, p1, p2, t))
+                if t >= 80 and event.type == MOUSEBUTTONDOWN and not is_esc:
+                    mode, p1, p2, t = mouse_flop((WIDTH, HEIGHT), (mode, p1, p2, t))
+                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                    is_esc = not is_esc
+                    if is_esc == False:
+                        CWIDTH, CHEIGHT = WIDTH, HEIGHT
+                        CQWIDTH, CQHEIGHT = QWIDTH, QHEIGHT
+                if event.type == MOUSEBUTTONDOWN and is_esc:
+                    (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT), ok_flag = set_screen_condition(screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                    if ok_flag:
+                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass # 진짜 pass임.
+                        else:
+                            WIDTH, HEIGHT = CWIDTH, CHEIGHT
+                            QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
+                            pg.display.quit()
+                            screen = pg.display.set_mode((WIDTH, HEIGHT))
+                        is_esc = False
             
             t = draw_flop(ori_screen, (Round, Match, p1, p2), t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+            if is_esc:
+                draw_option(ori_screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+            
             if t == 60:
                 if connect_mode == 'Single': common = get_random_card()
                 if connect_mode == 'Multi': common = sp.get_common(Round)                
@@ -313,8 +394,23 @@ def main():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
-                if event.type == MOUSEBUTTONDOWN:
-                    mode, Round, t, choose, p1, p2 = mouse_result((mode, Round, t, choose, p1, p2))
+                if event.type == MOUSEBUTTONDOWN and not is_esc:
+                    mode, Round, t, choose, p1, p2 = mouse_result((WIDTH, HEIGHT), (mode, Round, t, choose, p1, p2))
+                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                    is_esc = not is_esc
+                    if is_esc == False:
+                        CWIDTH, CHEIGHT = WIDTH, HEIGHT
+                        CQWIDTH, CQHEIGHT = QWIDTH, QHEIGHT
+                if event.type == MOUSEBUTTONDOWN and is_esc:
+                    (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT), ok_flag = set_screen_condition(screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                    if ok_flag:
+                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass # 진짜 pass임.
+                        else:
+                            WIDTH, HEIGHT = CWIDTH, CHEIGHT
+                            QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
+                            pg.display.quit()
+                            screen = pg.display.set_mode((WIDTH, HEIGHT))
+                        is_esc = False
                 
             if t == 0:
                 p1.set_shown()
@@ -338,6 +434,9 @@ def main():
             if mode == 'result': #가끔 씹힐때 있어서 버그처리
                 p1, p2, t = draw_result(ori_screen, (Round, Match, w), (p1, p2, t))
                 screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+                if is_esc:
+                    draw_option(ori_screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                    screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
                 
                 clock.tick(60)
                 pg.display.update()
@@ -347,15 +446,34 @@ def main():
                 if event.type == QUIT:   
                     pg.quit()
                     sys.exit()
-                if event.type == MOUSEBUTTONDOWN:
-                    mode, choose, tf1, p1, p2 = mouse_exchange_lose((mode, choose, tf1, p1, p2))
+                if event.type == MOUSEBUTTONDOWN and not is_esc:
+                    mode, choose, tf1, p1, p2 = mouse_exchange_lose((WIDTH, HEIGHT), (mode, choose, tf1, p1, p2))
                     if connect_mode == 'Multi' and mode == "exchange_result" : 
                         sp.update_cell('changed_index', p1.team+1, p1.ex_index)
                         sp.update_cell('changed_index', p2.team+1, p2.ex_index)
                         sp.update_cell("phase", p1.team+1, 3, False)
                         sp.update_cell("phase", p2.team+1, 3, False)
+                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                    is_esc = not is_esc
+                    if is_esc == False:
+                        CWIDTH, CHEIGHT = WIDTH, HEIGHT
+                        CQWIDTH, CQHEIGHT = QWIDTH, QHEIGHT
+                if event.type == MOUSEBUTTONDOWN and is_esc:
+                    (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT), ok_flag = set_screen_condition(screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                    if ok_flag:
+                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass # 진짜 pass임.
+                        else:
+                            WIDTH, HEIGHT = CWIDTH, CHEIGHT
+                            QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
+                            pg.display.quit()
+                            screen = pg.display.set_mode((WIDTH, HEIGHT))
+                        is_esc = False
+            
             p1, p2 = draw_exchange_lose(ori_screen, (Match, choose, tf1), (p1, p2))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+            if is_esc:
+                draw_option(ori_screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if tf1: tf1 -= 1
             
             if choose == 0.5: choose = 1
@@ -367,13 +485,32 @@ def main():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
-                if event.type == MOUSEBUTTONDOWN:
-                    mode, t, tf1, p1, p2 = mouse_exchange_draw((mode, t, tf1, p1, p2))
+                if event.type == MOUSEBUTTONDOWN and not is_esc:
+                    mode, t, tf1, p1, p2 = mouse_exchange_draw((WIDTH, HEIGHT), (mode, t, tf1, p1, p2))
                     if connect_mode == 'Multi' and mode == "exchange_delay":
                         sp.update_cell("changed_index", p2.team+1, p2.ex_index)
                         sp.update_cell("phase", p1.team+1, 3, False)
+                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                    is_esc = not is_esc
+                    if is_esc == False:
+                        CWIDTH, CHEIGHT = WIDTH, HEIGHT
+                        CQWIDTH, CQHEIGHT = QWIDTH, QHEIGHT
+                if event.type == MOUSEBUTTONDOWN and is_esc:
+                    (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT), ok_flag = set_screen_condition(screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                    if ok_flag:
+                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass # 진짜 pass임.
+                        else:
+                            WIDTH, HEIGHT = CWIDTH, CHEIGHT
+                            QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
+                            pg.display.quit()
+                            screen = pg.display.set_mode((WIDTH, HEIGHT))
+                        is_esc = False
+            
             p1, p2 = draw_exchange_draw(ori_screen, (Match, tf1), (p1, p2))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+            if is_esc:
+                draw_option(ori_screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if tf1: tf1 -= 1
 
             clock.tick(60)
@@ -427,10 +564,25 @@ def main():
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
-                if t >= 90 and event.type == MOUSEBUTTONDOWN:
-                    mode, t = mouse_exchange_result((mode, t))
+                if t >= 90 and event.type == MOUSEBUTTONDOWN and not is_esc:
+                    mode, t = mouse_exchange_result((WIDTH, HEIGHT), (mode, t))
                     if connect_mode == 'Multi' and mode == "get_match":
                         sp.upload_hand(hand_cards = p1.card_list)
+                if event.type == KEYDOWN and event.key == K_ESCAPE:
+                    is_esc = not is_esc
+                    if is_esc == False:
+                        CWIDTH, CHEIGHT = WIDTH, HEIGHT
+                        CQWIDTH, CQHEIGHT = QWIDTH, QHEIGHT
+                if event.type == MOUSEBUTTONDOWN and is_esc:
+                    (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT), ok_flag = set_screen_condition(screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                    if ok_flag:
+                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass # 진짜 pass임.
+                        else:
+                            WIDTH, HEIGHT = CWIDTH, CHEIGHT
+                            QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
+                            pg.display.quit()
+                            screen = pg.display.set_mode((WIDTH, HEIGHT))
+                        is_esc = False
 
             if t == 50:
                 p1.card_list[p1.ex_index] = p2.ex_card
@@ -438,6 +590,9 @@ def main():
             
             t = draw_exchange_result(ori_screen, (Match, p1, p2, choose), t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+            if is_esc:
+                draw_option(ori_screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
+                screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             clock.tick(60)
             pg.display.update()

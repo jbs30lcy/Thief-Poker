@@ -43,7 +43,7 @@ def str2Kr(s):
         return f'{blacks} {s[0]} 원 페어'
     return f'족보 없음 {s[8:]}'
 
-NS = [pg.font.Font(file_path + '/NanumSquareNeoOTF-cBd.otf', x) for x in range(1, 100)]
+NS  = [pg.font.Font(file_path + '/NanumSquareNeoOTF-cBd.otf', x) for x in range(1, 100)]
 NSE = [pg.font.Font(file_path + '/NanumSquareNeoOTF-dEb.otf', x) for x in range(1, 100)]
 NS.insert(0, 0)
 NSE.insert(0, 0)
@@ -52,14 +52,63 @@ Next_button = pg.transform.scale(pg.image.load(img_dir_path + 'Next_button.png')
 Rank_button = pg.transform.scale(pg.image.load(img_dir_path + 'Rank_button.png'), (90, 60))
 Coin_icon = pg.transform.scale(pg.image.load(img_dir_path + 'coin.png'), (50, 50))
 
+def draw_option(screen, csize, cqsize):
+
+    option_text = NS[36].render('Option', True, White)
+    size_text = NS[30].render('화면 크기', True, White)
+    Alpha_screen = pg.Surface((400, 700), pg.SRCALPHA)
+    
+    wid = csize[0]
+    color_list = list(map(lambda b: Red if b else White, [wid == 1920, wid == 1600, wid == 1440, wid == 1280]))
+    XL_screen_text     = NSE[36].render('1920 X 1080', True, color_list[0])
+    large_screen_text  = NSE[36].render('1600 X 900', True, color_list[1])
+    medium_screen_text = NSE[36].render('1440 X 810', True, color_list[2])
+    small_screen_text  = NSE[36].render('1280 X 720', True, color_list[3])
+
+    qwid = cqsize[0]
+    color_list = list(map(lambda b: Red if b else White, [qwid == 1920, qwid == 1600, qwid == 1440, qwid == 1280]))
+    quality_text = NS[30].render('품질', True, White)
+    best_quality_text   = NS[36].render('최상', True, color_list[0])
+    high_quality_text   = NS[36].render('좋음', True, color_list[1])
+    medium_quality_text = NS[36].render('보통', True, color_list[2])
+    low_quality_text    = NS[36].render('구림', True, color_list[3])
+    apply_text = NS[30].render('확인', True, Black)
+
+    Alpha_screen.fill(GreyB)
+    Mblit(Alpha_screen, option_text, (200, 50))
+    Mblit(Alpha_screen, size_text, (20, 110), 'ML')
+    pg.draw.rect(Alpha_screen, GreyC, (20, 140, 360, 60))
+    pg.draw.rect(Alpha_screen, GreyC, (20, 210, 360, 60))
+    pg.draw.rect(Alpha_screen, GreyC, (20, 280, 360, 60))
+    pg.draw.rect(Alpha_screen, GreyC, (20, 350, 360, 60))
+    Mblit(Alpha_screen, XL_screen_text,     (200, 170))
+    Mblit(Alpha_screen, large_screen_text,  (200, 240))
+    Mblit(Alpha_screen, medium_screen_text, (200, 310))
+    Mblit(Alpha_screen, small_screen_text,  (200, 380))
+    
+    Mblit(Alpha_screen, quality_text, (20, 450), 'ML')
+    pg.draw.rect(Alpha_screen, GreyC, (5, 480, 90, 90))
+    pg.draw.rect(Alpha_screen, GreyC, (105, 480, 90, 90))
+    pg.draw.rect(Alpha_screen, GreyC, (205, 480, 90, 90))
+    pg.draw.rect(Alpha_screen, GreyC, (305, 480, 90, 90))
+    Mblit(Alpha_screen, low_quality_text,    (50, 525))
+    Mblit(Alpha_screen, medium_quality_text, (150, 525))
+    Mblit(Alpha_screen, high_quality_text,   (250, 525))
+    Mblit(Alpha_screen, best_quality_text,   (350, 525))
+
+    pg.draw.rect(Alpha_screen, list(Pink)+[235], (380-90, 680-60, 90, 60))
+    Mblit(Alpha_screen, apply_text, (335, 650))
+    Mblit(screen, Alpha_screen, (800, 450))
+    
+
 def draw_main(screen):
-    screen.blit(bg1, (0, 0))
 
     title = NSE[96].render("도둑   포커", True, White)
     single_text = NS[40].render("싱글 모드", True, Black)
     multi_text  = NS[40].render("멀티 모드", True, Black)
     resume_text = NS[40].render("재접속 모드", True, Black)
     
+    screen.blit(bg1, (0, 0))
     Mblit(screen, title, (800, 250))
     pg.draw.rect(screen, Brown1, (320, 600, 300, 100))
     pg.draw.rect(screen, Brown1, (650, 600, 300, 100))

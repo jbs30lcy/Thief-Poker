@@ -5,7 +5,6 @@ import pygame as pg
 import os
 import random
 
-WIDTH, HEIGHT = 1600, 900
 White  = (255, 255, 255)
 Black  = (0, 0, 0)
 Red    = (240, 26, 0)
@@ -20,11 +19,10 @@ Grey2  = (230, 230, 230)
 Grey3  = (80, 80, 80)
 Grey4  = (127, 127, 127)
 GreyA  = (127, 127, 127, 127)
+GreyB  = (80, 80, 80, 235)
+GreyC  = (60, 60, 60, 240)
 Brown1 = (227, 181, 140)
-Grad1  = (40, 205, 147)
-Grad2  = (40, 205, 198)
-Grad3  = (40, 171, 205)
-Grad4  = (40, 137, 205)
+
 Card_IMGlist = {}
 CI_half = {}
 CI_std = {}
@@ -294,6 +292,9 @@ class Player:
                     break
             else: self.shown.append(card)
 
+class Item: # 이거 밤새서 만들각인데.
+    def __init__(self):
+        pass
 
 if __name__ == '__main__':
     print("This File is not executable file. please run main.py.")
