@@ -158,13 +158,15 @@ class Player:
         
         if 'S-F' in self.Rule[0]: # 스티플
             is_straight = False
+            is_s_index = -1
             for i in range(3, -1, -1):
                 slice_val_arr = value_bool_arr[i:i+4]
                 if sum(slice_val_arr) + black == 4:
                     is_straight = True
+                    is_s_index = i
             if is_straight and max(color_arr) + black == 4:
                 n = ''.join(map(str, color_arr)).rindex(str(max(color_arr)))
-                return f"{colors[int(n)+1]} {black_str} Straight-Flush"
+                return f"{is_s_index} {colors[int(n)+1]} {black_str} Straight-Flush"
         if max(value_arr) + black == 4: # 포카드
             n = ''.join(map(str, value_arr)).rindex(str(max(value_arr)))
             return f"{int(n)+1} {black_str} Four of a kind"
