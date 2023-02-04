@@ -62,8 +62,11 @@ def mouse_main(screen_size, var):
         player1.team = 1
         connect_mode = 'Multi'
     if in_rect(pos, (980, 600, 300, 100)):
-        pass # 리줌 만들어 ㅃㄹ!!@!@!
-    
+        mode = 'resume'
+        player1.group = 1
+        player1.team = 1
+        connect_mode = 'Multi'
+
     return mode, connect_mode, player1
 
 def key_choose_key(const, var):

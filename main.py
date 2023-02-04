@@ -68,7 +68,7 @@ def main():
 
     p1 = Player()
     p2 = Player()
-    sp = SP_DB()
+    sp = SP()
     WAITING_TIME = 30
 
     # mode 변수에 따라 실행되는 코드가 달라짐
@@ -113,8 +113,8 @@ def main():
                 if event.type == MOUSEBUTTONDOWN and not is_esc:
                     mode = mouse_choose_key((WIDTH, HEIGHT), mode)
                     if mode == "get_match":
-                        sp = SP_DB(p1.group, p1.team)
-                        sp.enroll_player()
+                        sp = SP(group = p1.group, team = p1.team)
+                        sp.enroll_player() 
                 if event.type == KEYDOWN:
                     p1, tf1, tf2 = key_choose_key(event, (p1, tf1, tf2))
                     if event.key == K_ESCAPE:
@@ -141,6 +141,86 @@ def main():
             
             clock.tick(60)
             pg.display.update()
+
+        if mode == 'resume': # "choose key 랑 화면 공유함
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+                if event.type == MOUSEBUTTONDOWN:
+                    mode = mouse_choose_key(mode)
+                    if mode == "get_match":
+                        print(p1.group, p1.team)
+                        sp = SP(p1.group, p1.team)
+                        Match, Round, Phase = sp.get_MRP()
+                        p1.card_list = sp.get_hand()
+                        p1.pre = [sp.get_pre()]
+                        p1.coin = sp.get_chips()
+                        p2num = sp.get_opponent(Match) 
+                        p2 = Player(p2num, sp.get_hand(p2num))
+                        choose = 0
+                        if Phase == 3:   # 3페이즈를 진행함 -> 교환 후 1페이즈로 가야함 (새로운 상대 찾기)
+                            mode="exchange_delay"
+                            continue
+                        if Phase == 4 :
+                            continue
+                        t, w = 0, -1
+                        p1.active_list = []
+                        p1.showc = []
+                        p1.Rank = ''
+                        p2.Rank = ''
+                        p1.isdd = False
+                        p2.isdd = False
+                        r1, r2, reward_coin = set_para(Match)
+                        p1.Rule = [r1, r2]
+                        p2.Rule = [r1, r2]
+                        
+                        p1.active_list = []
+                        p2.active_list = []
+                        p1.shown = sp.get_shown()
+                        p2.shown = sp.get_shown(p2.team)
+                        if Phase == 1: #1페이즈를 진행함 -> 2페이즈임
+                            mode = 'play_delay'
+                            tmp_showc = sp.get_playing(phase=1)
+                            tmp_card_list = p1.card_list.copy()
+                            for card in tmp_showc:
+                                for c in tmp_card_list:
+                                    if c.equals(card):
+                                        p1.showc.append(c)
+                                        del(tmp_card_list[tmp_card_list.index(c)])
+                            choose = 1
+                        elif Phase == 2: #2페이즈를 진행함 -> 3페이즈 or 1페이즈 
+                            tmp_showc = sp.get_playing(phase=1) + sp.get_playing(phase = 2)
+                            tmp_card_list = p1.card_list.copy()
+                            for card in tmp_showc:
+                                for c in tmp_card_list:
+                                    if c.equals(card):
+                                        p1.showc.append(c)
+                                        del(tmp_card_list[tmp_card_list.index(c)])
+                            
+                            p2.showc = sp.get_playing(p2.team, 1) 
+                            
+                            common = sp.get_common(Round)                
+                            p1.common = common
+                            p2.common = common
+                            p1.showc = [common] + p1.showc
+                            p2.showc = [common] + p2.showc
+                            mode = "play_delay"
+                            t = 0
+
+                        #Phase = Phase % 2 + 1 
+
+
+                if event.type == KEYDOWN:
+                    p1, tf1, tf2 = key_choose_key(event, (p1, tf1, tf2))
+            
+            tf1, tf2 = draw_choose_key(ori_screen, p1, (tf1, tf2))
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+            
+            clock.tick(60)
+            pg.display.update()
+
+
         '''
         # if mode == 'chooseRank': # choose one 해서 스트레이트 플러쉬 고민하기
         #     pos = pg.mouse.get_pos()
@@ -275,7 +355,7 @@ def main():
                 if event.type == MOUSEBUTTONDOWN and not is_esc:
                     p1, p2, mode, choose, t, tf1 = mouse_play((WIDTH, HEIGHT), (p1, p2, mode, choose, t, tf1))
                     if mode == 'play_delay':
-                        Phase = Phase % 2 + 1
+                        Phase = 2 if Phase == 1 else 1
                         if connect_mode == 'Multi':
                             sp.upload_playing( hand_cards = p1.active_list, match = Match, round = Round, phase = Phase)
                 if event.type == KEYDOWN and event.key == K_ESCAPE:
@@ -332,7 +412,7 @@ def main():
                 p2.active_list = []
             
             if connect_mode == 'Multi' and t % WAITING_TIME == 0 :
-                if sp.has_conducted(p2.team, Round, Phase):
+                if sp.has_conducted(p2.team,Match, Round, Phase):
                     #p2.active_list = sp.get_playing(p2.team, Phase)
                     if Phase == 1:
                         p2.showc = sp.get_playing(p2.team, Phase)
@@ -414,22 +494,23 @@ def main():
                 
             if t == 0:
                 p1.set_shown()
+                sp.upload_shown(p1.shown)
                 p2.set_shown()
                 w = win(p1, p2)
             if t == 70:
                 if w == 0: #무승부
                     p1.coin += (reward_coin // 2)
                     p1.pre[-1].append(0)
-                    p2.pre[-1].append(0)
+                    #p2.pre[-1].append(0)
                 if w == 1: #승리
                     p1.coin += reward_coin
                     p1.pre[-1].append(1)
-                    p2.pre[-1].append(-1)
+                    #p2.pre[-1].append(-1)
                 if w == 2: #패배
                     p1.pre[-1].append(-1)
-                    p2.pre[-1].append(1)
+                    #p2.pre[-1].append(1)
                 sp.update_cell('chips', p1.team+1, p1.coin)
-                
+                sp.upload_pre(p1.pre)
                 #sp.clear_phase()
             if mode == 'result': #가끔 씹힐때 있어서 버그처리
                 p1, p2, t = draw_result(ori_screen, (Round, Match, w), (p1, p2, t))
@@ -541,21 +622,33 @@ def main():
                     t = 0
                     mode = 'exchange_result'
 
-            if connect_mode == 'Multi' and t % WAITING_TIME == 0 and sp.has_conducted(p2.team, 2, 3):
-                if sum(p1.pre[-1]) > 0 :
-                    p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
-                    p2.ex_index = int(sp.get_acell('changed_index', p2.team+1))
-                    p1.ex_card = p1.card_list[p1.ex_index]
-                    p2.ex_card = p2.card_list[p2.ex_index]
-                    choose = 0
-                    t = 0
-                    mode = 'exchange_result'
-                if sum(p1.pre[-1]) == 0:
-                    p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
-                    p1.ex_card = p1.card_list[p1.ex_index]
-                    choose = 0
-                    t = 0
-                    mode = 'exchange_result'
+            if connect_mode == 'Multi' and t % WAITING_TIME == 0 and sp.has_conducted(p2.team,Match, 2, 3):
+                p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
+                p2.ex_index = int(sp.get_acell('changed_index', p2.team+1))
+                p1.ex_card = p1.card_list[p1.ex_index]
+                p2.ex_card = p2.card_list[p2.ex_index]
+                choose = 0
+                t = 0
+                mode = 'exchange_result'
+                
+                # if sum(p1.pre[-1]) > 0 :
+                #     p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
+                #     p2.ex_index = int(sp.get_acell('changed_index', p2.team+1))
+                #     p1.ex_card = p1.card_list[p1.ex_index]
+                #     p2.ex_card = p2.card_list[p2.ex_index]
+                #     choose = 0
+                #     t = 0
+                #     mode = 'exchange_result'
+                # if sum(p1.pre[-1]) == 0:
+                #     p1.ex_index = int(sp.get_acell('changed_index', p1.team+1))
+                #     p1.ex_card = p1.card_list[p1.ex_index]
+                #     choose = 0
+                #     t = 0
+                #     mode = 'exchange_result'
+                # if sum(p1.pre[-1]) < 0:
+                #     choose = 0
+                #     t = 0
+                #     mode = 'exchange_result'
             clock.tick(60)
             pg.display.update()
 
@@ -568,21 +661,6 @@ def main():
                     mode, t = mouse_exchange_result((WIDTH, HEIGHT), (mode, t))
                     if connect_mode == 'Multi' and mode == "get_match":
                         sp.upload_hand(hand_cards = p1.card_list)
-                if event.type == KEYDOWN and event.key == K_ESCAPE:
-                    is_esc = not is_esc
-                    if is_esc == False:
-                        CWIDTH, CHEIGHT = WIDTH, HEIGHT
-                        CQWIDTH, CQHEIGHT = QWIDTH, QHEIGHT
-                if event.type == MOUSEBUTTONDOWN and is_esc:
-                    (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT), ok_flag = set_screen_condition(screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
-                    if ok_flag:
-                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass # 진짜 pass임.
-                        else:
-                            WIDTH, HEIGHT = CWIDTH, CHEIGHT
-                            QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
-                            pg.display.quit()
-                            screen = pg.display.set_mode((WIDTH, HEIGHT))
-                        is_esc = False
 
             if t == 50:
                 p1.card_list[p1.ex_index] = p2.ex_card
