@@ -49,8 +49,8 @@ for card in Card_IMGlist:
 MATCH_PARA = [
     [['Flush'], [], 20],
     [['Flush'], [4], 30],
-    [['Straight', 'Flush'], [4], 30],
-    [['Straight', 'Flush'], [4], 60]
+    [['Straight', 'Flush', 'S-F'], [4], 30],
+    [['Straight', 'Flush', 'S-F'], [4], 60]
 ]
 
 def in_rect(pos, rect):
@@ -127,6 +127,8 @@ class Player:
 
     # str2score: 족보가 적혀 있는 str을 int로 변환하는 함수.
     def str2score(self, s):
+        if 'Straight-Flush' in s:
+            return 700 + 10 * int(s[0])
         if 'Four of a kind' in s:
             return 600 + 10 * int(s[0])
         if 'Straight' in s:
@@ -154,6 +156,15 @@ class Player:
             value_bool_arr[card.val - 1] = 1
             color_arr[colors_dict[card.color] - 1] += 1
         
+        if 'S-F' in self.Rule[0]: # 스티플
+            is_straight = False
+            for i in range(3, -1, -1):
+                slice_val_arr = value_bool_arr[i:i+4]
+                if sum(slice_val_arr) + black == 4:
+                    is_straight = True
+            if is_straight and max(color_arr) + black == 4:
+                n = ''.join(map(str, color_arr)).rindex(str(max(color_arr)))
+                return f"{colors[int(n)+1]} {black_str} Straight-Flush"
         if max(value_arr) + black == 4: # 포카드
             n = ''.join(map(str, value_arr)).rindex(str(max(value_arr)))
             return f"{int(n)+1} {black_str} Four of a kind"

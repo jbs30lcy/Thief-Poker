@@ -148,7 +148,7 @@ def main():
                     pg.quit()
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN:
-                    mode = mouse_choose_key(mode)
+                    mode = mouse_choose_key((WIDTH, HEIGHT), mode)
                     if mode == "get_match":
                         print(p1.group, p1.team)
                         sp = SP(p1.group, p1.team)

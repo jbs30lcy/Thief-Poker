@@ -42,6 +42,8 @@ def Mrect(screen, color, rect, width = 0, rectcon = 'MM', border_radius = 0):
 def str2Kr(s):
     col_kr_dict = {'Red': '빨강', 'Blue': '파랑', 'Yellow': '노랑', 'Green': '초록'}
     blacks = '검은' if 'Black' in s else ''
+    if 'Straight-Flush' in s:
+        return f'{blacks} {s[0]} 스티플'
     if 'Four of a kind' in s:
         return f'{blacks} {s[0]} 포카드'
     if 'Straight' in s:
