@@ -100,7 +100,7 @@ class Director():
     def ck_match(self, match):
         cells = self.sp.get_cell_range('match', 3, 2, self.num_players, use_player_sheet=False)
         for steps in cells : 
-            if steps[0] != str(match-1) or steps[1] != "2" or steps[2] != "4" :
+            if steps[0] != str(match-1) or steps[1] != "2" or steps[2] != "3" :
                 print(steps)
                 return False
         return True
@@ -154,7 +154,7 @@ class Director():
 
 if __name__ == "__main__" :
     d = Director(1, num_players=int(input("플레이어 수 입력 : ")))
-    d.clear_game()
+    #d.clear_game()
 
     #d.game_setting(test=True)
     rec = -5
@@ -183,5 +183,5 @@ if __name__ == "__main__" :
                 print(rec)
                 time.sleep(1)      
         else:
-            d.match_setting(a)
+            d.match_setting(a, test=True)
         rec = a
