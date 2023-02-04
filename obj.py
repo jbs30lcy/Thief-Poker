@@ -134,7 +134,7 @@ class Player:
         if 'Straight' in s:
             return 500 + int(s[0])
         if 'Flush' in s:
-            return 400
+            return 400 + int(s[s.find('(')+1 : s.find(')')])
         if 'Three of a kind' in s:
             return 300 + 10 * int(s[0])
         if 'Two pair' in s:
@@ -166,7 +166,7 @@ class Player:
                     is_s_index = i
             if is_straight and max(color_arr) + black == 4:
                 n = ''.join(map(str, color_arr)).rindex(str(max(color_arr)))
-                return f"{is_s_index} {colors[int(n)+1]} {black_str} Straight-Flush"
+                return f"{is_s_index+4} {colors[int(n)+1]} {black_str} Straight-Flush"
         if max(value_arr) + black == 4: # 포카드
             n = ''.join(map(str, value_arr)).rindex(str(max(value_arr)))
             return f"{int(n)+1} {black_str} Four of a kind"
@@ -177,7 +177,7 @@ class Player:
                     return f"{i+4} {black_str} Straight"
         if 'Flush' in self.Rule[0] and max(color_arr) + black == 4: # 플러시
             n = ''.join(map(str, color_arr)).rindex(str(max(color_arr)))
-            return f"{colors[int(n)+1]} {black_str} Flush"
+            return f"{colors[int(n)+1]} {black_str} Flush ({sum( [value_arr[i] * (i+1) for i in range(7)] )})"
         if max(value_arr) + black == 3: # 트리플
             n = ''.join(map(str, value_arr)).rindex(str(max(value_arr)))
             return f"{int(n)+1} {black_str} Three of a kind"
@@ -219,6 +219,9 @@ class Player:
         if self.str2score(R) < 200:
             for i in range(5):
                 new_showc = self.showc.copy()
+                if new_showc[i].color == 'Black':
+                    self.isdd = False
+                    break
                 del new_showc[i]
                 self.isdd = self.set_isdd(new_showc, R)
 

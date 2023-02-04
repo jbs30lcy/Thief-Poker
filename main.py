@@ -27,11 +27,12 @@ def win(player1, player2):
     if 400 <= score2 < 600 and player1.isdd: return 1 # 땡잡이가 플러시 이상의 족보를 잡기
     if p1b and 0 < score2 < 100: return 2
     if p2b and 0 < score1 < 100: return 1  # 개패가 검은 족보를 잡기
+    if score1 // 100 > score2 // 100: return 1
+    if score2 // 100 > score1 // 100: return 2 # 족보의 높낮이 (큰 차이)
+    if p1b and not p2b: return 2
+    if p2b and not p1b: return 1 # 비슷한 족보에서 검은 족보가 짐.
     if score1 > score2: return 1
-    if score2 > score1: return 2 # 족보의 높낮이
-    if p1b and p2b: return 0
-    if p1b: return 2
-    if p2b: return 1 # 동일 족보에서 검은 족보가 짐.
+    if score2 > score1: return 2 # 비슷한 족보에서 세부 족보
     return 0
 
 def set_para(Match):

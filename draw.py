@@ -51,7 +51,8 @@ def str2Kr(s):
         return f'{blacks} {s[0]} 스트레이트'
     if 'Flush' in s:
         i = s.find(' ')
-        return f'{blacks} {col_kr_dict[s[:i]]} 플러시'
+        j = s.find('(')
+        return f'{blacks} {col_kr_dict[s[:i]]} 플러시 {s[j:]}'
     if 'Three of a kind' in s:
         return f'{blacks} {s[0]} 트리플'
     if 'Two pair' in s:
