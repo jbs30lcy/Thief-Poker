@@ -5,7 +5,7 @@ import random
 import time
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5 import uic
+from PyQt5 import uic, QtGui
 
 OPPO2 = [
     [(1, 2)]
@@ -103,15 +103,15 @@ class Director():
     def ck_match(self, match):
         cells = self.sp.get_cell_range('match', 3, 2, self.num_players, use_player_sheet=False)
         for steps in cells : 
-            if steps[0] != str(match-1) or steps[1] != "2" or steps[2] != "3" :
-                print(steps)
+            if steps[0] != str(match-1) or steps[1] != "2" or steps[2] != "4" :
+               #print(steps)
                 return False
         return True
     
     def get_share_cards(self, match=1):
         cells = self.sp.get_cell_range('share_cards', 1, 2, self.num_players, use_player_sheet=False)
         res = [x.split("|")[match-1].split(",") for x in cells]
-        print(res)
+       #print(res)
         return res
 
     def match_setting(self, match = 0, test=False):
@@ -139,7 +139,6 @@ class Director():
             self.sp.update_cell_range('match', 3, 2, self.num_players, [ [0,2,4] for x in range(self.num_players)  ], use_player_sheet=False )
             self.sp.update_cell_range("team", 1, 2, self.num_players, list(range(1,self.num_players+1)), False)
             self.sp.update_cell_range("match_permission", 1, 2, self.num_players, [0] * self.num_players, False)
-            self.match_setting(1, test)
             return True
         else:
             print("Not Enough Players")
@@ -174,24 +173,28 @@ class Director():
         chips = list(map(int, self.sp.get_cell_range('chips', 1, 2, self.num_players)))
 
         ranking = sorted( [ [x, y] for x, y in zip(teams, chips) ], key = lambda x : x[1]  )      
-        print("RANKING : ")
-        print(ranking)
-        print("-"*50)
+       #print("RANKING : ")
+       #print(ranking)
+       #print("-"*50)
         return ranking
 
     def making_hand_reversed(self):
         cards = self.sp.get_cell_range('hand', 1, 2, self.num_players)
-        print("cards "*5)
-        print(cards)
+       #print("cards "*5)
+       #print(cards)
         
         ret = [  "|".join([ ((x[:-1] + f"{x[1]}") if  (x[-1] == '0' or x[-1].find('Black') > -1)  else (x[:-1] +  f"{8 - int(x[-1])}")) for x in c.split('|') ]) for c in cards ]
-        print("returned"*10)
+       #print("returned"*10)
         self.sp.update_cell_range('hand', 1, 2, self.num_players, ret)
         return ret 
 
-class DirectorQT(QMainWindow, form_class):
-    DB_connected = False
-    sp = None 
+form_class = uic.loadUiType("DirectorQT.ui")[0]
+
+class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
+    #dr = None 
+    dr = Director(1,8)
+    num_players = 2
+    EXPLAINED = 2
 
     def __init__(self):
         #초기 설정
@@ -200,47 +203,152 @@ class DirectorQT(QMainWindow, form_class):
         self.setWindowTitle("도둑포커 디렉터용 파일")
         
         #버튼에 기능 연결
-
-    def btnDBCon(self, group, num_players = 8):
-        self.dr = Director(group, num_players)
+        self.btn_matchStart.clicked.connect(self.btn_match_start)
+        self.btn_mkItem.clicked.connect(self.btn_mk_item)
         
+    def btn_mk_item(self):
+        pass
+
+    def btn_match_start(self):
+        group = self.get(self.txt_group)
+        match = self.get(self.txt_matchNum)
+        FINAL_MATCH = 15
+        EXPLAIN_INFO = [1,4,8,11]
+
+        if match <= 0:
+            self.dr = Director(group, self.num_players)
+            self.group = group
+
+            if match == 0:
+                self.dr.clear_game()
+            self.set_text(self.txt_matchNum, 1)
+            self.warning("다들 입장해주세요!")
+        elif match == FINAL_MATCH:
+            self.dr.joker_penalty()
+            self.update_ranking()
+        else:
+            if self.dr is None:
+                self.warning("초기화를 진행해주세요")
+                return
+            if match == 1 :
+                if self.dr.sp.ck_players(self.num_players):
+                    self.dr.game_setting()
+                else: 
+                    self.warning("아직 등록하지 않은 팀이 있습니다!")
+                    return
+            elif not self.dr.ck_match(match):
+                self.warning("아직 진행되지 않은 팀이 있습니다!")
+                return
+            
+            self.update_ranking()
+            if match in EXPLAIN_INFO:
+                if self.EXPLAINED == 0: #바뀌는 룰과 아이템 설명 완료
+                    self.EXPLAINED = 2
+                elif self.EXPLAINED == 2:  
+                    self.warning("미니게임 진행 후 아이템 저장을 완료해주세요!")
+                    self.EXPLAINED = 1
+                    item = self.get(ob=self.cbox_itemNum, ob_type='cbox')
+                    print("ITEM : ", item)
+                    self.set_image(self.img_explain, f'./explain_img{item}.png')
+                    
+                    return
+                elif self.EXPLAINED == 1:
+                    self.EXPLAINED = 0
+                    self.warning("바뀐 룰을 확인해주세요!")
+                    self.set_image(self.img_Jokbo, f'./Jokbo_img{match}.png')
+                    return
+            
+
+            self.dr.match_setting(match)
+            self.warning(f"{match}번 매치 진행")
+            
+            self.set_text(self.txt_matchNum, match+1)
+      
+
+    def update_ranking(self):
+        tb = self.table_ranking
+
+        tb.setColumnCount(2)
+        tb.setRowCount(self.num_players)
+        tb.clear()
+        tb.setFont(QtGui.QFont('맑은 고딕', 30))
+        tb.setHorizontalHeaderLabels(["Team","Chips"])
+        ranking = self.dr.get_ranking()
+        
+        for row, rank in enumerate(ranking):
+            for col, val in enumerate(rank):
+                tb.setItem(row,col,QTableWidgetItem(str(val)))
+
+
+    def set_image(self, ob, img_link=""):
+        ob.setPixmap(QtGui.QPixmap(img_link))
+
+    def set_text(self, ob, text="", ob_type="text"): # 값 설정
+        if ob_type=="text":
+            ob.setText(str(text))
+            return True
+        elif ob_type=="cbox":
+            return False
+
+    def get(self, ob, ob_type="text", clear=False, toint = True): #값 return
+        if ob_type=="text":
+            s = ob.text().strip()
+        elif ob_type=="cbox":
+            s = ob.currentText()
+        if clear==True:
+            ob.clear()
+
+        if toint: s = int(s)
+        return s
+    def warning(self, text = "", title="알림"):
+        QMessageBox.about(self,title,text)
 
 if __name__ == "__main__" :
-    d = Director(1, num_players=int(input("플레이어 수 입력 : ")))
-    #d.clear_game()
+    app = QApplication(sys.argv) 
 
-    #d.game_setting(test=True)
-    rec = -5
-    while True:
-        a = int(input("match 값 입력하기 : "))
-        if a == 0: break
-        if a == -2: 
-            d.clear_game()
-        elif a == -1:
-            d.game_setting(test=True)
-        elif a == -4:
-            d.joker_penalty()
-        elif a == -5:
-            print(d.get_ranking()) 
-        elif a == -6:
-            print(d.making_hand_reversed())
-        elif a == -3:
-            if rec == -5 : 
-                rec = -2
-            while True:
-                if rec == 0:
-                    rec = 2
-                if rec == -2: 
-                    d.clear_game()
-                    rec += 1
-                elif rec == -1:
-                    if d.game_setting(test=False):
-                        rec += 1
-                else:
-                    if d.match_setting(rec):
-                        rec += 1      
-                print(rec)
-                time.sleep(1)      
-        else:
-            d.match_setting(a, test=True)
-        rec = a
+    myWindow = DirectorQT() 
+
+    myWindow.show()
+
+    app.exec_()
+    
+    
+    # d = Director(1, num_players=int(input("플레이어 수 입력 : ")))
+    # #d.clear_game()
+
+    # #d.game_setting(test=True)
+    # rec = -5
+    # while True:
+    #     a = int(input("match 값 입력하기 : "))
+    #     if a == 0: break
+    #     if a == -2: 
+    #         d.clear_game()
+    #     elif a == -1:
+    #         d.game_setting(test=True)
+    #         d.match_setting(1)
+    #     elif a == -4:
+    #         d.joker_penalty()
+    #     elif a == -5:
+    #         print(d.get_ranking()) 
+    #     elif a == -6:
+    #         print(d.making_hand_reversed())
+    #     elif a == -3:
+    #         if rec == -5 : 
+    #             rec = -2
+    #         while True:
+    #             if rec == 0:
+    #                 rec = 2
+    #             if rec == -2: 
+    #                 d.clear_game()
+    #                 rec += 1
+    #             elif rec == -1:
+    #                 if d.game_setting(test=False):
+    #                     rec += 1
+    #             else:
+    #                 if d.match_setting(rec):
+    #                     rec += 1      
+    #             print(rec)
+    #             time.sleep(1)      
+    #     else:
+    #         d.match_setting(a, test=True)
+    #     rec = a
