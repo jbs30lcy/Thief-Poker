@@ -160,10 +160,10 @@ def main():
                         p2num = sp.get_opponent(Match) 
                         p2 = Player(p2num, sp.get_hand(p2num))
                         choose = 0
-                        if Phase == 3:   # 3페이즈를 진행함 -> 교환 후 1페이즈로 가야함 (새로운 상대 찾기)
+                        if Phase == 3:   # 3페이즈를 진행함 -> 교환페이즈로 가야함 (새로운 상대 찾기)
                             mode="exchange_delay"
                             continue
-                        if Phase == 4 :
+                        if Phase == 4 : # 게임 대기중 화면으로
                             continue
                         t, w = 0, -1
                         p1.active_list = []
@@ -629,6 +629,7 @@ def main():
                     mode, t = mouse_exchange_result((WIDTH, HEIGHT), (mode, t))
                     if connect_mode == 'Multi' and mode == "get_match":
                         sp.upload_hand(hand_cards = p1.card_list)
+                        sp.update_cell('phase', p1.team+1, 4, False)
 
             if t == 50:
                 p1.card_list[p1.ex_index] = p2.ex_card

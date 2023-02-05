@@ -57,7 +57,7 @@
      </font>
     </property>
     <property name="text">
-     <string>26</string>
+     <string>1</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_ranking">
@@ -138,7 +138,10 @@
      </font>
     </property>
     <property name="text">
-     <string>19</string>
+     <string>0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="img_Jokbo">

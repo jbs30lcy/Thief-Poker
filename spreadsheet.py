@@ -83,7 +83,7 @@ class SP:
         team += 1
         hand_cards = [str(x) for x in hand_cards]
         card_text = "|".join(hand_cards)
-        print("FDGDSHGS", card_text, col, team)
+       #print("FDGDSHGS", card_text, col, team)
         self.update_cell(col, team, card_text)
         self.update_cell_range('match', 3, team, 1, [match, round, phase], use_player_sheet=False)
 
@@ -116,7 +116,7 @@ class SP:
     def get_pre(self, team = 0):
         if team == 0 : team = self.team
         pre = self.get_acell("pre", team+1)
-        print(pre)
+       #print(pre)
         pre = self.decoding_list(pre, 1, int) 
         return pre
 
@@ -138,7 +138,7 @@ class SP:
         if cards == "" : return [] #혹시나 비어있을 경우 에러 처리
 
         cards = cards.split("|")
-        print(f"get_playing : {cards}")
+       #print(f"get_playing : {cards}")
         cards = [Card(x, fromcell=True) for x in cards]
 
         return cards
@@ -358,8 +358,8 @@ class SP:
         self.cols_dir = dict(zip( self.cols_db_dir, map(self.num_to_col, range(len(fetch))) ))
         
 
-        print(self.cols)
-        print(self.cols_dir)
+       #print(self.cols)
+       #print(self.cols_dir)
         
     def get_acell(self, col, row, use_player_sheet=True):
         table = 'player' if use_player_sheet else "director"
@@ -372,11 +372,11 @@ class SP:
         mykey = self.group * 100 + row - 1 
         table = 'player' if use_player_sheet else "director"
         col = self.col_to_num_db(col, use_player_sheet)
-        print(col)
+       #print(col)
         q = f"UPDATE {table} SET {col}=%s WHERE mykey={mykey};"
-        print("UPDATE_CELL")
-        print(q)
-        print("UPDATE CELL | ", q, text)
+       #print("UPDATE_CELL")
+       #print(q)
+       #print("UPDATE CELL | ", q, text)
         self.execute(q , [text])
 
     def update_cell_range(self, col_start, num_cols, row_start, num_rows, texts, use_player_sheet=True):
@@ -386,22 +386,22 @@ class SP:
         if num_rows == 1:
             texts = [  texts  ]
         
-        print("UPDATE_CELL_RANGE")
+       #print("UPDATE_CELL_RANGE")
         mykey = self.group * 100 + row_start - 1
         table = 'player' if use_player_sheet else "director"
-        print(col_start, use_player_sheet)
+       #print(col_start, use_player_sheet)
         col_start = self.col_to_num_db(col_start, use_player_sheet)
-        print(col_start)
+       #print(col_start)
         insert = self.col_to_num_db(col_start,use_player_sheet, num_cols)
-        print(insert)
+       #print(insert)
         if num_cols == 1 : insert = [insert]
         middle_text = [" {} = %s ".format(x) for x in insert]
-        print("UPDATE_CELL_RANGE")
-        print(middle_text)
+       #print("UPDATE_CELL_RANGE")
+       #print(middle_text)
         for mk in range(num_rows):
             q = f"UPDATE {table} SET " + " , ".join(middle_text) + f"WHERE mykey={mk+mykey}"
-            print(q)
-            print(texts[mk])
+           #print(q)
+           #print(texts[mk])
             self.execute(q, texts[mk] )
 
 
@@ -414,12 +414,12 @@ class SP:
         middle_text = " , ".join([f"{x}" for x in ins ]) 
         q += middle_text + f" FROM {table} "
         q += f" WHERE mykey > {mykey-1} AND mykey < {mykey+num_rows}" if num_rows > 1 else f" WHERE mykey = {mykey}"
-        print("GET_CELL_RANGE_QUERY | ",q, ins)
+       #print("GET_CELL_RANGE_QUERY | ",q, ins)
         fetch = self.execute(q)
-        print(fetch)
+       #print(fetch)
 
         ret = [ [ row[r] for r in row ] for row in fetch  ]
-        print(ret)
+       #print(ret)
         if num_cols == 1:
             ret = [ x[0] for x in ret ] 
         if num_rows == 1:
@@ -427,47 +427,47 @@ class SP:
         return ret
 
     def col_to_num_db(self, col, use_player_sheet=True, num_cols = 1):
-        print('col_to_num_db' + "-"*19)
-        print("COL : ", col)
+       #print('col_to_num_db' + "-"*19)
+       #print("COL : ", col)
         if num_cols == 1:
-            print("NOT RANGE")
+           #print("NOT RANGE")
             if type(col) == type(1):
-                print("IF INT")
+               #print("IF INT")
                 ret = self.cols_db[col] if use_player_sheet else self.cols_db_dir[col]
-                print(ret)
+               #print(ret)
                 return ret
-            print("INPUT WAS STRING")
+           #print("INPUT WAS STRING")
             if len(col) > 2: 
-                print("INPUT WAS LONG")
+               #print("INPUT WAS LONG")
                 ret = col + ("" if use_player_sheet or col[-1] == '_' else "_" )
-                print(ret)
+               #print(ret)
                 return ret
             if not use_player_sheet or col[-1] == '_' : col = col + "_"
 
             #col = self.cols[col] if use_player_sheet else self.cols_dir[col]
-            print(col)
+           #print(col)
             col = self.col_to_num(col)
-            print(col)
+           #print(col)
             ret = self.cols_db[col] if use_player_sheet else self.cols_db_dir[col]
-            print(ret)
+           #print(ret)
             return ret
         else:
-            print("CALL WAS RANGE")
-            print(col)
+           #print("CALL WAS RANGE")
+           #print(col)
             if type(col) == type("a"):
-                print("INPUT WAS STRING")
+               #print("INPUT WAS STRING")
                 if len(col) > 2 :
-                    print("INPUT WAS LONG")
+                   #print("INPUT WAS LONG")
                     col +=  "" if use_player_sheet or col[-1] == '_'else "_"
                     col = self.cols[col] if use_player_sheet else self.cols_dir[col]
                 col = self.col_to_num(col)
-                print(col)
-            print(col)
+               #print(col)
+           #print(col)
             ret =  self.cols_db[col:col+num_cols] if use_player_sheet else self.cols_db_dir[col:col+num_cols] 
-            print(ret)
+           #print(ret)
             return ret
     def execute(self, query, insert=""):
-        print("EXECUTE : ", query, insert)
+       #print("EXECUTE : ", query, insert)
         if insert=="":
             self.cur.execute(query)
         else:
@@ -478,7 +478,7 @@ class SP:
 
 
 if __name__ == '__main__': #테스트
-    print("NOT EXECUATE FILE")
+   #print("NOT EXECUATE FILE")
     exit(1)
     sp = SP(1,1)
 
@@ -489,12 +489,12 @@ if __name__ == '__main__': #테스트
         cards.append(Card(i, fromcell=True))
     sp.upload_hand(1, cards)
     sp.upload_playing(1, [Card('11', fromcell=True),'22'], 1)
-    print(sp.get_hand(1))
-    print(sp.get_playing(1,1))
-    print(sp.get_round(1))
-    print(sp.get_phase(1))
-    print(sp.has_conducted(1,1,2))
-    print(sp.has_conducted(1,2,2))
-    print(sp.get_cell_range(1,3,2,4))
-    print(sp.get_cell_range("B",3,2,4))    
+   #print(sp.get_hand(1))
+   #print(sp.get_playing(1,1))
+   #print(sp.get_round(1))
+   #print(sp.get_phase(1))
+   #print(sp.has_conducted(1,1,2))
+   #print(sp.has_conducted(1,2,2))
+   #print(sp.get_cell_range(1,3,2,4))
+   #print(sp.get_cell_range("B",3,2,4))    
     sp.update_cell_range(4,4,2,2, [a,a])
