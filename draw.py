@@ -43,8 +43,8 @@ def str2Kr(s):
     col_kr_dict = {'Red': '빨강', 'Blue': '파랑', 'Yellow': '노랑', 'Green': '초록'}
     blacks = '검은' if 'Black' in s else ''
     if 'Straight-Flush' in s:
-        i = s.rfind(' ')
-        return f'{blacks} {s[2:i]} {s[0]} 스티플'
+        i = s.find(' ', s.find(' ')+1)
+        return f'{blacks} {col_kr_dict[s[2:i]]} {s[0]} 스티플'
     if 'Four of a kind' in s:
         return f'{blacks} {s[0]} 포카드'
     if 'Straight' in s:
