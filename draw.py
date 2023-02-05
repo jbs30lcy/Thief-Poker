@@ -363,9 +363,9 @@ def draw_result(screen, const, var):
     if tick >= 40 or tick == -1:
         score1 = player1.str2score(player1.rank())
         score2 = player2.str2score(player2.rank())
-        if 400 <= score1 and player2.isdd: p2rank_text = NS[32].render('땡잡이', True, White)
+        if 400 <= score1 < 600 and player2.isdd: p2rank_text = NS[32].render('레인보우', True, White)
         else: p2rank_text = NS[32].render(str2Kr(player2.rank()), True, White)
-        if 400 <= score2 and player1.isdd: p1rank_text = NS[32].render('땡잡이', True, White)
+        if 400 <= score2 < 600 and player1.isdd: p1rank_text = NS[32].render('레인보우', True, White)
         else: p1rank_text = NS[32].render(str2Kr(player1.rank()), True, White)
     if tick >= 70 or tick == -1:
         if w == 0: win_text = NSE[96].render('DRAW', True, Black)
