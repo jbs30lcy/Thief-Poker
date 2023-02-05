@@ -5,6 +5,13 @@ import pygame as pg
 import os
 import random
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 White  = (255, 255, 255)
 Black  = (0, 0, 0)
 Red    = (240, 26, 0)
@@ -37,10 +44,10 @@ img_dir_path = file_path + "/img/"
 for color in colors[1:]:
     for num in range(1, 8):
         card_name = f"{color}_{num}"
-        card_image = pg.transform.scale(pg.image.load(img_dir_path + card_name + ".png"), (600, 900))
+        card_image = pg.transform.scale(pg.image.load(resource_path(img_dir_path + card_name + ".png")), (600, 900))
         Card_IMGlist[card_name] = card_image
-Card_IMGlist["Black"] = pg.transform.scale(pg.image.load(img_dir_path + "Black.png"), (600, 900))
-Card_IMGlist["Hide"] = pg.transform.scale(pg.image.load(img_dir_path + "Hide.png"), (600, 900))
+Card_IMGlist["Black"] = pg.transform.scale(pg.image.load(resource_path(img_dir_path + "Black.png")), (600, 900))
+Card_IMGlist["Hide"] = pg.transform.scale(pg.image.load(resource_path(img_dir_path + "Hide.png")), (600, 900))
 
 for card in Card_IMGlist:
     CI_half[card] = pg.transform.scale(Card_IMGlist[card], (300, 450))
@@ -60,7 +67,7 @@ Item_desc = [
     '이 매치에서 획득하는 코인이 두 배가 됩니다.'
     '다른 사람들이 가지고 있던 카드가 하나씩 전부 바뀝니다.'
 ]
-Item_IMGlist = [pg.transform.scale(pg.image.load(img_dir_path + f"Item_{x}.png"), (160, 240)) for x  in range(5)]
+Item_IMGlist = [pg.transform.scale(pg.image.load(resource_path(img_dir_path + f"Item_{x}.png")), (160, 240)) for x  in range(5)]
 
 def in_rect(pos, rect):
     return rect[0] <= pos[0] <= rect[0] + rect[2] and rect[1] <= pos[1] <= rect[1] + rect[3]
@@ -133,7 +140,7 @@ class Player:
         self.ex_index = 0
         self.ex_card = None
         self.pre = []
-        self.item = [1, 1, 1, 1, 1]
+        self.item = [0, 0, 0, 0, 0]
         self.using_item = -1
 
     # str2score: 족보가 적혀 있는 str을 int로 변환하는 함수.

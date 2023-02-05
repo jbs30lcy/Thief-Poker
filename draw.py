@@ -5,8 +5,8 @@ from moving import *
 import math
 pg.init()
 
-bg1 = pg.transform.scale(pg.image.load(img_dir_path + 'com_bg.png'), (1600, 900))
-bg2 = pg.transform.scale(pg.image.load(img_dir_path + 'com_bg_2.png'), (1600, 900))
+bg1 = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'com_bg.png')), (1600, 900))
+bg2 = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'com_bg_2.png')), (1600, 900))
 
 def Mblit(screen, surf, pos, poscon = 'MM'):
     x, y = pos
@@ -61,14 +61,14 @@ def str2Kr(s):
         return f'{blacks} {s[0]} 원 페어'
     return f'족보 없음 {s[8:]}'
 
-NS  = [pg.font.Font(file_path + '/NanumSquareNeoOTF-cBd.otf', x) for x in range(1, 100)]
-NSE = [pg.font.Font(file_path + '/NanumSquareNeoOTF-dEb.otf', x) for x in range(1, 100)]
+NS  = [pg.font.Font(resource_path(img_dir_path + '/NanumSquareNeoOTF-cBd.otf'), x) for x in range(1, 100)]
+NSE = [pg.font.Font(resource_path(img_dir_path + '/NanumSquareNeoOTF-dEb.otf'), x) for x in range(1, 100)]
 NS.insert(0, 0)
 NSE.insert(0, 0)
 
-Next_button = pg.transform.scale(pg.image.load(img_dir_path + 'Next_button.png'), (90, 60))
-Rank_button = pg.transform.scale(pg.image.load(img_dir_path + 'Rank_button.png'), (90, 60))
-Coin_icon = pg.transform.scale(pg.image.load(img_dir_path + 'coin.png'), (50, 50))
+Next_button = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'Next_button.png')), (90, 60))
+Rank_button = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'Rank_button.png')), (90, 60))
+Coin_icon = pg.transform.scale((pg.image.load(resource_path(img_dir_path + 'coin.png'))), (50, 50))
 
 def draw_option(screen, csize, cqsize):
 
