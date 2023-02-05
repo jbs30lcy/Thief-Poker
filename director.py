@@ -172,7 +172,7 @@ class Director():
         teams = list(range(1,self.num_players+1))
         chips = list(map(int, self.sp.get_cell_range('chips', 1, 2, self.num_players)))
 
-        ranking = sorted( [ [x, y] for x, y in zip(teams, chips) ], key = lambda x : x[1]  )      
+        ranking = sorted( [ [x, y] for x, y in zip(teams, chips) ], key = lambda x : x[1], reverse=True  )      
        #print("RANKING : ")
        #print(ranking)
        #print("-"*50)
@@ -193,8 +193,9 @@ form_class = uic.loadUiType("DirectorQT.ui")[0]
 class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
     #dr = None 
     dr = Director(1,8)
-    num_players = 2
+    num_players = 8
     EXPLAINED = 2
+    
 
     def __init__(self):
         #초기 설정
@@ -223,9 +224,6 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
                 self.dr.clear_game()
             self.set_text(self.txt_matchNum, 1)
             self.warning("다들 입장해주세요!")
-        elif match == FINAL_MATCH:
-            self.dr.joker_penalty()
-            self.update_ranking()
         else:
             if self.dr is None:
                 self.warning("초기화를 진행해주세요")
@@ -240,10 +238,19 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
                 self.warning("아직 진행되지 않은 팀이 있습니다!")
                 return
             
-            self.update_ranking()
+            if match == FINAL_MATCH:
+                self.dr.joker_penalty()
+                self.update_ranking()
+                return
+            SHOW_CHIPS = [ True if x < 12 else False for x in range(FINAL_MATCH+1)  ]
+            SHOW_CHIPS[-1] = True
+            self.update_ranking(show_chips= SHOW_CHIPS[match])
             if match in EXPLAIN_INFO:
                 if self.EXPLAINED == 0: #바뀌는 룰과 아이템 설명 완료
                     self.EXPLAINED = 2
+                    if match == EXPLAIN_INFO[3]:
+                        self.dr.making_hand_reversed()
+
                 elif self.EXPLAINED == 2:  
                     self.warning("미니게임 진행 후 아이템 저장을 완료해주세요!")
                     self.EXPLAINED = 1
@@ -265,7 +272,8 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
             self.set_text(self.txt_matchNum, match+1)
       
 
-    def update_ranking(self):
+    def update_ranking(self, show_chips = True):
+
         tb = self.table_ranking
 
         tb.setColumnCount(2)
@@ -277,13 +285,14 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
         
         for row, rank in enumerate(ranking):
             for col, val in enumerate(rank):
+                val = val if show_chips else "비밀!"
                 tb.setItem(row,col,QTableWidgetItem(str(val)))
 
 
     def set_image(self, ob, img_link=""):
         ob.setPixmap(QtGui.QPixmap(img_link))
 
-    def set_text(self, ob, text="", ob_type="text"): # 값 설정
+    def set_text(self, ob, text="", ob_type="text"  ): # 값 설정
         if ob_type=="text":
             ob.setText(str(text))
             return True
