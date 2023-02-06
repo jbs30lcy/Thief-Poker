@@ -57,7 +57,7 @@ MATCH_PARA = [
     [['Flush'], [], 20],
     [['Flush'], [4], 30],
     [['Straight', 'Flush', 'S-F'], [4], 30],
-    [['Straight', 'Flush', 'S-F'], [4], 60]
+    [['Straight', 'Flush', 'S-F'], [4], 50]
 ]
 
 Item_desc = [

@@ -43,8 +43,8 @@ def str2Kr(s):
     col_kr_dict = {'Red': '빨강', 'Blue': '파랑', 'Yellow': '노랑', 'Green': '초록'}
     blacks = '검은' if 'Black' in s else ''
     if 'Straight-Flush' in s:
-        i = s.rfind(' ')
-        return f'{blacks} {s[2:i]} {s[0]} 스티플'
+        i = s.find(' ', s.find(' ')+1)
+        return f'{blacks} {col_kr_dict[s[2:i]]} {s[0]} 스티플'
     if 'Four of a kind' in s:
         return f'{blacks} {s[0]} 포카드'
     if 'Straight' in s:
@@ -173,20 +173,23 @@ def draw_get_match(screen, const, var):
 
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
     title = NS[72].render("게임 준비 중...", True, Black)
+    j = 0
 
     screen.fill(Grey1)
     Mblit(screen, title, (800, 150))
     for i in range(5):
         num_text = NS[18].render(str(player1.item[i]), True, Black)
-        Mblit(screen, Item_IMGlist[i], (100 + 200*i, 750))
-        Mblit(screen, num_text, (170 + 200*i, 860))
-        if player1.using_item == i: Mrect(screen, Red, (100 + 200*i, 750, 160, 240), 3)
+        if player1.item[i]:
+            Mblit(screen, Item_IMGlist[i], (100 + 200*j, 750))
+            Mblit(screen, num_text, (170 + 200*j, 860))
+            if player1.using_item == i: Mrect(screen, Red, (100 + 200*j, 750, 160, 240), 3)
+            j += 1
 
     screen.blit(Alpha_screen, (0, 0))
     return tick+1
 
 def draw_play_pre(screen, const, var):
-    player1, player2 = const
+    player1, player2 = const    
     tick = var
     
     screen.blit(bg2, (0, 0))
@@ -283,7 +286,7 @@ def draw_play(screen, const, var):
     return player1, player2, tick+1
 
 def draw_play_delay(screen, const, var):
-    player1, player2 = const
+    player1, player2, phase = const
     tick = var
 
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
@@ -296,6 +299,8 @@ def draw_play_delay(screen, const, var):
         Mblit(screen, card.img_half, (x0 + i*100, 700))
         if card in player1.active_list:
             pg.draw.rect(screen, Red, (x0 + i*100 - 150, 475, 300, 450), 4, border_radius = 30)
+        if phase == 2 and card in player1.showc and not card in player1.active_list:
+            pg.draw.rect(screen, Grey3, (x0 + i*100 - 150, 475, 300, 450), 10, border_radius = 30)
     for i in range(8):
         x = 800 + 60*math.sin(math.pi * (i + round(tick/5)) / 4)
         y = 450 + 60*math.cos(math.pi * (i + round(tick/5)) / 4)
@@ -363,9 +368,9 @@ def draw_result(screen, const, var):
     if tick >= 40 or tick == -1:
         score1 = player1.str2score(player1.rank())
         score2 = player2.str2score(player2.rank())
-        if 400 <= score1 and player2.isdd: p2rank_text = NS[32].render('땡잡이', True, White)
+        if 400 <= score1 < 600 and player2.isdd: p2rank_text = NS[32].render('레인보우', True, White)
         else: p2rank_text = NS[32].render(str2Kr(player2.rank()), True, White)
-        if 400 <= score2 and player1.isdd: p1rank_text = NS[32].render('땡잡이', True, White)
+        if 400 <= score2 < 600 and player1.isdd: p1rank_text = NS[32].render('레인보우', True, White)
         else: p1rank_text = NS[32].render(str2Kr(player1.rank()), True, White)
     if tick >= 70 or tick == -1:
         if w == 0: win_text = NSE[96].render('DRAW', True, Black)
@@ -543,5 +548,26 @@ def draw_delay(screen, var):
         pg.draw.circle(Alpha_screen, c, (x, y), 10)
 
     screen.blit(Alpha_screen, (0, 0))
+
+    return tick+1
+
+def draw_end(screen, const, var):
+    player1 = const
+    tick = var
+
+    title = NSE[96].render('Game End!', True, Black)
+    coin_text = NS[36].render('보유 코인: ', True, Black)
+    coin_amoumt_text = NSE[96].render(str(player1.coin), True, Black)
+
+    screen.fill(Grey1)
+    Mblit(screen, title, (800, 150))
+    Mblit(screen, coin_text, (700, 450))
+    Mblit(screen, coin_amoumt_text, (900, 450))
+    for i, card in enumerate(player1.card_list):
+        if tick < 50*i : x, y = -200, 750
+        if 50*i <= tick < 50 + 50*i: x, y = easing((-200, 750), (800, 750), m_quadout, tick-50*i, 50)
+        if 50 + 50*i <= tick <= 100 + 50*i: x, y = easing((800, 750), (1800, 750), m_quadin, tick-50*(i+1), 50)
+        if tick > 100 + 50*i: x, y = 1800, 750
+        Mblit(screen, card.img_std, (x, y))
 
     return tick+1

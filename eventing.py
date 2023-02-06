@@ -297,8 +297,9 @@ def mouse_exchange_draw(screen_size, var):
 
     return mode, tick, tickf1, player1, player2
 
-def mouse_exchange_result(screen_size, var):
+def mouse_exchange_result(screen_size, const, var):
     WIDTH, HEIGHT = screen_size
+    Match = const
     mode, tick = var
 
     pos = list(pg.mouse.get_pos())
@@ -308,5 +309,6 @@ def mouse_exchange_result(screen_size, var):
     if in_rect(pos, (1580 - 90, 20, 90, 60)):
         tick = -1
         mode = 'get_match'
+        if Match == 14: mode = 'end'
 
     return mode, tick

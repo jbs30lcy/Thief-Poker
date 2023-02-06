@@ -45,11 +45,20 @@ def set_para(Match):
 
     return Rule[0], Rule[1], reward_coin
 
+def set_screen(size):
+    WIDTH, HEIGHT = size
+    icon = pg.image.load(resource_path(img_dir_path + 'jeonsaegi.ico'))
+    pg.display.quit()
+    screen = pg.display.set_mode((WIDTH, HEIGHT))
+    pg.display.set_caption('도둑 포커')
+    pg.display.set_icon(icon)
+    return screen
+
 def main():
 
     WIDTH, HEIGHT = 1600, 900
     QWIDTH, QHEIGHT = 1600, 900
-    screen = pg.display.set_mode((WIDTH, HEIGHT))
+    screen = set_screen((WIDTH, HEIGHT))
     ori_screen = pg.Surface((QWIDTH, QHEIGHT))
 
     mode = 'main'
@@ -89,12 +98,11 @@ def main():
                 if event.type == MOUSEBUTTONDOWN and is_esc:
                     (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT), ok_flag = set_screen_condition(screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
                     if ok_flag:
-                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass # 진짜 pass임.
+                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass
                         else:
                             WIDTH, HEIGHT = CWIDTH, CHEIGHT
                             QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
-                            pg.display.quit()
-                            screen = pg.display.set_mode((WIDTH, HEIGHT))
+                            screen = set_screen((WIDTH, HEIGHT))
                         is_esc = False
             
             draw_main(ori_screen)
@@ -130,8 +138,7 @@ def main():
                         else:
                             WIDTH, HEIGHT = CWIDTH, CHEIGHT
                             QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
-                            pg.display.quit()
-                            screen = pg.display.set_mode((WIDTH, HEIGHT))
+                            screen = set_screen((WIDTH, HEIGHT))
                         is_esc = False
             
             tf1, tf2 = draw_choose_key(ori_screen, p1, (tf1, tf2))
@@ -338,8 +345,7 @@ def main():
                         else:
                             WIDTH, HEIGHT = CWIDTH, CHEIGHT
                             QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
-                            pg.display.quit()
-                            screen = pg.display.set_mode((WIDTH, HEIGHT))
+                            screen = set_screen((WIDTH, HEIGHT))
                         is_esc = False
 
             p1, p2, t = draw_play(ori_screen, (Round, Match, choose, tf1), (p1, p2, t))
@@ -361,7 +367,7 @@ def main():
                     sys.exit()
                 if event.type == KEYDOWN and event.key == K_ESCAPE: is_esc = not is_esc
             
-            t = draw_play_delay(ori_screen, (p1, p2), t)
+            t = draw_play_delay(ori_screen, (p1, p2, Phase), t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             if connect_mode == 'Single' and t == 60:
@@ -416,8 +422,7 @@ def main():
                         else:
                             WIDTH, HEIGHT = CWIDTH, CHEIGHT
                             QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
-                            pg.display.quit()
-                            screen = pg.display.set_mode((WIDTH, HEIGHT))
+                            screen = set_screen((WIDTH, HEIGHT))
                         is_esc = False
             
             t = draw_flop(ori_screen, (Round, Match, p1, p2), t)
@@ -456,8 +461,7 @@ def main():
                         else:
                             WIDTH, HEIGHT = CWIDTH, CHEIGHT
                             QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
-                            pg.display.quit()
-                            screen = pg.display.set_mode((WIDTH, HEIGHT))
+                            screen = set_screen((WIDTH, HEIGHT))
                         is_esc = False
                 
             if t == 0:
@@ -514,8 +518,7 @@ def main():
                         else:
                             WIDTH, HEIGHT = CWIDTH, CHEIGHT
                             QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
-                            pg.display.quit()
-                            screen = pg.display.set_mode((WIDTH, HEIGHT))
+                            screen = set_screen((WIDTH, HEIGHT))
                         is_esc = False
             
             p1, p2 = draw_exchange_lose(ori_screen, (Match, choose, tf1), (p1, p2))
@@ -551,8 +554,7 @@ def main():
                         else:
                             WIDTH, HEIGHT = CWIDTH, CHEIGHT
                             QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
-                            pg.display.quit()
-                            screen = pg.display.set_mode((WIDTH, HEIGHT))
+                            screen = set_screen((WIDTH, HEIGHT))
                         is_esc = False
             
             p1, p2 = draw_exchange_draw(ori_screen, (Match, tf1), (p1, p2))
@@ -626,7 +628,7 @@ def main():
                     pg.quit()
                     sys.exit()
                 if t >= 90 and event.type == MOUSEBUTTONDOWN and not is_esc:
-                    mode, t = mouse_exchange_result((WIDTH, HEIGHT), (mode, t))
+                    mode, t = mouse_exchange_result((WIDTH, HEIGHT), Match, (mode, t))
                     if connect_mode == 'Multi' and mode == "get_match":
                         sp.upload_hand(hand_cards = p1.card_list)
                         sp.update_cell('phase', p1.team+1, 4, False)
@@ -640,6 +642,18 @@ def main():
             if is_esc:
                 draw_option(ori_screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
                 screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+
+            clock.tick(60)
+            pg.display.update()
+
+        if mode == 'end':
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+            
+            t = draw_end(ori_screen, p1, t)
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             clock.tick(60)
             pg.display.update()
