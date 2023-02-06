@@ -367,7 +367,7 @@ def main():
                     sys.exit()
                 if event.type == KEYDOWN and event.key == K_ESCAPE: is_esc = not is_esc
             
-            t = draw_play_delay(ori_screen, (p1, p2), t)
+            t = draw_play_delay(ori_screen, (p1, p2, Phase), t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             if connect_mode == 'Single' and t == 60:
@@ -628,7 +628,7 @@ def main():
                     pg.quit()
                     sys.exit()
                 if t >= 90 and event.type == MOUSEBUTTONDOWN and not is_esc:
-                    mode, t = mouse_exchange_result((WIDTH, HEIGHT), (mode, t))
+                    mode, t = mouse_exchange_result((WIDTH, HEIGHT), Match, (mode, t))
                     if connect_mode == 'Multi' and mode == "get_match":
                         sp.upload_hand(hand_cards = p1.card_list)
                         sp.update_cell('phase', p1.team+1, 4, False)
@@ -642,6 +642,18 @@ def main():
             if is_esc:
                 draw_option(ori_screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
                 screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+
+            clock.tick(60)
+            pg.display.update()
+
+        if mode == 'end':
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+            
+            t = draw_end(ori_screen, p1, t)
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             clock.tick(60)
             pg.display.update()
