@@ -168,11 +168,12 @@ def draw_choose_key(screen, const, var):
     return tickf1, tickf2
 
 def draw_get_match(screen, const, var):
-    player1 = const
+    player1, hover = const
     tick = var
 
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
     title = NS[72].render("게임 준비 중...", True, Black)
+    if not hover == -1: desc_text = NS[40].render(Item_desc[hover], True, Black)
     j = 0
 
     screen.fill(Grey1)
@@ -184,7 +185,7 @@ def draw_get_match(screen, const, var):
             Mblit(screen, num_text, (170 + 200*j, 860))
             if player1.using_item == i: Mrect(screen, Red, (100 + 200*j, 750, 160, 240), 3)
             j += 1
-
+    if not hover == -1: Mblit(screen, desc_text, (800, 500))
     screen.blit(Alpha_screen, (0, 0))
     return tick+1
 
@@ -213,7 +214,7 @@ def draw_play_pre(screen, const, var):
     return tick+1
 
 def draw_play(screen, const, var):
-    Round, Match, choose, tickf1 = const
+    Round, Match, choose, tickf1, (item_x1, item_x2) = const
     player1, player2, tick = var
 
     c1 = len(player1.card_list)
@@ -237,12 +238,13 @@ def draw_play(screen, const, var):
     for card in player2.card_list:
         if card.color == 'Black':
             p2_isblack = True
-    if p2_isblack:
+    if p2_isblack or player1.using_item == 2:
         blackcard_text = NSE[24].render("! 조커 있음 !", True, Pink)
+        peeping_text = NSE[24].render("엿보기 중", True, Blue)
         if tick % 60 < 30:
-            _, blackcard_y = easing((800, 200), (800, 180), m_sineinout, tick%60, 30)
+            _, flowing_y = easing((800, 180), (800, 160), m_sineinout, tick%60, 30)
         else:
-            _, blackcard_y = easing((800, 180), (800, 200), m_sineinout, tick%60 - 30, 30)
+            _, flowing_y = easing((800, 160), (800, 180), m_sineinout, tick%60 - 30, 30)
 
 
     screen.blit(bg2, (0, 0))
@@ -254,23 +256,42 @@ def draw_play(screen, const, var):
             pg.draw.rect(screen, Red, (x-150, y-225, 300, 450), 4, border_radius = 30)
         if choose == 1 and card in player1.showc:
             pg.draw.rect(screen, Grey3, (x-150, y-225, 300, 450), 10, border_radius = 30)
+        if player1.using_item == 1 and (i == item_x1 or i == item_x2):
+            if tick % 60 < 30:
+                ix, iy = easing((x-80, y-260), (x-80, y-250), m_sineinout, tick%60, 30)
+            else:
+                ix, iy = easing((x-80, y-250), (x-80, y-260), m_sineinout, tick%60 - 30, 30)
+            Mblit(screen, arrow_img, (ix, iy))
     
     if choose == 0 or choose == 0.5:
         for i in range(c2):
             card = player2.card_list[i]
-            x, y = 816.6 - c2*16.7 + 33.3*i, 300
-            Mblit(screen, Card.shrink(Card_IMGlist['Hide'], 1/6), (x, y))
+            x, y = 820 - c2*20 + i*40, 300
+            if player1.using_item == 2 and (item_x1 == i or item_x2 == i):
+                Mblit(screen, Card.shrink(card.img, 1/5), (x, y))
+                peep_surf = pg.Surface((120, 180), pg.SRCALPHA)
+                pg.draw.rect(peep_surf, list(Blue)+[127], (0, 0, 120, 180), border_radius = 8)
+                Mblit(screen, peep_surf, (x, y))
+            else: Mblit(screen, Card.shrink(Card_IMGlist['Hide'], 1/5), (x, y))
     if choose == 1:
-        Mblit(screen, Card.shrink(player2.showc[-2].img, 1/6), (816.7 - c2*16.7, 300))
-        Mblit(screen, Card.shrink(player2.showc[-1].img, 1/6), (850 - c2*16.7, 300))
-        for i in range(c2-2):
+        j = 0
+        Mblit(screen, Card.shrink(player2.showc[-2].img, 1/5), (350, 300))
+        Mblit(screen, Card.shrink(player2.showc[-1].img, 1/5), (480, 300))
+        for i in range(c2):
             card = player2.card_list[i]
-            x, y = 883.3 - c2*16.7 + 33.3*i, 300
-            Mblit(screen, Card.shrink(Card_IMGlist['Hide'], 1/6), (x, y))
+            if card in player2.showc: continue
+            x, y = 820 - (c2-2)*20 + j*40, 300
+            if player1.using_item == 2 and (item_x1 == i or item_x2 == i):
+                Mblit(screen, Card.shrink(card.img, 1/5), (x, y))
+                peep_surf = pg.Surface((120, 180), pg.SRCALPHA)
+                pg.draw.rect(peep_surf, list(Blue)+[127], (0, 0, 120, 180), border_radius = 8)
+                Mblit(screen, peep_surf, (x, y))
+            else: Mblit(screen, Card.shrink(Card_IMGlist['Hide'], 1/5), (x, y))
+            j += 1
         Mblit(screen, common_card.img_std, (1300, 300))
         pg.draw.rect(screen, Yellow, (1195, 150, 210, 300), 3, border_radius = 15)
 
-    pg.draw.circle(screen, White, (150, 300), 50)
+    pg.draw.circle(screen, White, (180, 450), 50)
     Mblit(screen, title, (800, 70))
     Mblit(screen, Match_text, (20, 20), 'TL')
     Mblit(screen, Round_text, (20, 55), 'TL')
@@ -278,9 +299,10 @@ def draw_play(screen, const, var):
     Mblit(screen, Coin_icon, (20, 855), 'ML')
     Mblit(screen, coin_text, (80, 855), 'ML')
     Mblit(screen, myteam_text, (1580, 880), 'BR')
-    Mblit(screen, yourteam_text, (150, 300))
+    Mblit(screen, yourteam_text, (180, 450))
     Mblit(Alpha_screen, warn_text, (800, 450))
-    if p2_isblack: Mblit(screen, blackcard_text, (800, blackcard_y))
+    if p2_isblack: Mblit(screen, blackcard_text, (800, flowing_y))
+    if player1.using_item == 2: Mblit(screen, peeping_text, (800, flowing_y - 30))
 
     screen.blit(Alpha_screen, (0, 0))
     return player1, player2, tick+1
@@ -551,13 +573,12 @@ def draw_delay(screen, var):
 
     return tick+1
 
-def draw_end(screen, const, var):
-    player1 = const
-    tick = var
+def draw_end(screen, var):
+    player1, tickf1, tick = var
 
     title = NSE[96].render('Game End!', True, Black)
     coin_text = NS[36].render('보유 코인: ', True, Black)
-    coin_amoumt_text = NSE[96].render(str(player1.coin), True, Black)
+    coin_amoumt_text = NSE[96].render(str(player1.coin), True, (3.5*tickf1, 3*tickf1, 0))
 
     screen.fill(Grey1)
     Mblit(screen, title, (800, 150))
@@ -570,4 +591,10 @@ def draw_end(screen, const, var):
         if tick > 100 + 50*i: x, y = 1800, 750
         Mblit(screen, card.img_std, (x, y))
 
-    return tick+1
+        if tick == 50 + 50*i and card.color == 'Black':
+            if player1.item[0] == 0: player1.coin = int(player1.coin * 0.8)
+            else: player1.item[0] -= 1
+            tickf1 = 60
+    if tickf1: tickf1 -= 1
+
+    return player1, tickf1, tick+1

@@ -12,12 +12,15 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 
+NUMBER_OF_GROUPS = 26
+NUMBER_OF_TEAMS = 8
+
 White  = (255, 255, 255)
 Black  = (0, 0, 0)
 Red    = (240, 26, 0)
 Pink   = (255, 180, 180)
 RedG   = (177, 123, 116)
-Yellow = (210, 190, 0)
+Yellow = (210, 180, 0)
 Green  = (60, 179, 113)
 GreenG = (101, 132, 115)
 Blue   = (24, 160, 230)
@@ -52,6 +55,7 @@ Card_IMGlist["Hide"] = pg.transform.scale(pg.image.load(resource_path(img_dir_pa
 for card in Card_IMGlist:
     CI_half[card] = pg.transform.scale(Card_IMGlist[card], (300, 450))
     CI_std[card] = pg.transform.scale(Card_IMGlist[card], (180, 270))
+arrow_img = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'arrow.png')), (30, 15))
 
 MATCH_PARA = [
     [['Flush'], [], 20],
@@ -61,10 +65,10 @@ MATCH_PARA = [
 ]
 
 Item_desc = [
-    '?'
-    '필요없는 카드 두 장을 랜덤한 카드 두 장으로 교체합니다.'
-    '상대가 보유한 카드 중 랜덤으로 두 장을 엿볼 수 있습니다.'
-    '이 매치에서 획득하는 코인이 두 배가 됩니다.'
+    '? (선택 불가)',
+    '필요없는 카드 두 장을 랜덤한 카드 두 장으로 교체합니다.',
+    '상대가 보유한 카드 중 랜덤으로 두 장을 엿볼 수 있습니다.',
+    '이 매치에서 획득하는 코인이 두 배가 됩니다.',
     '다른 사람들이 가지고 있던 카드가 하나씩 전부 바뀝니다.'
 ]
 Item_IMGlist = [pg.transform.scale(pg.image.load(resource_path(img_dir_path + f"Item_{x}.png")), (160, 240)) for x  in range(5)]
@@ -140,7 +144,7 @@ class Player:
         self.ex_index = 0
         self.ex_card = None
         self.pre = []
-        self.item = [0, 0, 0, 0, 0]
+        self.item = [1, 0, 1, 0, 1]
         self.using_item = -1
 
     # str2score: 족보가 적혀 있는 str을 int로 변환하는 함수.

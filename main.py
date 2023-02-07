@@ -73,6 +73,9 @@ def main():
     Rule = [['Straight'], []]
     dd = []
     is_esc = False
+    p2num = -1
+    item_x1, item_x2 = -1, -1
+    hover = -1
     CWIDTH, CHEIGHT = WIDTH, HEIGHT
     CQWIDTH, CQHEIGHT = QWIDTH, QHEIGHT
 
@@ -165,7 +168,7 @@ def main():
                         p1.pre = [sp.get_pre()]
                         p1.coin = sp.get_chips()
                         p2num = sp.get_opponent(Match) 
-                        p2 = Player(p2num, sp.get_hand(p2num))
+                        p2 = Player(p2num, sp.get_hand(p2num)) # 이것도 빼고, reset에서 갖고와야됨.
                         choose = 0
                         if Phase == 3:   # 3페이즈를 진행함 -> 교환페이즈로 가야함 (새로운 상대 찾기)
                             mode="exchange_delay"
@@ -235,14 +238,25 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN and not is_esc:
                     p1 = mouse_get_match((WIDTH, HEIGHT), p1)
+            pos = list(pg.mouse.get_pos())
+            pos[0] *= (1600/WIDTH)
+            pos[1] *= (900/HEIGHT)
+            j, hover = 0, -1
+
+            for i in range(5):
+                if not p1.item[i]: continue
+                if in_rect(pos, (20+200*j, 630, 160, 240)):
+                    hover = i
+                    break
+                j += 1
             
-            t = draw_get_match(ori_screen, p1, t)
+            t = draw_get_match(ori_screen, (p1, hover), t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             if connect_mode == 'Single' and t == 180:
                 if Phase % 2 == 0:
                     Match += 1
-                    p2 = Player(0, random.sample(make_whole(), 6))
+                    p2num = 0
                 mode = 'reset'
             
             if connect_mode == 'Multi' and t % WAITING_TIME == 0:
@@ -250,7 +264,6 @@ def main():
                     if Phase % 2 == 0:
                         Match += 1 
                         p2num = sp.get_opponent(Match) 
-                        p2 = Player(p2num, sp.get_hand(p2num))
                     mode = 'reset'
                     # Phase = Phase%2 + 1
 
@@ -258,17 +271,51 @@ def main():
             pg.display.update()   
 
         if mode == 'reset': # 죽일 수 있는 모드인줄 알았는데, 역시 잘 돌아가는 코드는 건들면 안됨. 이름만 init => reset으로 바꿈.
-
-            # 이쯤.. sp.get_hand가 실행되기 전에 적용해야 하는 아이템 효과가 있으므로
-            if p1.using_item >= 0: p1.item[p1.using_item] -= 1
-            sp.upload_item(p1)
+            if Round == 1:
+                if p1.using_item >= 0: p1.item[p1.using_item] -= 1
+                if p1.using_item == 1:
+                    if connect_mode == 'Single' and Match == 1: p1.card_list = random.sample(make_whole(), 6)
+                    if connect_mode == 'Multi': p1.card_list = sp.get_hand()
+                    item_x1, item_x2 = random.sample(range(6), 2) #len(p2.card_list)
+                    while True:
+                        new_card = Card(random.choice(('Red', 'Blue', 'Yellow', 'Green')), random.randint(1, 7))
+                        if not new_card.equals(p1.card_list[item_x1]):
+                            p1.card_list[item_x1] = new_card
+                            break
+                    while True:
+                        new_card = Card(random.choice(('Red', 'Blue', 'Yellow', 'Green')), random.randint(1, 7))
+                        if not new_card.equals(p1.card_list[item_x2]):
+                            p1.card_list[item_x2] = new_card
+                            break
+                    sp.upload_hand(hand_cards = p1.card_list)
+                elif p1.using_item == 2:
+                    item_x1, item_x2 = random.sample(range(6), 2) #len(p2.card_list)
+                else:
+                    item_x1, item_x2 = -1, -1
+                if p1.using_item == 4 and connect_mode == 'Multi':
+                    for team in range(1, NUMBER_OF_TEAMS + 1):
+                        if team == p1.team: continue
+                        user_hand = sp.get_hand(team = team)
+                        while True:
+                            I = random.randint(0, 5)
+                            if not user_hand[I].color == 'Black': break
+                        while True:
+                            new_card = Card(random.choice(('Red', 'Blue', 'Yellow', 'Green')), random.randint(1, 7))
+                            if not new_card.equals(user_hand[I].color): break
+                        sp.upload_hand(team = team, hand_cards = user_hand)
+                sp.upload_item(p1)
+                time.sleep(1)
 
             choose = 0
             t, w = 0, -1
             #p1, Match = start(Round, (p1, Match)) # 이 부분 대신에 DB에서 끌고 와야 하지
             if Match == 1 and Round == 1:
-                if connect_mode == 'Single': p1.card_list = random.sample(make_whole(), 6)
-            if connect_mode == 'Multi': p1.card_list = sp.get_hand()
+                if connect_mode == 'Single':
+                    p1.card_list = [Card('Black') for i in range(6)]# random.sample(make_whole(), 6)
+                    p2.card_list = random.sample(make_whole(), 6)
+            if connect_mode == 'Multi':
+                p1.card_list = sp.get_hand()
+                p2 = Player(p2num, sp.get_hand(p2num))
             p1.active_list = []
             p1.showc = []
             p1.Rank = ''
@@ -348,7 +395,7 @@ def main():
                             screen = set_screen((WIDTH, HEIGHT))
                         is_esc = False
 
-            p1, p2, t = draw_play(ori_screen, (Round, Match, choose, tf1), (p1, p2, t))
+            p1, p2, t = draw_play(ori_screen, (Round, Match, choose, tf1, (item_x1, item_x2)), (p1, p2, t))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if is_esc:
                 draw_option(ori_screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
@@ -418,7 +465,7 @@ def main():
                 if event.type == MOUSEBUTTONDOWN and is_esc:
                     (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT), ok_flag = set_screen_condition(screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
                     if ok_flag:
-                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass # 진짜 pass임.
+                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass
                         else:
                             WIDTH, HEIGHT = CWIDTH, CHEIGHT
                             QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
@@ -471,16 +518,15 @@ def main():
                 w = win(p1, p2)
             if t == 70:
                 if w == 0: #무승부
+                    if p1.using_item == 3: p1.coin += (reward_coin // 2)
                     p1.coin += (reward_coin // 2)
                     p1.pre[-1].append(0)
-                    #p2.pre[-1].append(0)
                 if w == 1: #승리
+                    if p1.using_item == 3: p1.coin += reward_coin
                     p1.coin += reward_coin
                     p1.pre[-1].append(1)
-                    #p2.pre[-1].append(-1)
                 if w == 2: #패배
                     p1.pre[-1].append(-1)
-                    #p2.pre[-1].append(1)
                 sp.update_cell('chips', p1.team+1, p1.coin)
                 sp.upload_pre(p1.pre)
                 #sp.clear_phase()
@@ -628,7 +674,7 @@ def main():
                     pg.quit()
                     sys.exit()
                 if t >= 90 and event.type == MOUSEBUTTONDOWN and not is_esc:
-                    mode, t = mouse_exchange_result((WIDTH, HEIGHT), Match, (mode, t))
+                    mode, t, tf1 = mouse_exchange_result((WIDTH, HEIGHT), Match, (mode, t, tf1))
                     if connect_mode == 'Multi' and mode == "get_match":
                         sp.upload_hand(hand_cards = p1.card_list)
                         sp.update_cell('phase', p1.team+1, 4, False)
@@ -652,7 +698,7 @@ def main():
                     pg.quit()
                     sys.exit()
             
-            t = draw_end(ori_screen, p1, t)
+            p1, tf1, t = draw_end(ori_screen, (p1, tf1, t))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             clock.tick(60)

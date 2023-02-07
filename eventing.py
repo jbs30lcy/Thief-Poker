@@ -3,8 +3,6 @@ from pygame.locals import *
 from obj import *
 from setting import *
 pg.init()
-NUMBER_OF_GROUPS = 26
-NUMBER_OF_TEAMS = 8
 
 def set_screen_condition(screen, screen_size, ori_screen_size):
     WIDTH, HEIGHT = screen.get_width(), screen.get_height()
@@ -111,10 +109,14 @@ def mouse_get_match(screen_size, var):
     pos = list(pg.mouse.get_pos())
     pos[0] *= (1600/WIDTH)
     pos[1] *= (900/HEIGHT)
-
+    
+    j = int(player1.item[0] > 0)
     for i in range(1, 5):
-        if in_rect(pos, (20+200*i, 630, 160, 240)) and player1.item[i] > 0:
-            player1.using_item = i
+        if not player1.item[i]: continue
+        if in_rect(pos, (20+200*j, 630, 160, 240)):
+            if player1.using_item == i: player1.using_item = -1
+            else: player1.using_item = i
+        j += 1
 
     return player1
 
@@ -300,7 +302,7 @@ def mouse_exchange_draw(screen_size, var):
 def mouse_exchange_result(screen_size, const, var):
     WIDTH, HEIGHT = screen_size
     Match = const
-    mode, tick = var
+    mode, tick, tickf1 = var
 
     pos = list(pg.mouse.get_pos())
     pos[0] *= (1600/WIDTH)
@@ -309,6 +311,8 @@ def mouse_exchange_result(screen_size, const, var):
     if in_rect(pos, (1580 - 90, 20, 90, 60)):
         tick = -1
         mode = 'get_match'
-        if Match == 14: mode = 'end'
+        if Match == 14:
+            mode = 'end'
+            tickf1 = 0
 
-    return mode, tick
+    return mode, tick, tickf1
