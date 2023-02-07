@@ -185,6 +185,10 @@ class SP:
         self.update_cell('item', self.team+1, item_str)
         self.update_cell('using_item', self.team+1, str(player.using_item))
 
+    def get_item(self):
+        items = self.get_acell('item', self.team+1).split('|')
+        items = list(map(int, items))
+        return items
 
     # 보조 메소드들
     def encoding_list(self, l = [], dimension = 1):

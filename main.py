@@ -260,6 +260,7 @@ def main():
                 mode = 'reset'
             
             if connect_mode == 'Multi' and t % WAITING_TIME == 0:
+                p1.item = sp.get_item()
                 if sp.get_start_permission(Match+1) :
                     if Phase % 2 == 0:
                         Match += 1 

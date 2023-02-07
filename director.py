@@ -1,5 +1,5 @@
 from spreadsheet import SP
-from obj import Card
+from obj import *
 import copy
 import random
 import time
@@ -192,8 +192,8 @@ form_class = uic.loadUiType("DirectorQT.ui")[0]
 
 class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
     #dr = None 
-    dr = Director(1,8)
-    num_players = 8
+    dr = Director(1, NUMBER_OF_TEAMS)
+    num_players = NUMBER_OF_TEAMS
     EXPLAINED = 2
     
 
