@@ -144,7 +144,7 @@ class Player:
         self.ex_index = 0
         self.ex_card = None
         self.pre = []
-        self.item = [1, 0, 1, 0, 1]
+        self.item = [1, 1, 1, 1, 1]
         self.using_item = -1
 
     # str2score: 족보가 적혀 있는 str을 int로 변환하는 함수.
