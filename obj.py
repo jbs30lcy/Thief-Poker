@@ -13,7 +13,7 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 NUMBER_OF_GROUPS = 26
-NUMBER_OF_TEAMS = 2
+NUMBER_OF_TEAMS = 8
 
 White  = (255, 255, 255)
 Black  = (0, 0, 0)
