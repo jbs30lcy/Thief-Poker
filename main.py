@@ -339,7 +339,9 @@ def main():
                 p1.card_list = sp.get_hand()
                 p2 = Player(p2num, sp.get_hand(p2num))
             p1.active_list = []
+            p2.active_list = []
             p1.showc = []
+            p2.showc = []
             p1.Rank = ''
             p2.Rank = ''
             p1.isdd = False
