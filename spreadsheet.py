@@ -164,7 +164,12 @@ class SP:
 
         return opponent
 
-    
+    def len_column(self, use_player_sheet=True):
+        table = 'player' if use_player_sheet else 'director'
+        q = f'select * from {table}'
+        f = self.execute(q)[0]
+        
+        return len(f)-1
 
     def get_round(self, team = 0) -> int:
         # ValueError: invalid literal for int() with base 10: '' 
@@ -180,14 +185,31 @@ class SP:
         return 0 if self.cell_is_empty(cell) else int(cell)
 
     
-    def upload_item(self, player):
-        item_str = '|'.join(map(str, player.item))
-        self.update_cell('item', self.team+1, item_str)
-        self.update_cell('using_item', self.team+1, str(player.using_item))
+    def upload_item(self, items, team = 0):
+        if team == 0 : team = self.team
+        items = self.encoding_list(items, 1)
+        self.update_cell('item'. team+1, items)
 
-    def get_item(self):
-        items = self.get_acell('item', self.team+1).split('|')
-        items = list(map(int, items))
+    def upload_item_use(self, item, team = 0):
+        if team == 0: team = self.team
+        self.update_cell("using_item", team+1, item)
+
+    def get_item_use(self, team = 0):
+        if team == 0 : team = self.team
+        cell = self.get_acell('using_item', team+1)
+        return int(cell)
+
+    def get_item_target(self, team = 0 ):
+        if team == 0: team = self.team
+        cell = self.get_acell("item_target", team+1)
+        if self.cell_is_empty(cell) : 
+            return -1,-1
+        else : return self.decoding_list(cell, 1, int)
+
+    def get_item(self, team = 0):
+        if team == 0 : team = self.team
+        cell = self.get_acell('item', team+1)
+        items = self.decoding_list(cell, 1, int)
         return items
 
     # 보조 메소드들
@@ -483,9 +505,13 @@ class SP:
 
 if __name__ == '__main__': #테스트
    #print("NOT EXECUATE FILE")
-    exit(1)
+    
+    
     sp = SP(1,1)
 
+    print(sp.len_column())
+    print(sp.len_column(False))
+    exit(1)
     #sp = SP()
     a = ['11', '21', '31', '41']
     cards = []

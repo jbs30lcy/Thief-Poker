@@ -116,12 +116,37 @@ class Director():
 
     def match_setting(self, match = 0, test=False):
         if test or self.ck_match(match) :
-            self.sp.update_cell_range('match_permission', 1, 2, self.num_players, [match]*self.num_players, use_player_sheet=False)
             self.sp.update_cell_range('common1', 2, 2, self.num_players, self.get_share_cards(match) )
             self.sp.update_cell_range("phase1", 2, 2, self.num_players, [["",""] for x in range(self.num_players)] )
             self.sp.update_cell_range("pre", 1, 2, self.num_players, [""] * self.num_players, True )
 
+            # 플레이어별 아이템 사용
+            item_targets = []
+            items = []
+            for i in range(1, self.num_players+1):
+                used_item = self.sp.get_item_use(i)
+                if used_item == 1 : # 카드 다시 뽑기
+                    hand = self.sp.get_hand(i)
+                    changed_index = random.sample(list(range(len(hand))), 2)
+                    for j in changed_index:
+                        new_card = Card(use_random=True, except_card=hand[j])
+                        hand[j] = new_card
+                    self.sp.upload_hand(i, hand)
+                elif used_item == 2 : # 카드 엿보기
+                    hand = self.sp.get_hand(i)
+                    changed_index = random.sample(list(range(len(hand))), 2)
+                else:
+                    changed_index = [-1,-1]
+                changed_items = self.sp.get_item(i)
+                if used_item >= 0 : 
+                    changed_items[used_item] -= 1
+                items.append(self.sp.encoding_list(changed_items))     
+                
+                item_targets.append(self.sp.encoding_list(changed_index))
+            self.sp.update_cell_range("item_target", 1, 2, self.num_players, item_targets )    
+            self.sp.update_cell_range('item', 1, 2, self.num_players, items)
             print(f"{match}번 매치 시작")
+            self.sp.update_cell_range('match_permission', 1, 2, self.num_players, [match]*self.num_players, use_player_sheet=False)
             return True
         else:
             print("아직 경기가 끝나지 않았습니다.")
@@ -147,19 +172,21 @@ class Director():
     def clear_game(self):
         #게임 초기화하기
         # 게임 결과를 엑셀로 저장할까?
-          
-        player_table_col = 13
-        director_table_col = 6
+        num_items = 5 
+        player_table_col = self.sp.len_column()
+        director_table_col = self.sp.len_column(False)
         player_l = [ [''] * player_table_col for x in range(self.num_players)]
         director_l = [ [''] * director_table_col for x in range(self.num_players)]
-        items = [['0|0|0|0|0'] for x in range(self.num_players)]
-        using_items = [['-1'] for x in range(self.num_players)]
+        items = [ "|".join( ["0"] * num_items ) ] * self.num_players
+        using_items = ['-1'] * self.num_players 
+        #items = [['0|0|0|0|0'] for x in range(self.num_players)]
+        #using_items = [['-1'] for x in range(self.num_players)]
 
-        self.sp.update_cell_range(1, player_table_col, 2 + (self.num-1)*8, self.num_players, player_l)
-        self.sp.update_cell_range(2, director_table_col, 2 + (self.num-1)*8, self.num_players, director_l, False)
-        self.sp.update_cell_range('item', 1, 2 + (self.num-1)*8, self.num_players, items)
-        self.sp.update_cell_range('using_item', 1, 2 + (self.num-1)*8, self.num_players, using_items)
-
+        self.sp.update_cell_range(1, player_table_col, 2, self.num_players, player_l)
+        self.sp.update_cell_range(1, director_table_col, 2, self.num_players, director_l, False)
+        self.sp.update_cell_range('item', 1, 2, self.num_players, items)
+        self.sp.update_cell_range('using_item', 1, 2 , self.num_players, using_items)
+        self.sp.update_cell_range('item_target', 1, 2, self.num_players, ['-1|-1'] * self.num_players )
     # def joker_penalty(self):
     #     teams = list(range(1,self.num_players+1))
     #     chips = list(map(int, self.sp.get_cell_range('chips', 1, 2, self.num_players)))
@@ -195,7 +222,7 @@ class Director():
     def assign_item(self, team, item):
         items = list(map(int, self.sp.get_acell('item', team+1).split('|')))
         items[item] += 1
-        items_str = "|".join(list(map(str, items)))
+        items_str = self.sp.encoding_list(items) #"|".join(list(map(str, items)))
         self.sp.update_cell('item', team+1, items_str)
 
 form_class = uic.loadUiType("DirectorQT.ui")[0]
@@ -222,8 +249,8 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
         item_team = self.get(self.cbox_itemTNum, ob_type = "cbox")
         group     = self.get(self.txt_group)
 
-        self.dr = Director(group, self.num_players)
-        self.group = group
+        # self.dr = Director(group, self.num_players)
+        # self.group = group
         self.dr.assign_item(item_team, item)
 
     def btn_match_start(self):

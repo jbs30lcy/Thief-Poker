@@ -13,7 +13,7 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 NUMBER_OF_GROUPS = 26
-NUMBER_OF_TEAMS = 8
+NUMBER_OF_TEAMS = 2
 
 White  = (255, 255, 255)
 Black  = (0, 0, 0)
@@ -77,9 +77,11 @@ def in_rect(pos, rect):
     return rect[0] <= pos[0] <= rect[0] + rect[2] and rect[1] <= pos[1] <= rect[1] + rect[3]
 
 class Card:
-    def __init__(self, color='00', val = 0, fromcell=False, use_random=False, except_joker=False):
+    def __init__(self, color='00', val = 0, fromcell=False, use_random=False, except_joker=False, except_card = None):
         if use_random:
-            ran = random.randrange(NUMBER_OF_COLORS * NUMBER_OF_NUM + 1)
+            tmp_list = list(range(int(except_joker), NUMBER_OF_NUM * NUMBER_OF_COLORS + 1))
+            if except_card:  del(tmp_list[tmp_list.index(except_card.tonum())])
+            ran = random.choice(tmp_list)
             self.color = colors[(ran-1) // NUMBER_OF_NUM + 1 ]
             self.val = (ran-1) % NUMBER_OF_NUM + 1 if ran > 0 else 0
         elif fromcell:
@@ -113,6 +115,9 @@ class Card:
     
     def __str__(self):
         return f'{ colors_dict[self.color] }{self.val}'
+
+    def tonum(self):
+        return ( colors_dict[self.color] - 1 ) * NUMBER_OF_NUM +self.val
 
     @staticmethod
     def rand_card(except_joker=False):

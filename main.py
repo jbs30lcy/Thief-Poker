@@ -184,6 +184,9 @@ def main():
                         p1.card_list = sp.get_hand()
                         p1.pre = [sp.get_pre()]
                         p1.coin = sp.get_chips()
+                        p1.item = sp.get_item()
+                        p1.using_item = sp.get_item_use()
+                        item_x1, item_x2 = sp.get_item_target()
                         p2num = sp.get_opponent(Match) 
                         p2 = Player(p2num, sp.get_hand(p2num)) # 이것도 빼고, reset에서 갖고와야됨.
                         choose = 0
@@ -256,7 +259,8 @@ def main():
                     pg.quit()
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN and not is_esc:
-                    p1 = mouse_get_match((WIDTH, HEIGHT), p1)
+                    p1, clicked = mouse_get_match((WIDTH, HEIGHT), p1)
+                    if clicked : sp.upload_item_use(p1.using_item) 
             pos = list(pg.mouse.get_pos())
             pos[0] *= (1600/WIDTH)
             pos[1] *= (900/HEIGHT)
@@ -292,28 +296,28 @@ def main():
             pg.display.update()   
 
         if mode == 'reset': # 죽일 수 있는 모드인줄 알았는데, 역시 잘 돌아가는 코드는 건들면 안됨. 이름만 init => reset으로 바꿈.
-            time.sleep(0.7)
-            if Round == 1:
-                if p1.using_item >= 0: p1.item[p1.using_item] -= 1
-                if p1.using_item == 1:
-                    if connect_mode == 'Single' and Match == 1: p1.card_list = random.sample(make_whole(), 6)
-                    if connect_mode == 'Multi': p1.card_list = sp.get_hand()
-                    item_x1, item_x2 = random.sample(range(6), 2) #len(p2.card_list)
-                    while True:
-                        new_card = Card(random.choice(('Red', 'Blue', 'Yellow', 'Green')), random.randint(1, 7))
-                        if not new_card.equals(p1.card_list[item_x1]):
-                            p1.card_list[item_x1] = new_card
-                            break
-                    while True:
-                        new_card = Card(random.choice(('Red', 'Blue', 'Yellow', 'Green')), random.randint(1, 7))
-                        if not new_card.equals(p1.card_list[item_x2]):
-                            p1.card_list[item_x2] = new_card
-                            break
-                    sp.upload_hand(hand_cards = p1.card_list)
-                elif p1.using_item == 2:
-                    item_x1, item_x2 = random.sample(range(6), 2) #len(p2.card_list)
-                else:
-                    item_x1, item_x2 = -1, -1
+            # time.sleep(0.7)
+            # if Round == 1:
+                # if p1.using_item >= 0: p1.item[p1.using_item] -= 1
+                # if p1.using_item == 1:
+                #     if connect_mode == 'Single' and Match == 1: p1.card_list = random.sample(make_whole(), 6)
+                #     if connect_mode == 'Multi': p1.card_list = sp.get_hand()
+                #     item_x1, item_x2 = random.sample(range(6), 2) #len(p2.card_list)
+                #     while True:
+                #         new_card = Card(random.choice(('Red', 'Blue', 'Yellow', 'Green')), random.randint(1, 7))
+                #         if not new_card.equals(p1.card_list[item_x1]):
+                #             p1.card_list[item_x1] = new_card
+                #             break
+                #     while True:
+                #         new_card = Card(random.choice(('Red', 'Blue', 'Yellow', 'Green')), random.randint(1, 7))
+                #         if not new_card.equals(p1.card_list[item_x2]):
+                #             p1.card_list[item_x2] = new_card
+                #             break
+                #     sp.upload_hand(hand_cards = p1.card_list)
+                # elif p1.using_item == 2:
+                #     item_x1, item_x2 = random.sample(range(6), 2) #len(p2.card_list)
+                # else:
+                #     item_x1, item_x2 = -1, -1
                 # if p1.using_item == 4 and connect_mode == 'Multi':
                 #     for team in range(1, NUMBER_OF_TEAMS + 1):
                 #         if team == p1.team: continue
@@ -325,8 +329,8 @@ def main():
                 #             new_card = Card(random.choice(('Red', 'Blue', 'Yellow', 'Green')), random.randint(1, 7))
                 #             if not new_card.equals(user_hand[I].color): break
                 #         sp.upload_hand(team = team, hand_cards = user_hand)
-                sp.upload_item(p1)
-                time.sleep(0.7)
+                # sp.upload_item(p1)
+                # time.sleep(0.7)
 
             choose = 0
             t, w = 0, -1
@@ -337,6 +341,9 @@ def main():
                     p2.card_list = random.sample(make_whole(), 6)
             if connect_mode == 'Multi':
                 p1.card_list = sp.get_hand()
+                p1.item = sp.get_item()
+                p1.using_item = sp.get_item_use()
+                item_x1, item_x2 = sp.get_item_target()
                 p2 = Player(p2num, sp.get_hand(p2num))
             p1.active_list = []
             p1.showc = []
