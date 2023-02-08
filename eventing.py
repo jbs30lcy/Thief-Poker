@@ -309,7 +309,7 @@ def mouse_exchange_result(screen_size, const, var):
     if in_rect(pos, (1580 - 90, 20, 90, 60)):
         tick = -1
         mode = 'get_match'
-        if Match == 1:
+        if Match == 14:
             mode = 'end'
             tickf1 = tickf2 = 0
 
