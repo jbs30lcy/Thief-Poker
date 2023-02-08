@@ -69,6 +69,12 @@ NSE.insert(0, 0)
 Next_button = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'Next_button.png')), (90, 60))
 Rank_button = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'Rank_button.png')), (90, 60))
 Coin_icon = pg.transform.scale((pg.image.load(resource_path(img_dir_path + 'coin.png'))), (50, 50))
+Jokbo_button = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'Jokbo_button.png')), (90, 60))
+white_bg = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'white_bg.png')), (1600, 900))
+white_bg.set_alpha(128)
+Jokbo_ver1 = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'Jokbo_ver1.png')), (500, 888))
+Jokbo_ver2 = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'Jokbo_ver2.png')), (500, 888))
+Jokbo_ver3 = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'Jokbo_ver3.png')), (500, 888))
 
 def draw_option(screen, csize, cqsize):
 
@@ -296,6 +302,7 @@ def draw_play(screen, const, var):
     Mblit(screen, Match_text, (20, 20), 'TL')
     Mblit(screen, Round_text, (20, 55), 'TL')
     Mblit(screen, Next_button, (1580, 20), 'TR')
+    Mblit(screen, Jokbo_button, (1580, 90), 'TR')
     Mblit(screen, Coin_icon, (20, 855), 'ML')
     Mblit(screen, coin_text, (80, 855), 'ML')
     Mblit(screen, myteam_text, (1580, 880), 'BR')
@@ -305,6 +312,11 @@ def draw_play(screen, const, var):
     if player1.using_item == 2: Mblit(screen, peeping_text, (800, flowing_y - 30))
 
     screen.blit(Alpha_screen, (0, 0))
+    
+    pos = list(pg.mouse.get_pos())
+    if in_rect(pos, (1580 - 90, 90, 90, 60)):
+        draw_jokbo(screen, Match)
+    
     return player1, player2, tick+1
 
 def draw_play_delay(screen, const, var):
@@ -598,3 +610,12 @@ def draw_end(screen, var):
     if tickf1: tickf1 -= 1
 
     return player1, tickf1, tick+1
+
+def draw_jokbo(screen, Match):
+    Mblit(screen, white_bg, (800, 450))
+    if Match >= 1 and Match <= 3:
+        Mblit(screen, Jokbo_ver1, (800, 450))
+    elif Match <= 7:
+        Mblit(screen, Jokbo_ver2, (800, 450))
+    elif Match <= 14:
+        Mblit(screen, Jokbo_ver3, (800, 450))        

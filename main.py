@@ -376,7 +376,7 @@ def main():
                     pg.quit()
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN and not is_esc:
-                    p1, p2, mode, choose, t, tf1 = mouse_play((WIDTH, HEIGHT), (p1, p2, mode, choose, t, tf1))
+                    p1, p2, mode, choose, t, tf1= mouse_play((WIDTH, HEIGHT), (p1, p2, mode, choose, t, tf1))
                     if mode == 'play_delay':
                         Phase = 2 if Phase == 1 else 1
                         if connect_mode == 'Multi':
