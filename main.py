@@ -415,6 +415,12 @@ def main():
                         is_esc = False
 
             p1, p2, t = draw_play(ori_screen, (Round, Match, choose, tf1, (item_x1, item_x2)), (p1, p2, t))
+            pos = list(pg.mouse.get_pos())
+            pos[0] *= (1600/WIDTH)
+            pos[1] *= (900/HEIGHT)
+            if in_rect(pos, (1580 - 90, 90, 90, 60)):
+                draw_jokbo(ori_screen, Match)
+
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
             if is_esc:
                 draw_option(ori_screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))

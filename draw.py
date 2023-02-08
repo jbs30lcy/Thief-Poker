@@ -313,10 +313,6 @@ def draw_play(screen, const, var):
 
     screen.blit(Alpha_screen, (0, 0))
     
-    pos = list(pg.mouse.get_pos())
-    if in_rect(pos, (1580 - 90, 90, 90, 60)):
-        draw_jokbo(screen, Match)
-    
     return player1, player2, tick+1
 
 def draw_play_delay(screen, const, var):
