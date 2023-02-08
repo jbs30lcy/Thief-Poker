@@ -472,20 +472,27 @@ def main():
                         p2.showc = []
                         showc_tmp = sp.get_playing(p2.team, Phase)
                         for card in p2.card_list:
-                            if card.equals(showc_tmp[0]) or card.equals(showc_tmp[1]):
+                            if card.equals(showc_tmp[0]):
                                 p2.showc.append(card)
+                                showc_tmp.remove(showc_tmp[0])
+                            if card.equals(showc_tmp[1]):
+                                p2.showc.append(card)
+                                showc_tmp.remove(showc_tmp[1])
                         mode = 'flop'
                         t = 0
                     else:
                         showc_tmp = sp.get_playing(p2.team, Phase)
                         for card in p2.card_list:
-                            if card.equals(showc_tmp[0]) or card.equals(showc_tmp[1]):
+                            if card.equals(showc_tmp[0]):
                                 p2.showc.append(card)
+                                showc_tmp.remove(showc_tmp[0])
+                            if card.equals(showc_tmp[1]):
+                                p2.showc.append(card)
+                                showc_tmp.remove(showc_tmp[1])
                         mode = "result"
                         t = 0
                     p1.active_list = []
                     p2.active_list = []
-                    
                 
             clock.tick(60)
             pg.display.update()
