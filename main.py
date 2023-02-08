@@ -62,8 +62,12 @@ def set_last_coin(sp, var):
 
     for card in player1.card_list:
         if card.color == 'Black':
-            pass
-
+            if protect_joker > 0:
+                protect_joker -= 1
+                player1.coin = int(0.9 * player1.coin)
+            else:
+                player1.coin = int(0.8 * player1.coin)
+    sp.update_cell('chips', player1.team+1, player1.coin)
     return coin, player1
 
 def main():
@@ -82,12 +86,13 @@ def main():
     connect_mode = 'Single'
     tf1, tf2 = 0, 0 # 조건부 작동되는 tick
     common = None
-    Rule = [['Straight'], []]
+    #Rule = [['Straight'], []]
     dd = []
     is_esc = False
     p2num = -1
     item_x1, item_x2 = -1, -1
     hover = -1
+    coin2 = 0
     CWIDTH, CHEIGHT = WIDTH, HEIGHT
     CQWIDTH, CQHEIGHT = QWIDTH, QHEIGHT
 
@@ -197,7 +202,9 @@ def main():
                         r1, r2, reward_coin = set_para(Match)
                         p1.Rule = [r1, r2]
                         p2.Rule = [r1, r2]
-                        
+                        p1.item = sp.get_item()
+                        p1.using_item = sp.get_acell('using_item', p1.team+1)
+                        item_x1, item_x2 = random.sample(range(6), 2) # 사실 이렇게 해놓으면 안되지만.. 아몰라ㅠㅠ
                         p1.active_list = []
                         p2.active_list = []
                         p1.shown = sp.get_shown()
@@ -261,6 +268,7 @@ def main():
                     hover = i
                     break
                 j += 1
+            if t == 0: p1.using_item = -1
             
             t = draw_get_match(ori_screen, (p1, hover), t)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
@@ -270,7 +278,6 @@ def main():
                     Match += 1
                     p2num = 0
                 mode = 'reset'
-                p1.using_item = -1
             
             if connect_mode == 'Multi' and t % WAITING_TIME == 0:
                 p1.item = sp.get_item()
@@ -279,7 +286,6 @@ def main():
                         Match += 1 
                         p2num = sp.get_opponent(Match) 
                     mode = 'reset'
-                    p1.using_item = -1
                     # Phase = Phase%2 + 1
 
             clock.tick(60)
@@ -733,7 +739,7 @@ def main():
                     pg.quit()
                     sys.exit()
             
-            p1, tf1, tf2, t = draw_end(ori_screen, (p1, tf1, tf2, t))
+            p1, coin2, tf1, tf2, t = draw_end(ori_screen, (p1, coin2, tf1, tf2, t))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             clock.tick(60)

@@ -316,13 +316,15 @@ class Player:
         
         #냈던 카드 전부 뽑기
         for card in self.showc[1:]:
-            if card == self.showc[1]:
+            f = True
+            if card == self.showc[1] and not self.shown:
                 self.shown.append(card)
                 continue
             for c2 in self.shown:
                 if card.equals(c2):
+                    f = False
                     break
-            else: self.shown.append(card)
+            if f: self.shown.append(card)
 
 class Item:
     def __init__(self, num):

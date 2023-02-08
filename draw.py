@@ -582,11 +582,13 @@ def draw_delay(screen, var):
     return tick+1
 
 def draw_end(screen, var):
-    player1, tickf1, tickf2, tick = var
+    player1, coin, tickf1, tickf2, tick = var
 
     title = NSE[96].render('Game End!', True, Black)
     coin_text = NS[36].render('보유 코인: ', True, Black)
-    coin_amoumt_text = NSE[96].render(str(player1.coin), True, (3.5*tickf1, 3*tickf1, 0))
+    coin_amoumt_text = NSE[96].render(str(coin), True, (3.5*tickf1, 3*tickf1, 0))
+    tetkai_text = NSE[56].render('텟카이', True, Black).convert_alpha()
+    tetkai_text.set_alpha(tickf2*255/30)
 
     screen.fill(Grey1)
     Mblit(screen, title, (800, 150))
@@ -600,13 +602,18 @@ def draw_end(screen, var):
         Mblit(screen, card.img_std, (x, y))
 
         if tick == 50 + 50*i and card.color == 'Black':
-            if player1.item[0] == 0: player1.coin = int(player1.coin * 0.8)
-            else: player1.item[0] -= 1
+            if player1.item[0] == 0: coin = int(coin * 0.8)
+            else:
+                player1.item[0] -= 1
+                coin = int(coin * 0.9)
+                tickf2 = 30
             tickf1 = 60
     if tickf1: tickf1 -= 1
-    if tickf2: tickf2 -= 1
+    if tickf2:
+        Mblit(screen, tetkai_text, (1200, 450))
+        tickf2 -= 1
 
-    return player1, tickf1, tick+1
+    return player1, coin, tickf1, tickf2, tick+1
 
 def draw_jokbo(screen, Match):
     Mblit(screen, white_bg, (800, 450))
