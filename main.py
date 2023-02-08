@@ -346,7 +346,9 @@ def main():
                 item_x1, item_x2 = sp.get_item_target()
                 p2 = Player(p2num, sp.get_hand(p2num))
             p1.active_list = []
+            p2.active_list = []
             p1.showc = []
+            p2.showc = []
             p1.Rank = ''
             p2.Rank = ''
             p1.isdd = False
@@ -477,20 +479,27 @@ def main():
                         p2.showc = []
                         showc_tmp = sp.get_playing(p2.team, Phase)
                         for card in p2.card_list:
-                            if card.equals(showc_tmp[0]) or card.equals(showc_tmp[1]):
+                            if card.equals(showc_tmp[0]):
                                 p2.showc.append(card)
+                                showc_tmp.remove(showc_tmp[0])
+                            if card.equals(showc_tmp[1]):
+                                p2.showc.append(card)
+                                showc_tmp.remove(showc_tmp[1])
                         mode = 'flop'
                         t = 0
                     else:
                         showc_tmp = sp.get_playing(p2.team, Phase)
                         for card in p2.card_list:
-                            if card.equals(showc_tmp[0]) or card.equals(showc_tmp[1]):
+                            if card.equals(showc_tmp[0]):
                                 p2.showc.append(card)
+                                showc_tmp.remove(showc_tmp[0])
+                            if card.equals(showc_tmp[1]):
+                                p2.showc.append(card)
+                                showc_tmp.remove(showc_tmp[1])
                         mode = "result"
                         t = 0
                     p1.active_list = []
                     p2.active_list = []
-                    
                 
             clock.tick(60)
             pg.display.update()
@@ -541,7 +550,8 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN and not is_esc:
                     mode, Round, t, choose, p1, p2 = mouse_result((WIDTH, HEIGHT), (mode, Round, t, choose, p1, p2))
-                    if not mode == 'result': p2.shown = sp.get_shown(p2.team)
+                    if not mode == 'result':
+                        if connect_mode == 'Multi': p2.shown = sp.get_shown(p2.team)
                 if event.type == KEYDOWN and event.key == K_ESCAPE:
                     is_esc = not is_esc
                     if is_esc == False:
