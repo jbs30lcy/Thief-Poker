@@ -152,21 +152,25 @@ class Director():
         director_table_col = 6
         player_l = [ [''] * player_table_col for x in range(self.num_players)]
         director_l = [ [''] * director_table_col for x in range(self.num_players)]
+        items = [['0|0|0|0|0'] for x in range(self.num_players)]
+        using_items = [['-1'] for x in range(self.num_players)]
+
         self.sp.update_cell_range(1, player_table_col, 2 + (self.num-1)*8, self.num_players, player_l)
         self.sp.update_cell_range(2, director_table_col, 2 + (self.num-1)*8, self.num_players, director_l, False)
-        
+        self.sp.update_cell_range('item', 1, 2 + (self.num-1)*8, self.num_players, items)
+        self.sp.update_cell_range('using_item', 1, 2 + (self.num-1)*8, self.num_players, using_items)
 
-    def joker_penalty(self):
-        teams = list(range(1,self.num_players+1))
-        chips = list(map(int, self.sp.get_cell_range('chips', 1, 2, self.num_players)))
-        hands = self.sp.get_cell_range("hand", 1, 2, self.num_players)
+    # def joker_penalty(self):
+    #     teams = list(range(1,self.num_players+1))
+    #     chips = list(map(int, self.sp.get_cell_range('chips', 1, 2, self.num_players)))
+    #     hands = self.sp.get_cell_range("hand", 1, 2, self.num_players)
         
-        res = []
-        for i in range(self.num_players):
-            c = int(chips[i] * ( 0.8 ** ((hands[i].count('0') // 2) + (hands[i].count('Black'))))    )
-            res.append( c )
+    #     res = []
+    #     for i in range(self.num_players):
+    #         c = int(chips[i] * ( 0.8 ** ((hands[i].count('0') // 2) + (hands[i].count('Black'))))    )
+    #         res.append( c )
         
-        self.sp.update_cell_range( "chips", 1, 2, self.num_players, res )
+    #     self.sp.update_cell_range( "chips", 1, 2, self.num_players, res )
 
     def get_ranking(self):
         teams = list(range(1,self.num_players+1))
@@ -186,7 +190,13 @@ class Director():
         ret = [  "|".join([ ((x[:-1] + f"{x[1]}") if  (x[-1] == '0' or x[-1].find('Black') > -1)  else (x[:-1] +  f"{8 - int(x[-1])}")) for x in c.split('|') ]) for c in cards ]
        #print("returned"*10)
         self.sp.update_cell_range('hand', 1, 2, self.num_players, ret)
-        return ret 
+        return ret
+
+    def assign_item(self, team, item):
+        items = list(map(int, self.sp.get_acell('item', team+1).split('|')))
+        items[item] += 1
+        items_str = "|".join(list(map(str, items)))
+        self.sp.update_cell('item', team+1, items_str)
 
 form_class = uic.loadUiType("DirectorQT.ui")[0]
 
@@ -208,7 +218,13 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
         self.btn_mkItem.clicked.connect(self.btn_mk_item)
         
     def btn_mk_item(self):
-        pass
+        item      = self.get(self.cbox_itemNum, ob_type = "cbox")
+        item_team = self.get(self.cbox_itemTNum, ob_type = "cbox")
+        group     = self.get(self.txt_group)
+
+        self.dr = Director(group, self.num_players)
+        self.group = group
+        self.dr.assign_item(item_team, item)
 
     def btn_match_start(self):
         group = self.get(self.txt_group)
@@ -239,10 +255,10 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
                 return
             
             if match == FINAL_MATCH:
-                self.dr.joker_penalty()
+                # self.dr.joker_penalty()
                 self.update_ranking()
                 return
-            SHOW_CHIPS = [ True if x < 12 else False for x in range(FINAL_MATCH+1)  ]
+            SHOW_CHIPS = [ True if x < 11 else False for x in range(FINAL_MATCH+1)  ]
             SHOW_CHIPS[-1] = True
             self.update_ranking(show_chips= SHOW_CHIPS[match])
             if match in EXPLAIN_INFO:

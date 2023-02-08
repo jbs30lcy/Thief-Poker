@@ -54,6 +54,18 @@ def set_screen(size):
     pg.display.set_icon(icon)
     return screen
 
+def set_last_coin(sp, var):
+    coin, player1 = var
+    
+    coin = player1.coin
+    protect_joker = player1.item[0]
+
+    for card in player1.card_list:
+        if card.color == 'Black':
+            pass
+
+    return coin, player1
+
 def main():
 
     WIDTH, HEIGHT = 1600, 900
@@ -258,6 +270,7 @@ def main():
                     Match += 1
                     p2num = 0
                 mode = 'reset'
+                p1.using_item = -1
             
             if connect_mode == 'Multi' and t % WAITING_TIME == 0:
                 p1.item = sp.get_item()
@@ -266,12 +279,14 @@ def main():
                         Match += 1 
                         p2num = sp.get_opponent(Match) 
                     mode = 'reset'
+                    p1.using_item = -1
                     # Phase = Phase%2 + 1
 
             clock.tick(60)
             pg.display.update()   
 
         if mode == 'reset': # 죽일 수 있는 모드인줄 알았는데, 역시 잘 돌아가는 코드는 건들면 안됨. 이름만 init => reset으로 바꿈.
+            time.sleep(0.7)
             if Round == 1:
                 if p1.using_item >= 0: p1.item[p1.using_item] -= 1
                 if p1.using_item == 1:
@@ -293,26 +308,26 @@ def main():
                     item_x1, item_x2 = random.sample(range(6), 2) #len(p2.card_list)
                 else:
                     item_x1, item_x2 = -1, -1
-                if p1.using_item == 4 and connect_mode == 'Multi':
-                    for team in range(1, NUMBER_OF_TEAMS + 1):
-                        if team == p1.team: continue
-                        user_hand = sp.get_hand(team = team)
-                        while True:
-                            I = random.randint(0, 5)
-                            if not user_hand[I].color == 'Black': break
-                        while True:
-                            new_card = Card(random.choice(('Red', 'Blue', 'Yellow', 'Green')), random.randint(1, 7))
-                            if not new_card.equals(user_hand[I].color): break
-                        sp.upload_hand(team = team, hand_cards = user_hand)
+                # if p1.using_item == 4 and connect_mode == 'Multi':
+                #     for team in range(1, NUMBER_OF_TEAMS + 1):
+                #         if team == p1.team: continue
+                #         user_hand = sp.get_hand(team = team)
+                #         while True:
+                #             I = random.randint(0, 5)
+                #             if not user_hand[I].color == 'Black': break
+                #         while True:
+                #             new_card = Card(random.choice(('Red', 'Blue', 'Yellow', 'Green')), random.randint(1, 7))
+                #             if not new_card.equals(user_hand[I].color): break
+                #         sp.upload_hand(team = team, hand_cards = user_hand)
                 sp.upload_item(p1)
-                time.sleep(1)
+                time.sleep(0.7)
 
             choose = 0
             t, w = 0, -1
             #p1, Match = start(Round, (p1, Match)) # 이 부분 대신에 DB에서 끌고 와야 하지
             if Match == 1 and Round == 1:
                 if connect_mode == 'Single':
-                    p1.card_list = [Card('Black') for i in range(6)]# random.sample(make_whole(), 6)
+                    p1.card_list = random.sample(make_whole(), 6)
                     p2.card_list = random.sample(make_whole(), 6)
             if connect_mode == 'Multi':
                 p1.card_list = sp.get_hand()
@@ -326,6 +341,9 @@ def main():
             if Round == 1:
                 p1.pre.append([])
                 p2.pre.append([])
+                p1.shown = []
+                p2.shown = []
+                sp.upload_shown(p1.shown)
             r1, r2, reward_coin = set_para(Match)
             p1.Rule = [r1, r2]
             p2.Rule = [r1, r2]
@@ -437,16 +455,23 @@ def main():
                 if sp.has_conducted(p2.team,Match, Round, Phase):
                     #p2.active_list = sp.get_playing(p2.team, Phase)
                     if Phase == 1:
-                        p2.showc = sp.get_playing(p2.team, Phase)
+                        p2.showc = []
+                        showc_tmp = sp.get_playing(p2.team, Phase)
+                        for card in p2.card_list:
+                            if card.equals(showc_tmp[0]) or card.equals(showc_tmp[1]):
+                                p2.showc.append(card)
                         mode = 'flop'
                         t = 0
                     else:
-                        p2.showc += sp.get_playing(p2.team, Phase)
+                        showc_tmp = sp.get_playing(p2.team, Phase)
+                        for card in p2.card_list:
+                            if card.equals(showc_tmp[0]) or card.equals(showc_tmp[1]):
+                                p2.showc.append(card)
                         mode = "result"
-                        t = 0 
+                        t = 0
                     p1.active_list = []
                     p2.active_list = []
-                    print(f"P2.showc :: {p2.showc}")
+                    
                 
             clock.tick(60)
             pg.display.update()
@@ -497,6 +522,7 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN and not is_esc:
                     mode, Round, t, choose, p1, p2 = mouse_result((WIDTH, HEIGHT), (mode, Round, t, choose, p1, p2))
+                    if not mode == 'result': p2.shown = sp.get_shown(p2.team)
                 if event.type == KEYDOWN and event.key == K_ESCAPE:
                     is_esc = not is_esc
                     if is_esc == False:
@@ -676,9 +702,11 @@ def main():
                     sys.exit()
                 if t >= 90 and event.type == MOUSEBUTTONDOWN and not is_esc:
                     mode, t, tf1 = mouse_exchange_result((WIDTH, HEIGHT), Match, (mode, t, tf1))
-                    if connect_mode == 'Multi' and mode == "get_match":
+                    if connect_mode == 'Multi' and not mode == "exchange_result":
                         sp.upload_hand(hand_cards = p1.card_list)
                         sp.update_cell('phase', p1.team+1, 4, False)
+                    if connect_mode == 'Multi' and mode == 'end':
+                        coin2, p1 = set_last_coin(sp, (coin2, p1))# end에서 한번 더 바뀔거야. 그거 바꿔야돼
 
             if t == 50:
                 p1.card_list[p1.ex_index] = p2.ex_card
@@ -699,7 +727,7 @@ def main():
                     pg.quit()
                     sys.exit()
             
-            p1, tf1, t = draw_end(ori_screen, (p1, tf1, t))
+            p1, tf1, tf2, t = draw_end(ori_screen, (p1, tf1, tf2, t))
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             clock.tick(60)

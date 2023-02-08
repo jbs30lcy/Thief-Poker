@@ -574,7 +574,7 @@ def draw_delay(screen, var):
     return tick+1
 
 def draw_end(screen, var):
-    player1, tickf1, tick = var
+    player1, tickf1, tickf2, tick = var
 
     title = NSE[96].render('Game End!', True, Black)
     coin_text = NS[36].render('보유 코인: ', True, Black)
@@ -596,5 +596,6 @@ def draw_end(screen, var):
             else: player1.item[0] -= 1
             tickf1 = 60
     if tickf1: tickf1 -= 1
+    if tickf2: tickf2 -= 1
 
     return player1, tickf1, tick+1

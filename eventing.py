@@ -152,8 +152,6 @@ def mouse_play(screen_size, var):
                 choose = 0.5
                 player1.showc = player1.active_list.copy()
                 #player2.showc = player2.active_list.copy()
-                player1.set_shown()
-                player2.set_shown()
                 tick = -1                
                 mode = 'play_delay'
             if choose == 1:
@@ -188,7 +186,7 @@ def mouse_result(screen_size, var):
     pos[0] *= (1600/WIDTH)
     pos[1] *= (900/HEIGHT)
 
-    if tick >= 70 and in_rect(pos, (1580 - 90, 20, 90, 60)):
+    if tick >= 110 and in_rect(pos, (1580 - 90, 20, 90, 60)):
         Round += 1
         mode = 'reset'
         if Round == 3:
@@ -313,6 +311,6 @@ def mouse_exchange_result(screen_size, const, var):
         mode = 'get_match'
         if Match == 14:
             mode = 'end'
-            tickf1 = 0
+            tickf1 = tickf2 = 0
 
     return mode, tick, tickf1

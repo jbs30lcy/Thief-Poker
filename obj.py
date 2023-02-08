@@ -13,7 +13,7 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 NUMBER_OF_GROUPS = 26
-NUMBER_OF_TEAMS = 8
+NUMBER_OF_TEAMS = 2 #8
 
 White  = (255, 255, 255)
 Black  = (0, 0, 0)
@@ -316,6 +316,9 @@ class Player:
         
         #냈던 카드 전부 뽑기
         for card in self.showc[1:]:
+            if card == self.showc[1]:
+                self.shown.append(card)
+                continue
             for c2 in self.shown:
                 if card.equals(c2):
                     break
