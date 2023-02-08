@@ -543,7 +543,8 @@ def main():
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN and not is_esc:
                     mode, Round, t, choose, p1, p2 = mouse_result((WIDTH, HEIGHT), (mode, Round, t, choose, p1, p2))
-                    if not mode == 'result': p2.shown = sp.get_shown(p2.team)
+                    if not mode == 'result':
+                        if connect_mode == 'Multi': p2.shown = sp.get_shown(p2.team)
                 if event.type == KEYDOWN and event.key == K_ESCAPE:
                     is_esc = not is_esc
                     if is_esc == False:

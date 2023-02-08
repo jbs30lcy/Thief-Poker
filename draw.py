@@ -361,6 +361,7 @@ def draw_flop(screen, const, var):
         common_surf = pg.Surface((180, 270), pg.SRCALPHA).convert_alpha()
         common_surf.blit(player1.common.img_std, (0, 0))
         common_x, common_y = 1200, 450
+    myteam_text = NS[30].render(f'Team {player1.team}', True, White)
 
     if 0 <= tick <= 80: # mode가 바뀔 때 tick = -1임.
         myrank = NS[30].render(str2Kr(player1.rank2p(player1.showc[-2:])), True, White)
@@ -379,6 +380,7 @@ def draw_flop(screen, const, var):
     Mblit(screen, yourrank, (800, 300), 'ML')
     Mblit(screen, Coin_icon, (20, 855), 'ML')
     Mblit(screen, coin_text, (80, 855), 'ML')
+    Mblit(screen, myteam_text, (1580, 880), 'BR')
     if tick >= 60 or tick == -1: Mblit(screen, common_surf, (common_x, common_y))
     if tick > 80 or tick == -1: Mblit(screen, Next_button, (1580, 20), 'TR')
 
@@ -407,6 +409,7 @@ def draw_result(screen, const, var):
         if w == 1: win_text = NSE[96].render('YOU WIN!', True, Black)
         if w == 2: win_text = NSE[96].render('YOU LOSE', True, Black)
     coin_text = NS[30].render(str(player1.coin), True, White)
+    myteam_text = NS[30].render(f'Team {player1.team}', True, White)
 
     screen.blit(bg1, (0, 0))
     Mblit(screen, player1.showc[1].img_std, (400, 615))
@@ -426,6 +429,7 @@ def draw_result(screen, const, var):
         Mblit(screen, Next_button, (1580, 20), 'TR')
     Mblit(screen, Coin_icon, (20, 855), 'ML')
     Mblit(screen, coin_text, (80, 855), 'ML')
+    Mblit(screen, myteam_text, (1580, 880), 'BR')
 
     return player1, player2, tick+1
 
@@ -443,6 +447,7 @@ def draw_exchange_lose(screen, const, var):
     Match_text = NS[24].render(f'Match {Match}', True, White)
     warn_text = NSE[72].render('Choose more card.', True, Black).convert_alpha()
     warn_text.set_alpha(tickf1*255/30)
+    myteam_text = NS[30].render(f'Team {player1.team}', True, White)
 
     screen.blit(bg1, (0, 0))
     for i in range(c1):
@@ -464,6 +469,7 @@ def draw_exchange_lose(screen, const, var):
     
     Mblit(screen, title, (800, 80))
     Mblit(screen, Match_text, (20, 20), 'TL')
+    Mblit(screen, myteam_text, (1580, 880), 'BR')
     Mblit(screen, Next_button, (1580, 20), 'TR')
     Mblit(Alpha_screen, warn_text, (800, 450))
     
@@ -481,6 +487,7 @@ def draw_exchange_draw(screen, const, var):
     Match_text = NS[24].render(f'Match {Match}', True, White)
     warn_text = NSE[72].render('Choose more card.', True, Black).convert_alpha()
     warn_text.set_alpha(tickf1*255/30)
+    myteam_text = NS[30].render(f'Team {player1.team}', True, White)
 
     screen.blit(bg1, (0, 0))
     for i in range(c1):
@@ -499,6 +506,7 @@ def draw_exchange_draw(screen, const, var):
     
     Mblit(screen, title, (800, 80))
     Mblit(screen, Match_text, (20, 20), 'TL')
+    Mblit(screen, myteam_text, (1580, 880), 'BR')
     Mblit(screen, Next_button, (1580, 20), 'TR')
     Mblit(Alpha_screen, warn_text, (800, 450))
     
@@ -542,6 +550,7 @@ def draw_exchange_result(screen, const, var):
     yourcard_surf.set_alpha((tick-60)*255/30)
     if tick >= 90:
         title = NS[72].render('교환  결과', True, White)
+    myteam_text = NS[30].render(f'Team {player1.team}', True, White)
 
     screen.blit(bg1, (0, 0))
     for i in range(c1):
@@ -560,6 +569,7 @@ def draw_exchange_result(screen, const, var):
                 Mblit(screen, yourcard_surf, (x, 615))
             continue
         Mblit(screen, card.img_std, (x, 615))
+    Mblit(screen, myteam_text, (1580, 880), 'BR')
     if tick >= 90:
         Mblit(screen, title, (800, 80))
         Mblit(screen, Next_button, (1580, 20), 'TR')
