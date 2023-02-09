@@ -127,7 +127,10 @@ class Director():
                 used_item = self.sp.get_item_use(i)
                 if used_item == 1 : # 카드 다시 뽑기
                     hand = self.sp.get_hand(i)
-                    changed_index = random.sample(list(range(len(hand))), 2)
+                    changed_index = None
+                    while True:
+                        changed_index = random.sample(list(range(len(hand))), 2)
+                        if hand[changed_index[0]].val * hand[changed_index[1]].val:break                    
                     for j in changed_index:
                         new_card = Card(use_random=True, except_card=hand[j])
                         hand[j] = new_card
