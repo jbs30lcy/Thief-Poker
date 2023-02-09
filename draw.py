@@ -8,7 +8,7 @@ pg.init()
 bg1 = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'com_bg.png')), (1600, 900))
 bg2 = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'com_bg_2.png')), (1600, 900))
 
-def Mblit(screen, surf, pos, poscon = 'MM'):
+def Mblit(screen, surf, pos, poscon = 'MM', rel_pos = True):
     x, y = pos
     r, c = poscon
     rect = surf.get_rect()
@@ -174,16 +174,18 @@ def draw_choose_key(screen, const, var):
     return tickf1, tickf2
 
 def draw_get_match(screen, const, var):
-    player1, hover = const
+    player1, hover, text_index, Match = const
     tick = var
 
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
     title = NS[72].render("게임 준비 중...", True, Black)
-    if not hover == -1: desc_text = NS[40].render(Item_desc[hover], True, Black)
+    TMI_text = NS[36].render(Didyouknow[text_index], True, Grey3)
+    if not hover == -1: desc_text = NS[30].render(Item_desc[hover], True, Black)
     j = 0
 
     screen.fill(Grey1)
-    Mblit(screen, title, (800, 150))
+    Mblit(screen, title, (800, 100))
+    if not Match == 7: Mblit(screen, TMI_text, (800, 200))
     for i in range(5):
         num_text = NS[18].render(str(player1.item[i]), True, Black)
         if player1.item[i]:
@@ -191,7 +193,7 @@ def draw_get_match(screen, const, var):
             Mblit(screen, num_text, (170 + 200*j, 860))
             if player1.using_item == i: Mrect(screen, Red, (100 + 200*j, 750, 160, 240), 3)
             j += 1
-    if not hover == -1: Mblit(screen, desc_text, (800, 500))
+    if not hover == -1: Mblit(screen, desc_text, (800, 590))
     screen.blit(Alpha_screen, (0, 0))
     return tick+1
 

@@ -71,7 +71,11 @@ Item_desc = [
     '이 매치에서 획득하는 코인이 두 배가 됩니다.',
     '다른 사람들이 가지고 있던 카드가 하나씩 전부 바뀝니다.'
 ]
-Item_IMGlist = [pg.transform.scale(pg.image.load(resource_path(img_dir_path + f"Item_{x}.png")), (160, 240)) for x  in range(5)]
+Item_IMGlist = [pg.transform.scale(pg.image.load(resource_path(img_dir_path + f"Item_{x}.png")), (160, 240)) for x in range(5)]
+
+Didyouknow = [
+    'KAIST는 Korea Advanced Institute of Science and Technology의 줄임말입니다.'
+]
 
 def in_rect(pos, rect):
     return rect[0] <= pos[0] <= rect[0] + rect[2] and rect[1] <= pos[1] <= rect[1] + rect[3]
@@ -280,7 +284,8 @@ class Player:
         n2 = arr[1].val
         c1 = arr[0].color
         c2 = arr[1].color
-
+        if c1 == c2 == 'Black':
+            return '7 Black Pair'
         if c1 == 'Black':
             return f'{n2} Black Pair'
         if c2 == 'Black':
@@ -298,6 +303,8 @@ class Player:
         c2 = arr[1].color
         c3 = arr[2].color
 
+        if c2 == c3 == 'Black':
+            return f'{n1} Black Three of a kind'
         if c1 == 'Black':
             if n2 == n3: return f'{n2} Black Three of a kind'
             else: return f'{max(n2, n3)} Black Pair'

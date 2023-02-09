@@ -6,6 +6,7 @@ from setting import *
 from draw import *
 from eventing import *
 from spreadsheet import *
+from dinosaur_game import *
 
 pg.init()
 pg.display.set_caption("도둑 포커")
@@ -95,6 +96,7 @@ def main():
     coin2 = 0
     CWIDTH, CHEIGHT = WIDTH, HEIGHT
     CQWIDTH, CQHEIGHT = QWIDTH, QHEIGHT
+    game = Dinosaur_game()
 
     p1 = Player()
     p2 = Player()
@@ -254,27 +256,37 @@ def main():
             pg.display.update()
 
         if mode == 'get_match':  # Finding player - 하는 화면
-            for event in pg.event.get():
+            event_list = pg.event.get()
+            for event in event_list:
                 if event.type == QUIT:
                     pg.quit()
                     sys.exit()
                 if event.type == MOUSEBUTTONDOWN and not is_esc:
                     p1, clicked = mouse_get_match((WIDTH, HEIGHT), p1)
-                    if clicked : sp.upload_item_use(p1.using_item) 
+                    if clicked : sp.upload_item_use(p1.using_item)
+                if event.type == KEYDOWN and not game.playing == 'PLAY':
+                    if game.playing == 'STOP': game = Dinosaur_game()
+                    game.playing = 'PLAY'
+            if game.playing == 'PLAY': game.event(event_list, pg.key.get_pressed())
+
             pos = list(pg.mouse.get_pos())
             pos[0] *= (1600/WIDTH)
             pos[1] *= (900/HEIGHT)
             j, hover = 0, -1
-
             for i in range(5):
                 if not p1.item[i]: continue
                 if in_rect(pos, (20+200*j, 630, 160, 240)):
                     hover = i
                     break
                 j += 1
-            if t == 0: p1.using_item = -1
+            if t == 0:
+                p1.using_item = -1
+                sp.upload_item_use(p1.using_item)
+            if t % 300 == 0:
+                text_index = random.choice(range(len(Didyouknow)))
             
-            t = draw_get_match(ori_screen, (p1, hover), t)
+            t = draw_get_match(ori_screen, (p1, hover, text_index, Match), t)
+            if not game.playing == 'HIDE': game.draw(ori_screen)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             if connect_mode == 'Single' and t == 180:
@@ -730,6 +742,7 @@ def main():
                     if connect_mode == 'Multi' and not mode == "exchange_result":
                         sp.upload_hand(hand_cards = p1.card_list)
                         sp.update_cell('phase', p1.team+1, 4, False)
+                        game = Dinosaur_game()
                     if connect_mode == 'Multi' and mode == 'end':
                         coin2, p1 = set_last_coin(sp, (coin2, p1))# end에서 한번 더 바뀔거야. 그거 바꿔야돼
 
