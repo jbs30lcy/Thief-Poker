@@ -119,7 +119,7 @@ class Dinosaur_game():
         max_score_text = NS[20].render(f'{int(Dinosaur_game.Max_score//10)}', True, Black)
         Mblit(self.screen, score_text,     (1180, 20), 'TR')
         Mblit(self.screen, max_score_text, (1180, 50), 'TR')
-        if int(self.nubjuk.x / 600) > int((self.nubjuk.x - self.level) / 600) and self.playing == 'PLAY' and random.random() < 1/2:
+        if int(self.nubjuk.x / (500 + 0.01*self.level)) > int((self.nubjuk.x - self.level) / (500 + 0.01*self.level)) and self.playing == 'PLAY' and random.random() < 1/2:
             self.enemy_list.append(Enemy(self.nubjuk.x + 1200, random.randint(1, 3)))
             if len(self.enemy_list) > 10:
                 self.enemy_list.remove(self.enemy_list[0])
@@ -134,7 +134,7 @@ class Dinosaur_game():
                 self.nubjuk.vy = 0
                 self.state = 'walking'
             if self.state == 'jumping':
-                self.nubjuk.vy -= 0.387
+                self.nubjuk.vy -= 1.5
             self.level = 10 + 0.0002 * self.nubjuk.x
 
         Mblit(Uscreen, self.screen, (800, 400), rel_pos = False)
@@ -146,7 +146,7 @@ class Dinosaur_game():
                     self.state = 'jumping'
                     self.nubjuk.img = self.nubjuk.stand_img
                     self.nubjuk.h = 60
-                    self.nubjuk.vy = 11.613
+                    self.nubjuk.vy = 22.5
         key = key_pressed
         if key[K_DOWN]:
             if self.state == 'walking':
@@ -156,7 +156,7 @@ class Dinosaur_game():
                 self.nubjuk.img = self.nubjuk.stand_img
                 self.nubjuk.h = 60
                 self.state = 'dropping'
-                self.nubjuk.vy = -11.613
+                self.nubjuk.vy = -22.5
         else:
             self.nubjuk.img = self.nubjuk.stand_img
             self.nubjuk.h = 60

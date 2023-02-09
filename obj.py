@@ -4,6 +4,7 @@
 import pygame as pg
 import os
 import random
+from TMI import *
 
 def resource_path(relative_path):
     try:
@@ -72,10 +73,6 @@ Item_desc = [
     '다른 사람들이 가지고 있던 카드가 하나씩 전부 바뀝니다.'
 ]
 Item_IMGlist = [pg.transform.scale(pg.image.load(resource_path(img_dir_path + f"Item_{x}.png")), (160, 240)) for x in range(5)]
-
-Didyouknow = [
-    'KAIST는 Korea Advanced Institute of Science and Technology의 줄임말입니다.'
-]
 
 def in_rect(pos, rect):
     return rect[0] <= pos[0] <= rect[0] + rect[2] and rect[1] <= pos[1] <= rect[1] + rect[3]

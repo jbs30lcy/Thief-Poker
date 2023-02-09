@@ -284,7 +284,7 @@ def main():
             if t == 0:
                 p1.using_item = -1
                 sp.upload_item_use(p1.using_item)
-            if t % 300 == 0:
+            if t % 1200 == 0:
                 text_index = random.choice(range(len(Didyouknow)))
             
             t = draw_get_match(ori_screen, (p1, hover, text_index, Match), t)

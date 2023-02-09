@@ -179,13 +179,22 @@ def draw_get_match(screen, const, var):
 
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
     title = NS[72].render("게임 준비 중...", True, Black)
-    TMI_text = NS[36].render(Didyouknow[text_index], True, Grey3)
+    if len(Didyouknow[text_index]) == 1:
+        TMI_text_1 = NS[32].render(Didyouknow[text_index][0], True, Grey3)
+    if len(Didyouknow[text_index]) == 2:
+        TMI_text_1 = NS[28].render(Didyouknow[text_index][0], True, Grey3)
+        TMI_text_2 = NS[28].render(Didyouknow[text_index][1], True, Grey3)
     if not hover == -1: desc_text = NS[30].render(Item_desc[hover], True, Black)
     j = 0
 
     screen.fill(Grey1)
     Mblit(screen, title, (800, 100))
-    if not Match == 7: Mblit(screen, TMI_text, (800, 200))
+    if not Match == 7:
+        if len(Didyouknow[text_index]) == 1:
+            Mblit(screen, TMI_text_1, (800, 200))
+        if len(Didyouknow[text_index]) == 2:
+            Mblit(screen, TMI_text_1, (800, 180))
+            Mblit(screen, TMI_text_2, (800, 220))
     for i in range(5):
         num_text = NS[18].render(str(player1.item[i]), True, Black)
         if player1.item[i]:
