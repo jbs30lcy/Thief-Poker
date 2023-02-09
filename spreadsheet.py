@@ -99,7 +99,7 @@ class SP:
     def get_shown(self, team = 0):
         if team == 0 : team = self.team
         txt = self.get_acell('shown', team+1)
-        return [Card(x, fromcell =True) for x in txt.split("|")]
+        return [Card(x, fromcell =True) for x in txt.split("|")] if txt != "" else []
     
     def upload_shown(self, shown = []):
         self.update_cell('shown', self.team+1, self.encoding_list(shown, 1))

@@ -214,7 +214,9 @@ def main():
                         p2.active_list = []
                         p1.shown = sp.get_shown()
                         p2.shown = sp.get_shown(p2.team)
-                        if Phase == 1: #1페이즈를 진행함 -> 2페이즈임
+                        if Phase == 0:
+                            mode = 'play_pre'
+                        elif Phase == 1: #1페이즈를 진행함 -> 2페이즈임
                             mode = 'play_delay'
                             tmp_showc = sp.get_playing(phase=1)
                             tmp_card_list = p1.card_list.copy()
@@ -374,6 +376,8 @@ def main():
             r1, r2, reward_coin = set_para(Match)
             p1.Rule = [r1, r2]
             p2.Rule = [r1, r2]
+            sp.update_cell_range("match", 3, p1.team+1, 1, [Match, 1, 0], False)
+            
             if 1 in p1.Rule[1] or 2 in p1.Rule[1]:
                 mode = 'showDD'
             else:
