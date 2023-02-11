@@ -60,6 +60,7 @@ class Director():
         res = []
         except_joker = False
         if use_setting:
+            # 스페이드 1 다이아 2 클로버 3 하트 4
             tmp = [ "00|11|23|24|16|47",
                     "00|41|12|14|35|26",
                     "00|21|32|13|34|45",
@@ -67,7 +68,10 @@ class Director():
                     "22|14|25|46|37|17",
                     "31|31|22|13|45|26",
                     "32|23|44|15|16|27",
-                    "41|12|43|24|36|47"]
+                    "41|12|43|24|36|47",
+                    "00|21|42|33|44|17",
+                    "11|43|25|35|36|27"
+                    ]
             if order_players == []:
                 order_players = list(range(self.num_players))
                 random.shuffle(order_players)
