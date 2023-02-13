@@ -59,7 +59,7 @@ def str2Kr(s):
         return f'{blacks} {s[:3]} 투 페어'
     if 'Pair' in s:
         return f'{blacks} {s[0]} 원 페어'
-    return f'족보 없음 {s[8:]}'
+    return f'노 페어 {s[8:]}'
 
 NS  = [pg.font.Font(resource_path(img_dir_path + '/NanumSquareNeoOTF-cBd.otf'), x) for x in range(1, 100)]
 NSE = [pg.font.Font(resource_path(img_dir_path + '/NanumSquareNeoOTF-dEb.otf'), x) for x in range(1, 100)]
@@ -635,6 +635,20 @@ def draw_end(screen, var):
         tickf2 -= 1
 
     return player1, coin, tickf1, tickf2, tick+1
+
+def draw_credit(screen):
+    title = NSE[72].render("도둑  포커", True, Black)
+    developer_text = NSE[60].render("프로그램 개발자: 임찬열, 권혁원", True, Black)
+    myteam_text    = NSE[36].render("도둑포커 팀: 배서위, 박정원, 임선재, 정재원, 전재민, 차민, 탁건우", True, Black)
+    joojup1_text   = NSE[48].render("도둑 포커는 서비스 종료입니다ㅠㅠ", True, Black)
+    joojup2_text   = NSE[48].render("혹시 게임이 다시 하고 싶다면 개발자에게 메일로 연락해주세용^^", True, Black)
+
+    screen.fill(Grey1)
+    Mblit(screen, title, (800, 100))
+    Mblit(screen, developer_text, (800, 300))
+    Mblit(screen, myteam_text,    (800, 370))
+    Mblit(screen, joojup1_text,   (800, 500))
+    Mblit(screen, joojup2_text,   (800, 550))
 
 def draw_jokbo(screen, Match):
     Mblit(screen, white_bg, (800, 450))

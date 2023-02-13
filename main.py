@@ -103,6 +103,10 @@ def main():
     sp = SP()
     WAITING_TIME = 30
 
+    sp.cur.execute("SELECT * FROM etc where col=1")
+    if sp.cur.fetchall()[0]['is_end'] == 1111111111:
+        mode = 'credit'
+
     # mode 변수에 따라 실행되는 코드가 달라짐
     while True:
         if mode == 'main': # 초록색 게임 시작 화면
@@ -782,6 +786,18 @@ def main():
                     sys.exit()
             
             t = draw_delay(ori_screen, t)
+            screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
+
+            clock.tick(60)
+            pg.display.update()
+
+        if mode == 'credit': # 전새기 끝나고, etc테이블의 특정 값을 1111111111로 바꾸면
+            for event in pg.event.get():
+                if event.type == QUIT:
+                    pg.quit()
+                    sys.exit()
+            
+            draw_credit(ori_screen)
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             clock.tick(60)
