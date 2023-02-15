@@ -272,7 +272,7 @@ def main():
                 if event.type == MOUSEBUTTONDOWN and not is_esc:
                     p1, clicked = mouse_get_match((WIDTH, HEIGHT), p1)
                     if clicked : sp.upload_item_use(p1.using_item)
-                if event.type == KEYDOWN and not game.playing == 'PLAY':
+                if event.type == KEYDOWN and event.key == K_r and not game.playing == 'PLAY':
                     if game.playing == 'STOP': game = Dinosaur_game()
                     game.playing = 'PLAY'
             if game.playing == 'PLAY': game.event(event_list, pg.key.get_pressed())
@@ -496,8 +496,12 @@ def main():
                     p2.showc += add_showc
                     mode = "result"
                     t = 0
-                    if p1.rank() == 'error': p1.showc = sp.force_get_showc(Round, p1.team)
-                    if p2.rank() == 'error': p2.showc = sp.force_get_showc(Round, p2.team)
+                    if p1.rank() == 'error':
+                        time.sleep(0.5)
+                        p1.showc = sp.force_get_showc(Round, p1.team)
+                    if p2.rank() == 'error':
+                        time.sleep(0.5)
+                        p2.showc = sp.force_get_showc(Round, p2.team)
                 p1.active_list = []
                 p2.active_list = []
             

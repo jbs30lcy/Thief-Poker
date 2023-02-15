@@ -78,8 +78,8 @@ class Dinosaur_game():
         pg.draw.rect(self.screen, Green, (0, 270, 1200, 30))
         self.screen.blit(self.nubjuk.img, (270, 270 - self.nubjuk.y - self.nubjuk.h))
         if self.playing == 'STOP':
-            pg.draw.circle(self.screen, White, (285, 280 - self.nubjuk.y - self.nubjuk.h), 5)
-            pg.draw.circle(self.screen, White, (315, 280 - self.nubjuk.y - self.nubjuk.h), 5)
+            pg.draw.circle(self.screen, White, (285, 282 - self.nubjuk.y - self.nubjuk.h), 5)
+            pg.draw.circle(self.screen, White, (315, 282 - self.nubjuk.y - self.nubjuk.h), 5)
         for enemy in self.enemy_list:
             enemy.blit(self.screen, self.nubjuk.x)
             if self.collide(enemy):
@@ -93,9 +93,12 @@ class Dinosaur_game():
         Mblit(self.screen, score_text,     (1180, 20), 'TR')
         Mblit(self.screen, max_score_text, (1180, 45), 'TR')
         Mblit(self.screen, world_record,   (1180, 70), 'TR')
-        if WR == self.nubjuk.x // 10 and self.playing == 'STOP':
-            is_world_record = NS[50].render('World Record!!', True, Red)
-            Mblit(self.screen, is_world_record, (600, 150))
+        if self.playing == 'STOP':
+            if WR == self.nubjuk.x // 10:
+                dying_text = NS[50].render('World Record!!', True, Red)
+            else:
+                dying_text = NS[40].render('R키를 눌러 재시작', True, Black)
+            Mblit(self.screen, dying_text, (600, 150))
         if int(self.nubjuk.x / (500 + 0.03*self.level)) > int((self.nubjuk.x - self.level) / (500 + 0.03*self.level)) and self.playing == 'PLAY' and random.random() < 1/2:
             self.enemy_list.append(Enemy(self.nubjuk.x + 1200, random.randint(1, 4)))
             if len(self.enemy_list) > 10:
@@ -121,14 +124,13 @@ class Dinosaur_game():
     def event(self, out_event, key_pressed):
         if self.nubjuk.x % 400 < 200: self.nubjuk.stand_img = self.nubjuk.si1
         else: self.nubjuk.stand_img = self.nubjuk.si2
-        for event in out_event:
-            if event.type == KEYDOWN:
-                if self.state == 'walking' and (event.key == K_SPACE or event.key == K_UP):
-                    self.state = 'jumping'
-                    self.nubjuk.img = self.nubjuk.stand_img
-                    self.nubjuk.h = 60
-                    self.nubjuk.vy = 22.5
         key = key_pressed
+        if key[K_SPACE] or key[K_UP]:
+            if self.state == 'walking':
+                self.state = 'jumping'
+                self.nubjuk.img = self.nubjuk.stand_img
+                self.nubjuk.h = 60
+                self.nubjuk.vy = 22.5
         if key[K_DOWN]:
             if self.state == 'walking':
                 self.nubjuk.img = self.nubjuk.lie_img
