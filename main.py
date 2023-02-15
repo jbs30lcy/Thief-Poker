@@ -104,8 +104,10 @@ def main():
     WAITING_TIME = 30
 
     sp.cur.execute("SELECT * FROM etc where col=1")
-    if sp.cur.fetchall()[0]['is_end'] == 1111111111:
+    fetch = sp.cur.fetchall()[0]
+    if fetch['is_end'] == 1111111111:
         mode = 'credit'
+    WR = fetch['wr']
 
     # mode 변수에 따라 실행되는 코드가 달라짐
     while True:
@@ -288,11 +290,14 @@ def main():
             if t == 0:
                 p1.using_item = -1
                 sp.upload_item_use(p1.using_item)
-            if t % 300 == 0:
+            if t % 1200 == 0:
                 text_index = random.choice(range(len(Didyouknow)))
             
             t = draw_get_match(ori_screen, (p1, hover, text_index, Match), t)
-            if not game.playing == 'HIDE': game.draw(ori_screen)
+            if not game.playing == 'HIDE':
+                score = game.draw(ori_screen, WR)
+                if connect_mode == 'Multi' and score > 0: sp.cur.execute(f"UPDATE etc set WR={score} where col=1")
+
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             if connect_mode == 'Single' and t == 180:
@@ -308,7 +313,9 @@ def main():
                         Match += 1 
                         p2num = sp.get_opponent(Match) 
                     mode = 'reset'
-                    # Phase = Phase%2 + 1
+                
+                sp.cur.execute("SELECT * FROM etc where col=1")
+                WR = sp.cur.fetchall()[0]['wr']
 
             clock.tick(60)
             pg.display.update()   
