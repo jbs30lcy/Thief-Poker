@@ -106,8 +106,6 @@ class SP:
 
     def get_common(self, round=1):
         cell = self.get_acell(f"common{round}", self.team+1, use_player_sheet=True)
-        #print(cell)
-        #print(Card(cell, fromcell=True))
         return Card(cell, fromcell=True)
     
     def clear_phase(self):
@@ -211,6 +209,9 @@ class SP:
         cell = self.get_acell('item', team+1)
         items = self.decoding_list(cell, 1, int)
         return items
+
+    def force_get_showc(self, Round, team):
+        return self.get_playing(team, 1) + self.get_playing(team, 2) + self.get_common(Round)
 
     # 보조 메소드들
     def encoding_list(self, l = [], dimension = 1):

@@ -2,7 +2,7 @@
 # 색상, 파일 경로, 카드 이미지 집합, Card class, Player class
 
 import pygame as pg
-import os
+import os, sys
 import random
 from TMI import *
 
@@ -37,6 +37,7 @@ Brown1 = (227, 181, 140)
 Card_IMGlist = {}
 CI_half = {}
 CI_std = {}
+CI_small = {}
 colors = ("Black", "Red", "Yellow", "Blue", "Green")
 colors_dict = {"Black":0, "Red":1, "Yellow":2, "Blue":3, "Green":4}
 NUMBER_OF_COLORS = 4
@@ -56,6 +57,7 @@ Card_IMGlist["Hide"] = pg.transform.scale(pg.image.load(resource_path(img_dir_pa
 for card in Card_IMGlist:
     CI_half[card] = pg.transform.scale(Card_IMGlist[card], (300, 450))
     CI_std[card] = pg.transform.scale(Card_IMGlist[card], (180, 270))
+    CI_small[card] = pg.transform.scale(Card_IMGlist[card], (160, 240))
 arrow_img = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'arrow.png')), (30, 15))
 
 MATCH_PARA = [
@@ -104,6 +106,7 @@ class Card:
         self.img = Card_IMGlist[self.name]
         self.img_half = CI_half[self.name]
         self.img_std = CI_std[self.name]
+        self.img_small = CI_small[self.name]
 
     def equals(self, o):
         return str(self) == str(o)
@@ -222,6 +225,8 @@ class Player:
     def rank(self):
         if self.Rank: return self.Rank  # memoization
         R = 'No rank (1)'
+        if not len(self.showc) == 5:
+            return 'error'
         for i in range(5):
             black_in = 0
             new_showc = self.showc.copy()

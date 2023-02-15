@@ -145,7 +145,7 @@ def mouse_play(screen_size, var):
                 player1.active_list.append(card)
                 if len(player1.active_list) > 2:
                     del player1.active_list[0]
-    if in_rect(pos, (1580 - 90, 20, 90, 60)):
+    if in_rect(pos, (1580 - 90, 880 - 60, 90, 60)):
         if len(player1.active_list) < 2:
             tickf1 = 30
         else:
@@ -173,7 +173,7 @@ def mouse_flop(screen_size, var):
     pos[0] *= (1600/WIDTH)
     pos[1] *= (900/HEIGHT)
 
-    if in_rect(pos, (1580 - 90, 20, 90, 60)):
+    if in_rect(pos, (1580 - 90, 880 - 60, 90, 60)):
         tick = -1
         player1, player2 = phase2((player1, player2))
         mode = 'play'
@@ -188,7 +188,7 @@ def mouse_result(screen_size, var):
     pos[0] *= (1600/WIDTH)
     pos[1] *= (900/HEIGHT)
 
-    if tick >= 110 and in_rect(pos, (1580 - 90, 20, 90, 60)):
+    if tick >= 110 and in_rect(pos, (1580 - 90, 880 - 60, 90, 60)):
         Round += 1
         mode = 'reset'
         if Round == 3:
@@ -227,7 +227,7 @@ def mouse_exchange_lose(screen_size, var):
                     player1.active_list.append(card)
                     if len(player1.active_list) > 1:
                         del player1.active_list[0]
-        if in_rect(pos, (1580 - 90, 20, 90, 60)):
+        if in_rect(pos, (1580 - 90, 880 - 60, 90, 60)):
             if len(player1.active_list) < 1:
                 tickf1 = 30
             else:
@@ -285,7 +285,7 @@ def mouse_exchange_draw(screen_size, var):
                 player2.active_list.append(card)
                 if len(player2.active_list) > 1:
                     del player2.active_list[0]
-    if in_rect(pos, (1580 - 90, 20, 90, 60)):
+    if in_rect(pos, (1580 - 90, 880 - 60, 90, 60)):
         if len(player2.active_list) < 1:
             tickf1 = 30
         else:
@@ -308,7 +308,7 @@ def mouse_exchange_result(screen_size, const, var):
     pos[0] *= (1600/WIDTH)
     pos[1] *= (900/HEIGHT)
 
-    if in_rect(pos, (1580 - 90, 20, 90, 60)):
+    if in_rect(pos, (1580 - 90, 880 - 60, 90, 60)):
         tick = -1
         mode = 'get_match'
         if Match == 14:

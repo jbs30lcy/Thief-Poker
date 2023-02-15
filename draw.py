@@ -5,8 +5,10 @@ from moving import *
 import math
 pg.init()
 
-bg1 = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'com_bg.png')), (1600, 900))
-bg2 = pg.transform.scale(pg.image.load(resource_path(img_dir_path + 'com_bg_2.png')), (1600, 900))
+bg_list = []
+for i in range(5):
+    bg_list.append(pg.transform.scale(pg.image.load(resource_path(img_dir_path + f'com_bg_{i+1}.png')), (1600, 900)))
+bg1, bg2, bg3, bg4, bg5 = bg_list
 
 def Mblit(screen, surf, pos, poscon = 'MM', rel_pos = True):
     x, y = pos
@@ -61,8 +63,8 @@ def str2Kr(s):
         return f'{blacks} {s[0]} 원 페어'
     return f'노 페어 {s[8:]}'
 
-NS  = [pg.font.Font(resource_path(img_dir_path + '/NanumSquareNeoOTF-cBd.otf'), x) for x in range(1, 100)]
-NSE = [pg.font.Font(resource_path(img_dir_path + '/NanumSquareNeoOTF-dEb.otf'), x) for x in range(1, 100)]
+NS  = [pg.font.Font(resource_path(img_dir_path + '/BMJUA_otf.otf'), x) for x in range(1, 100)]
+NSE = [pg.font.Font(resource_path(img_dir_path + '/a가을운동회M.ttf'), x) for x in range(1, 100)]
 NS.insert(0, 0)
 NSE.insert(0, 0)
 
@@ -126,13 +128,12 @@ def draw_option(screen, csize, cqsize):
     
 
 def draw_main(screen):
-
-    title = NSE[96].render("도둑   포커", True, White)
-    single_text = NS[40].render("싱글 모드", True, Black)
-    multi_text  = NS[40].render("멀티 모드", True, Black)
-    resume_text = NS[40].render("재접속 모드", True, Black)
+    title = NSE[96].render("도둑  포커", True, White)
+    single_text = NS[50].render("싱글 모드", True, Black)
+    multi_text  = NS[50].render("멀티 모드", True, Black)
+    resume_text = NS[50].render("재접속 모드", True, Black)
     
-    screen.blit(bg1, (0, 0))
+    screen.blit(bg3, (0, 0))
     Mblit(screen, title, (800, 250))
     pg.draw.rect(screen, Brown1, (320, 600, 300, 100))
     pg.draw.rect(screen, Brown1, (650, 600, 300, 100))
@@ -179,16 +180,19 @@ def draw_get_match(screen, const, var):
 
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
     title = NS[72].render("게임 준비 중...", True, Black)
+    dyk_text = NS[28].render("알고 계셨나요?", True, Black)
+    dyk_text = pg.transform.rotate(dyk_text, 10)
     if len(Didyouknow[text_index]) == 1:
-        TMI_text_1 = NS[32].render(Didyouknow[text_index][0], True, Grey3)
+        TMI_text_1 = NS[35].render(Didyouknow[text_index][0], True, Grey3)
     if len(Didyouknow[text_index]) == 2:
-        TMI_text_1 = NS[28].render(Didyouknow[text_index][0], True, Grey3)
-        TMI_text_2 = NS[28].render(Didyouknow[text_index][1], True, Grey3)
+        TMI_text_1 = NS[31].render(Didyouknow[text_index][0], True, Grey3)
+        TMI_text_2 = NS[31].render(Didyouknow[text_index][1], True, Grey3)
     if not hover == -1: desc_text = NS[30].render(Item_desc[hover], True, Black)
     j = 0
 
     screen.fill(Grey1)
     Mblit(screen, title, (800, 100))
+    Mblit(screen, dyk_text, (300, 135))
     if not Match == 7:
         if len(Didyouknow[text_index]) == 1:
             Mblit(screen, TMI_text_1, (800, 200))
@@ -238,17 +242,13 @@ def draw_play(screen, const, var):
     c2 = len(player2.card_list)
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
 
-    if choose == 0 or choose == 0.5:
-        title = NS[72].render("카드 두 장을 선택하세요", True, White)
-    if choose == 1:
-        title = NS[72].render("다른 카드 두 장을 선택하세요", True, White)
-    Match_text = NS[24].render(f'Match {Match}', True, White)
-    Round_text = NS[24].render(f'Round {Round}', True, White)
-    myteam_text = NS[30].render(f'Team {player1.team}', True, White)
+    match_text = NSE[36].render(str(Match), True, White)
+    round_text = NSE[36].render(str(Round), True, White)
+    myteam_text = NS[40].render(f'Team {player1.team}', True, White)
     yourteam_text = NSE[48].render(str(player2.team), True, Black)
-    warn_text = NSE[72].render('Choose more card.', True, Black).convert_alpha()
+    warn_text = NS[72].render('Choose more card.', True, Black).convert_alpha()
     warn_text.set_alpha(tickf1*255/30)
-    coin_text = NS[30].render(str(player1.coin), True, White)
+    coin_text = NSE[36].render(str(player1.coin), True, White)
     common_card = player1.common
 
     p2_isblack = False
@@ -309,14 +309,12 @@ def draw_play(screen, const, var):
         pg.draw.rect(screen, Yellow, (1195, 150, 210, 300), 3, border_radius = 15)
 
     pg.draw.circle(screen, White, (180, 450), 50)
-    Mblit(screen, title, (800, 70))
-    Mblit(screen, Match_text, (20, 20), 'TL')
-    Mblit(screen, Round_text, (20, 55), 'TL')
-    Mblit(screen, Next_button, (1580, 20), 'TR')
+    Mblit(screen, match_text, (180, 43), 'ML')
+    Mblit(screen, round_text, (180, 91), 'ML')
+    Mblit(screen, coin_text, (180, 139), 'ML')
+    Mblit(screen, Next_button, (1580, 880), 'BR')
     Mblit(screen, Jokbo_button, (1580, 90), 'TR')
-    Mblit(screen, Coin_icon, (20, 855), 'ML')
-    Mblit(screen, coin_text, (80, 855), 'ML')
-    Mblit(screen, myteam_text, (1580, 880), 'BR')
+    Mblit(screen, myteam_text, (1580, 20), 'TR')
     Mblit(screen, yourteam_text, (180, 450))
     Mblit(Alpha_screen, warn_text, (800, 450))
     if p2_isblack: Mblit(screen, blackcard_text, (800, flowing_y))
@@ -334,7 +332,7 @@ def draw_play_delay(screen, const, var):
     c1 = len(player1.card_list)
     x0 = 850 - c1*50
 
-    screen.blit(bg2, (0, 0))
+    screen.blit(bg5, (0, 0))
     for i in range(c1):
         card = player1.card_list[i]
         Mblit(screen, card.img_half, (x0 + i*100, 700))
@@ -356,44 +354,43 @@ def draw_flop(screen, const, var):
     tick = var
 
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
-    x1, x2 = 400, 600
+    mx1, mx2 = 327, 607
+    yx1, yx2 = 387, 627
     if 0 <= tick < 40:
-        _, p2card_y = easing((0, -135), (0, 285), m_quadout, tick, 40)
+        _, p1card_y = easing((0, 900), (0, 547), m_quadout, tick, 40)
+        _, p2card_y = easing((0, 0), (0, 218), m_quadout, tick, 40)
     else:
-        _, p2card_y = 0, 285
-    p1card_y = 900 - p2card_y
+        _, p1card_y = 0, 547
+        _, p2card_y = 0, 218
 
     if 60 <= tick <= 80:
         common_surf = pg.Surface((180, 270), pg.SRCALPHA).convert_alpha()
         common_surf.blit(player1.common.img_std, (0, 0))
         common_surf.set_alpha((tick-60)*255/20)
-        common_x, common_y = easing((1400, 450), (1200, 450), m_sineout, tick-60, 20)
+        common_x, common_y = easing((1727, 383), (1427, 383), m_sineout, tick-60, 20)
     if tick > 80 or tick == -1:
         common_surf = pg.Surface((180, 270), pg.SRCALPHA).convert_alpha()
         common_surf.blit(player1.common.img_std, (0, 0))
-        common_x, common_y = 1200, 450
-    myteam_text = NS[30].render(f'Team {player1.team}', True, White)
+        common_x, common_y = 1427, 383
+    myteam_text = NS[40].render(f'Team {player1.team}', True, White)
 
     if 0 <= tick <= 80: # mode가 바뀔 때 tick = -1임.
-        myrank = NS[30].render(str2Kr(player1.rank2p(player1.showc[-2:])), True, White)
-        yourrank = NS[30].render(str2Kr(player2.rank2p(player2.showc[-2:])), True, White)
+        p1rank_text = NS[40].render(str2Kr(player1.rank2p(player1.showc[-2:])), True, White)
+        p2rank_text = NS[38].render(str2Kr(player2.rank2p(player2.showc[-2:])), True, White)
     else:
-        myrank = NS[30].render(str2Kr(player1.rank3p(player1.showc)), True, White)
-        yourrank = NS[30].render(str2Kr(player2.rank3p(player2.showc)), True, White)
-    coin_text = NS[30].render(str(player1.coin), True, White)
+        p1rank_text = NS[40].render(str2Kr(player1.rank3p(player1.showc)), True, White)
+        p2rank_text = NS[38].render(str2Kr(player2.rank3p(player2.showc)), True, White)
 
     screen.blit(bg1, (0, 0))
-    Mblit(screen, player1.showc[-2].img_std, (x1, p1card_y))
-    Mblit(screen, player1.showc[-1].img_std, (x2, p1card_y))
-    Mblit(screen, player2.showc[-2].img_std, (x1, p2card_y))
-    Mblit(screen, player2.showc[-1].img_std, (x2, p2card_y))
-    Mblit(screen, myrank, (800, 600), 'ML')
-    Mblit(screen, yourrank, (800, 300), 'ML')
-    Mblit(screen, Coin_icon, (20, 855), 'ML')
-    Mblit(screen, coin_text, (80, 855), 'ML')
-    Mblit(screen, myteam_text, (1580, 880), 'BR')
+    Mblit(screen, player1.showc[-2].img_std, (mx1, p1card_y))
+    Mblit(screen, player1.showc[-1].img_std, (mx2, p1card_y))
+    Mblit(screen, player2.showc[-2].img_small, (yx1, p2card_y))
+    Mblit(screen, player2.showc[-1].img_small, (yx2, p2card_y))
+    Mblit(screen, p1rank_text, (800, 740))
+    Mblit(screen, p2rank_text, (800, 50))
+    Mblit(screen, myteam_text, (1580, 20), 'TR')
     if tick >= 60 or tick == -1: Mblit(screen, common_surf, (common_x, common_y))
-    if tick > 80 or tick == -1: Mblit(screen, Next_button, (1580, 20), 'TR')
+    if tick > 80 or tick == -1: Mblit(screen, Next_button, (1580, 880), 'BR')
 
     return tick+1
 
@@ -402,45 +399,46 @@ def draw_result(screen, const, var):
     player1, player2, tick = var
 
     if 0 <= tick < 40:
-        _, p2card_y = easing((0, -135), (0, 285), m_quadout, tick, 40)
+        _, p1card_y = easing((0, 900), (0, 547), m_quadout, tick, 40)
+        _, p2card_y = easing((0, 0), (0, 218), m_quadout, tick, 40)
     if tick >= 40 or tick == -1:
-        _, p2card_y = 0, 285
-    p1card_y = 900 - p2card_y
+        _, p1card_y = 0, 547
+        _, p2card_y = 0, 218
     common = player1.common
 
     if tick >= 40 or tick == -1:
         score1 = player1.str2score(player1.rank())
         score2 = player2.str2score(player2.rank())
-        if 400 <= score1 < 600 and player2.isdd: p2rank_text = NS[32].render('레인보우', True, White)
-        else: p2rank_text = NS[32].render(str2Kr(player2.rank()), True, White)
-        if 400 <= score2 < 600 and player1.isdd: p1rank_text = NS[32].render('레인보우', True, White)
-        else: p1rank_text = NS[32].render(str2Kr(player1.rank()), True, White)
+        if 400 <= score1 < 600 and player2.isdd: p2rank_text = NS[38].render('레인보우', True, White)
+        else: p2rank_text = NS[38].render(str2Kr(player2.rank()), True, White)
+        if 400 <= score2 < 600 and player1.isdd: p1rank_text = NS[40].render('레인보우', True, White)
+        else: p1rank_text = NS[40].render(str2Kr(player1.rank()), True, White)
     if tick >= 70 or tick == -1:
         if w == 0: win_text = NSE[96].render('DRAW', True, Black)
         if w == 1: win_text = NSE[96].render('YOU WIN!', True, Black)
         if w == 2: win_text = NSE[96].render('YOU LOSE', True, Black)
     coin_text = NS[30].render(str(player1.coin), True, White)
-    myteam_text = NS[30].render(f'Team {player1.team}', True, White)
+    myteam_text = NS[40].render(f'Team {player1.team}', True, White)
 
     screen.blit(bg1, (0, 0))
-    Mblit(screen, player1.showc[1].img_std, (400, 615))
-    Mblit(screen, player1.showc[2].img_std, (600, 615))
-    Mblit(screen, player2.showc[1].img_std, (400, 285))
-    Mblit(screen, player2.showc[2].img_std, (600, 285))
-    Mblit(screen, player1.showc[3].img_std, (800, p1card_y))
-    Mblit(screen, player1.showc[4].img_std, (1000, p1card_y))
-    Mblit(screen, player2.showc[3].img_std, (800, p2card_y))
-    Mblit(screen, player2.showc[4].img_std, (1000, p2card_y))
-    Mblit(screen, common.img_std, (1200, 450))
+    Mblit(screen, player1.showc[1].img_std,   (327, 547))
+    Mblit(screen, player1.showc[2].img_std,   (607, 547))
+    Mblit(screen, player2.showc[1].img_small, (387, 218))
+    Mblit(screen, player2.showc[2].img_small, (627, 218))
+    Mblit(screen, player1.showc[3].img_std,   (887, p1card_y))
+    Mblit(screen, player1.showc[4].img_std,   (1167, p1card_y))
+    Mblit(screen, player2.showc[3].img_small, (867, p2card_y))
+    Mblit(screen, player2.showc[4].img_small, (1107, p2card_y))
+    Mblit(screen, common.img_std, (1427, 383))
     if tick >= 40 or tick == -1:
-        Mblit(screen, p1rank_text, (800, 820))
-        Mblit(screen, p2rank_text, (800, 70))
+        Mblit(screen, p1rank_text, (800, 740))
+        Mblit(screen, p2rank_text, (800, 50))
     if tick >= 70 or tick == -1:
         Mblit(screen, win_text, (800, 450))
-        Mblit(screen, Next_button, (1580, 20), 'TR')
+        Mblit(screen, Next_button, (1580, 880), 'BR')
     Mblit(screen, Coin_icon, (20, 855), 'ML')
     Mblit(screen, coin_text, (80, 855), 'ML')
-    Mblit(screen, myteam_text, (1580, 880), 'BR')
+    Mblit(screen, myteam_text, (1580, 20), 'TR')
 
     return player1, player2, tick+1
 
@@ -455,12 +453,11 @@ def draw_exchange_lose(screen, const, var):
         title = NS[72].render("상대에게 줄 카드를 선택하세요", True, White)
     if choose == 1:
         title = NS[72].render("상대에게 뺏어올 카드를 선택하세요", True, White)
-    Match_text = NS[24].render(f'Match {Match}', True, White)
-    warn_text = NSE[72].render('Choose more card.', True, Black).convert_alpha()
+    warn_text = NS[72].render('Choose more card.', True, Black).convert_alpha()
     warn_text.set_alpha(tickf1*255/30)
-    myteam_text = NS[30].render(f'Team {player1.team}', True, White)
+    myteam_text = NS[40].render(f'Team {player1.team}', True, White)
 
-    screen.blit(bg1, (0, 0))
+    screen.blit(bg4, (0, 0))
     for i in range(c1):
         card = player1.card_list[i]
         x = 900 - 100*c1 + 200*i
@@ -479,9 +476,8 @@ def draw_exchange_lose(screen, const, var):
             pg.draw.rect(Alpha_screen, GreyA, (x - 90, 150, 180, 270), border_radius = 15)
     
     Mblit(screen, title, (800, 80))
-    Mblit(screen, Match_text, (20, 20), 'TL')
-    Mblit(screen, myteam_text, (1580, 880), 'BR')
-    Mblit(screen, Next_button, (1580, 20), 'TR')
+    Mblit(screen, myteam_text, (1580, 20), 'TR')
+    Mblit(screen, Next_button, (1580, 880), 'BR')
     Mblit(Alpha_screen, warn_text, (800, 450))
     
     screen.blit(Alpha_screen, (0, 0))
@@ -495,12 +491,11 @@ def draw_exchange_draw(screen, const, var):
     s2 = len(player2.shown)
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
     title = NS[72].render("상대에게 뺏어올 카드를 선택하세요", True, White)
-    Match_text = NS[24].render(f'Match {Match}', True, White)
-    warn_text = NSE[72].render('Choose more card.', True, Black).convert_alpha()
+    warn_text = NS[72].render('Choose more card.', True, Black).convert_alpha()
     warn_text.set_alpha(tickf1*255/30)
-    myteam_text = NS[30].render(f'Team {player1.team}', True, White)
+    myteam_text = NS[40].render(f'Team {player1.team}', True, White)
 
-    screen.blit(bg1, (0, 0))
+    screen.blit(bg4, (0, 0))
     for i in range(c1):
         card = player1.card_list[i]
         x = 900 - 100*c1 + 200*i
@@ -516,9 +511,8 @@ def draw_exchange_draw(screen, const, var):
             pg.draw.rect(screen, Red, (x - 90, 150, 180, 270), 3, border_radius = 15)
     
     Mblit(screen, title, (800, 80))
-    Mblit(screen, Match_text, (20, 20), 'TL')
-    Mblit(screen, myteam_text, (1580, 880), 'BR')
-    Mblit(screen, Next_button, (1580, 20), 'TR')
+    Mblit(screen, myteam_text, (1580, 20), 'TR')
+    Mblit(screen, Next_button, (1580, 880), 'BR')
     Mblit(Alpha_screen, warn_text, (800, 450))
     
     screen.blit(Alpha_screen, (0, 0))
@@ -530,9 +524,9 @@ def draw_exchange_delay(screen, const, var):
     tick    = var
     c1      = len(player1.card_list)
 
-    screen.blit(bg1, (0, 0))
+    screen.blit(bg4, (0, 0))
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
-    title = NS[60].render('Please wait...', True, White)
+    title = NS[60].render('교환 중...', True, White)
 
     Mblit(screen, title, (800, 70))
     for i in range(c1):
@@ -561,9 +555,9 @@ def draw_exchange_result(screen, const, var):
     yourcard_surf.set_alpha((tick-60)*255/30)
     if tick >= 90:
         title = NS[72].render('교환  결과', True, White)
-    myteam_text = NS[30].render(f'Team {player1.team}', True, White)
+    myteam_text = NS[40].render(f'Team {player1.team}', True, White)
 
-    screen.blit(bg1, (0, 0))
+    screen.blit(bg4, (0, 0))
     for i in range(c1):
         card = player1.card_list[i]
         x = 900 - c1*100 + i*200
@@ -580,10 +574,10 @@ def draw_exchange_result(screen, const, var):
                 Mblit(screen, yourcard_surf, (x, 615))
             continue
         Mblit(screen, card.img_std, (x, 615))
-    Mblit(screen, myteam_text, (1580, 880), 'BR')
+    Mblit(screen, myteam_text, (1580, 20), 'TR')
     if tick >= 90:
         Mblit(screen, title, (800, 80))
-        Mblit(screen, Next_button, (1580, 20), 'TR')
+        Mblit(screen, Next_button, (1580, 880), 'BR')
 
     return tick+1
 
@@ -637,7 +631,7 @@ def draw_end(screen, var):
     return player1, coin, tickf1, tickf2, tick+1
 
 def draw_credit(screen):
-    title = NSE[72].render("도둑  포커", True, Black)
+    title = NSE[72].render("도둑 포커", True, Black)
     developer_text = NSE[60].render("프로그램 개발자: 임찬열, 권혁원", True, Black)
     myteam_text    = NSE[36].render("도둑포커 팀: 배서위, 박정원, 임선재, 정재원, 전재민, 차민, 탁건우", True, Black)
     joojup1_text   = NSE[48].render("도둑 포커는 서비스 종료입니다ㅠㅠ", True, Black)
@@ -658,3 +652,6 @@ def draw_jokbo(screen, Match):
         Mblit(screen, Jokbo_ver2, (800, 450))
     elif Match <= 14:
         Mblit(screen, Jokbo_ver3, (800, 450))        
+
+if __name__ == '__main__':
+    print("This File is not executable file. please run main.py.")

@@ -104,8 +104,10 @@ def main():
     WAITING_TIME = 30
 
     sp.cur.execute("SELECT * FROM etc where col=1")
-    if sp.cur.fetchall()[0]['is_end'] == 1111111111:
+    fetch = sp.cur.fetchall()[0]
+    if fetch['is_end'] == 1111111111:
         mode = 'credit'
+    WR = fetch['wr']
 
     # mode 변수에 따라 실행되는 코드가 달라짐
     while True:
@@ -160,7 +162,7 @@ def main():
                 if event.type == MOUSEBUTTONDOWN and is_esc:
                     (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT), ok_flag = set_screen_condition(screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
                     if ok_flag:
-                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass # 진짜 pass임.
+                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass
                         else:
                             WIDTH, HEIGHT = CWIDTH, CHEIGHT
                             QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
@@ -292,7 +294,10 @@ def main():
                 text_index = random.choice(range(len(Didyouknow)))
             
             t = draw_get_match(ori_screen, (p1, hover, text_index, Match), t)
-            if not game.playing == 'HIDE': game.draw(ori_screen)
+            if not game.playing == 'HIDE':
+                score = game.draw(ori_screen, WR)
+                if connect_mode == 'Multi' and score > 0: sp.cur.execute(f"UPDATE etc set WR={score} where col=1")
+
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
             if connect_mode == 'Single' and t == 180:
@@ -308,7 +313,9 @@ def main():
                         Match += 1 
                         p2num = sp.get_opponent(Match) 
                     mode = 'reset'
-                    # Phase = Phase%2 + 1
+                
+                sp.cur.execute("SELECT * FROM etc where col=1")
+                WR = sp.cur.fetchall()[0]['wr']
 
             clock.tick(60)
             pg.display.update()   
@@ -489,6 +496,8 @@ def main():
                     p2.showc += add_showc
                     mode = "result"
                     t = 0
+                    if p1.rank() == 'error': p1.showc = sp.force_get_showc(Round, p1.team)
+                    if p2.rank() == 'error': p2.showc = sp.force_get_showc(Round, p2.team)
                 p1.active_list = []
                 p2.active_list = []
             
