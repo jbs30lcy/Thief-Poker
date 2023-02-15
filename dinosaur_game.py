@@ -56,55 +56,6 @@ class Dinosaur_game():
         if self.nubjuk.x + 60 > enemy.x and self.nubjuk.x < enemy.x + 60: f += 1
         if self.nubjuk.y + self.nubjuk.h > enemy.y_down and self.nubjuk.y < enemy.y_up: f += 1
         return f == 2
-    
-    # def play(self):
-    #     while True:
-    #         if not self.playing: return 
-    #         for event in pg.event.get():
-    #             if event.type == QUIT:
-    #                 pg.quit()
-    #                 sys.exit()
-    #             if event.type == KEYDOWN:
-    #                 if self.state == 'walking' and (event.key == K_SPACE or event.key == K_UP):
-    #                     self.state = 'jumping'
-    #                     self.nubjuk.vy = 11.613
-
-    #         key = pg.key.get_pressed()
-    #         if key[K_DOWN]:
-    #             if self.state == 'walking':
-    #                 self.nubjuk.img = self.nubjuk.lie_img
-    #                 self.nubjuk.h = 30
-    #             if self.state == 'jumping':
-    #                 self.nubjuk.img = self.nubjuk.stand_img
-    #                 self.nubjuk.h = 60
-    #                 self.state = 'dropping'
-    #                 self.nubjuk.vy = -11.613
-    #         else:
-    #             self.nubjuk.img = self.nubjuk.stand_img
-    #             self.nubjuk.h = 60
-
-    #         self.screen.fill(Grey2)
-    #         pg.draw.rect(self.screen, Green, (0, 270, 1200, 30))
-    #         self.screen.blit(self.nubjuk.img, (270, 270 - self.nubjuk.y - self.nubjuk.h))
-    #         for enemy in self.enemy_list:
-    #             enemy.blit(self.screen, self.nubjuk.x)
-    #             if self.collide(enemy):
-    #                 self.playing = 'STOP'
-            
-    #         if self.nubjuk.x % 1200 == 0:
-    #             self.enemy_list.append(Enemy(random.randint(self.nubjuk.x + 1200, self.nubjuk.x + 1500), random.randint(1, 3)))
-
-    #         self.nubjuk.x += 10
-    #         self.nubjuk.y += self.nubjuk.vy
-    #         if self.nubjuk.y < 0:
-    #             self.nubjuk.y = 0
-    #             self.nubjuk.vy = 0
-    #             self.state = 'walking'
-    #         if self.state == 'jumping':
-    #             self.nubjuk.vy -= 0.387
-                
-    #         clock.tick(60)
-    #         pg.display.update()
 
     def draw(self, Uscreen):
         self.screen.fill(Grey2)

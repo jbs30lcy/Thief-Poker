@@ -160,7 +160,7 @@ def main():
                 if event.type == MOUSEBUTTONDOWN and is_esc:
                     (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT), ok_flag = set_screen_condition(screen, (CWIDTH, CHEIGHT), (CQWIDTH, CQHEIGHT))
                     if ok_flag:
-                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass # 진짜 pass임.
+                        if CWIDTH == WIDTH and CHEIGHT == HEIGHT and CQWIDTH == QWIDTH and CQHEIGHT == QHEIGHT: pass
                         else:
                             WIDTH, HEIGHT = CWIDTH, CHEIGHT
                             QWIDTH, QHEIGHT = CQWIDTH, CQHEIGHT
@@ -288,7 +288,7 @@ def main():
             if t == 0:
                 p1.using_item = -1
                 sp.upload_item_use(p1.using_item)
-            if t % 1200 == 0:
+            if t % 300 == 0:
                 text_index = random.choice(range(len(Didyouknow)))
             
             t = draw_get_match(ori_screen, (p1, hover, text_index, Match), t)
@@ -489,6 +489,8 @@ def main():
                     p2.showc += add_showc
                     mode = "result"
                     t = 0
+                    if p1.rank() == 'error': p1.showc = sp.force_get_showc(Round, p1.team)
+                    if p2.rank() == 'error': p2.showc = sp.force_get_showc(Round, p2.team)
                 p1.active_list = []
                 p2.active_list = []
             
