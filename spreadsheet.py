@@ -82,7 +82,7 @@ class SP:
         col = self.cols[f'phase{phase}']
         team += 1
         hand_cards = [str(x) for x in hand_cards]
-        card_text = "|".join(hand_cards)
+        card_text = self.encoding_list(hand_cards)
        #print("FDGDSHGS", card_text, col, team)
         self.update_cell(col, team, card_text)
         self.update_cell_range('match', 3, team, 1, [match, round, phase], use_player_sheet=False)
@@ -153,7 +153,7 @@ class SP:
         # ValueError: invalid literal for int() with base 10: '' 
         # 위 에러가 뜨면 빈 셀을 읽은 것
         if team == 0 : team = self.team
-        cell = self.get_acell( self.cols_dir['match'], team+1, use_player_sheet=False )
+        cell = self.get_acell( 'match', team+1, use_player_sheet=False )
         return 0 if self.cell_is_empty(cell) else int(cell)
 
     def get_opponent(self, match, team=0) :

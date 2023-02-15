@@ -5,7 +5,7 @@ import random
 import time
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5 import uic, QtGui
+from PyQt5 import uic, QtGui, QtCore
 
 OPPO2 = [
     [(1, 2)]
@@ -159,6 +159,23 @@ class Director():
             print("아직 경기가 끝나지 않았습니다.")
             return False
 
+    def ck_start(self):
+        cells = self.sp.get_cell_range("team", 1, 2, self.num_players, use_player_sheet=False)
+        ret = []
+        for cell in cells:
+            ret.append(False if self.sp.cell_is_empty(cell) else True) 
+
+        return ret 
+
+    def ck_match_list(self, match):
+        cells = self.sp.get_cell_range("phase", 1, 2, self.num_players, use_player_sheet=False)
+        ret = []
+        for i,cell in enumerate(cells):
+            print(i,cell)
+            ret.append(True if cell == '4' else False )
+        
+        return ret
+
     def game_setting(self, test=False):
         if test or self.sp.ck_players(self.num_players) : 
             print("GAME START")
@@ -239,7 +256,9 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
     dr = Director(1, NUMBER_OF_TEAMS)
     num_players = NUMBER_OF_TEAMS
     EXPLAINED = 2
-    
+    STARTED = False
+    item_name_dict = { "아이템 선택하기":5,"???":0, "바꿔줘 호애앵애애애애애애애애ㅐㅐㅐ애애ㅇ":1, "다~보인다 했제?!":2, "묻고 따블로 가!":3} 
+    IMG_SIZE = [900, 700, 900, 800] #족보 크기, 아이템 크기
 
     def __init__(self):
         #초기 설정
@@ -247,24 +266,60 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
         self.setupUi(self)
         self.setWindowTitle("도둑포커 디렉터용 파일")
         
+        #이미지 삽입
+        self.set_image(self.img_Jokbo, "./img/Jokbo_img_dir_1", self.IMG_SIZE[0], self.IMG_SIZE[1])
         #버튼에 기능 연결
         self.btn_matchStart.clicked.connect(self.btn_match_start)
         self.btn_mkItem.clicked.connect(self.btn_mk_item)
-        
+        self.btn_check.clicked.connect(self.btn_update_check_phase)
+        self.btn_gameStart.clicked.connect(self.btn_game_start)
+        self.btn_gameResume.clicked.connect(self.btn_game_resume)
+        self.cbox_itemNum.currentTextChanged.connect(self.combox_item_changed)
+
     def btn_mk_item(self):
-        item      = self.get(self.cbox_itemNum, ob_type = "cbox")
-        item_team = self.get(self.cbox_itemTNum, ob_type = "cbox")
-        group     = self.get(self.txt_group)
+        item      = self.get(self.cbox_itemNum, ob_type = "cbox", toint=False)
+        item_team = self.get(self.cbox_itemTNum, ob_type = "cbox", toint=True)
+        group     = self.get(self.txt_group, toint=True)
+        if item == "아이템 선택하기": 
+            self.warning("아이템을 선택해주세요!")
+            return
 
         # self.dr = Director(group, self.num_players)
         # self.group = group
+        item = self.item_name_dict[item]
         self.dr.assign_item(item_team, item)
 
+
+    def btn_game_start(self):
+        self.STARTED = True
+        self.btn_game_resume()
+        self.dr.clear_game()
+        self.warning("다들 입장해주세요!")
+
+    def btn_game_resume(self):
+
+        group = self.get(self.txt_group, toint=True)
+        self.num_players = self.get(self.txt_numPlayers, toint=True)
+
+        self.dr = Director(group, self.num_players)
+        self.group = group
+        
+        if self.STARTED == False:
+            m = self.dr.sp.get_match(1)
+            self.set_text(self.txt_matchNum, m)
+            self.warning(f"잠시 실수가 있었네요~\n match{m} 진행할게요!")
+
+    def combox_item_changed(self, value):    
+        # self.img_explain.setPixmap(pixmap)
+        # pixmap = QPixmap('cat.jpg')
+        value = self.item_name_dict[value]
+        self.set_image(self.img_explain, f"./img/item_{value}.png", self.IMG_SIZE[0],self.IMG_SIZE[1] )
+
     def btn_match_start(self):
-        group = self.get(self.txt_group)
-        match = self.get(self.txt_matchNum)
+        group = self.get(self.txt_group, toint=True)
+        match = self.get(self.txt_matchNum, toint=True) + 1
         FINAL_MATCH = 15
-        EXPLAIN_INFO = [1,4,8,11]
+        EXPLAIN_INFO = [4,8,11]
 
         if match <= 0:
             self.dr = Director(group, self.num_players)
@@ -298,49 +353,55 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
             if match in EXPLAIN_INFO:
                 if self.EXPLAINED == 0: #바뀌는 룰과 아이템 설명 완료
                     self.EXPLAINED = 2
-                    if match == EXPLAIN_INFO[3]:
+                    if match == EXPLAIN_INFO[-1]:
                         self.dr.making_hand_reversed()
 
                 elif self.EXPLAINED == 2:  
                     self.warning("미니게임 진행 후 아이템 저장을 완료해주세요!")
                     self.EXPLAINED = 1
-                    item = self.get(ob=self.cbox_itemNum, ob_type='cbox')
-                    print("ITEM : ", item)
-                    self.set_image(self.img_explain, f'./explain_img{item}.png')
+                    
                     
                     return
                 elif self.EXPLAINED == 1:
                     self.EXPLAINED = 0
                     self.warning("바뀐 룰을 확인해주세요!")
-                    self.set_image(self.img_Jokbo, f'./Jokbo_img{match}.png')
+                    self.set_image(self.img_Jokbo, f"./img/Jokbo_img_dir_{EXPLAIN_INFO.index(match)+2}.png",self.IMG_SIZE[0],self.IMG_SIZE[1])
+        
                     return
             
 
             self.dr.match_setting(match)
+            self.set_text(self.txt_matchNum, match)
             self.warning(f"{match}번 매치 진행")
             
-            self.set_text(self.txt_matchNum, match+1)
       
 
     def update_ranking(self, show_chips = True):
-
-        tb = self.table_ranking
-
-        tb.setColumnCount(2)
-        tb.setRowCount(self.num_players)
-        tb.clear()
-        tb.setFont(QtGui.QFont('맑은 고딕', 30))
-        tb.setHorizontalHeaderLabels(["Team","Chips"])
         ranking = self.dr.get_ranking()
-        
         for row, rank in enumerate(ranking):
-            for col, val in enumerate(rank):
-                val = val if show_chips else "비밀!"
-                tb.setItem(row,col,QTableWidgetItem(str(val)))
+            for col, val in enumerate(rank+['진행중']):
+                if show_chips == False and col == 2 : val = "-"
+                print(f"self.rank_table{col+1}_{row+1}")
+                self.set_text( eval(f"self.rank_table{col+1}_{row+1}"), str(val) )
+                    
+    def btn_update_check_phase(self):
+        m = self.get(self.txt_matchNum, toint=True)
+        if m == 0 :
+            for row, flag in enumerate(self.dr.ck_start()):
+                val = '접속 완료' if flag else '접속중' 
+                self.set_text( eval(f"self.rank_table3_{row+1}"), str(val) )
+                    
+        else:
+            for row, flag in enumerate(self.dr.ck_match_list(m)):
+                val = '매치 완료' if flag else '진행중' 
+                self.set_text( eval(f"self.rank_table3_{row+1}"), str(val) )
+            
 
-
-    def set_image(self, ob, img_link=""):
-        ob.setPixmap(QtGui.QPixmap(img_link))
+    def set_image(self, ob, img_link="", width = 0, height = 0):
+        pixmap = QtGui.QPixmap(img_link)
+        if width * height > 0:
+            pixmap = pixmap.scaled(width, height, QtCore.Qt.KeepAspectRatio)
+        ob.setPixmap(pixmap)
 
     def set_text(self, ob, text="", ob_type="text"  ): # 값 설정
         if ob_type=="text":
@@ -349,7 +410,7 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
         elif ob_type=="cbox":
             return False
 
-    def get(self, ob, ob_type="text", clear=False, toint = True): #값 return
+    def get(self, ob, ob_type="text", clear=False, toint = False): #값 return
         if ob_type=="text":
             s = ob.text().strip()
         elif ob_type=="cbox":
