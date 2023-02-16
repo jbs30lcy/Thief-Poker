@@ -258,16 +258,16 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
     EXPLAINED = 2
     STARTED = False
     item_name_dict = { "아이템 선택하기":5,"???":0, "바꿔줘 호애앵애애애애애애애애ㅐㅐㅐ애애ㅇ":1, "다~보인다 했제?!":2, "묻고 따블로 가!":3} 
-    IMG_SIZE = [900, 700, 900, 800] #족보 크기, 아이템 크기
-
+    IMG_SIZE = [900, 800, 788, 900] #족보 크기, 아이템 크기
     def __init__(self):
         #초기 설정
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle("도둑포커 디렉터용 파일")
-        
+        self.change_tab()
         #이미지 삽입
         self.set_image(self.img_Jokbo, "./img/Jokbo_img_dir_1", self.IMG_SIZE[0], self.IMG_SIZE[1])
+        self.set_image(self.img_explain, "./img/item_description_5.png", self.IMG_SIZE[2], self.IMG_SIZE[3])
         #버튼에 기능 연결
         self.btn_matchStart.clicked.connect(self.btn_match_start)
         self.btn_mkItem.clicked.connect(self.btn_mk_item)
@@ -275,6 +275,9 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
         self.btn_gameStart.clicked.connect(self.btn_game_start)
         self.btn_gameResume.clicked.connect(self.btn_game_resume)
         self.cbox_itemNum.currentTextChanged.connect(self.combox_item_changed)
+
+    def change_tab(self, index=0):
+        self.tabWidget.setCurrentIndex(index)
 
     def btn_mk_item(self):
         item      = self.get(self.cbox_itemNum, ob_type = "cbox", toint=False)
@@ -295,6 +298,7 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
         self.btn_game_resume()
         self.dr.clear_game()
         self.warning("다들 입장해주세요!")
+        self.change_tab(1)
 
     def btn_game_resume(self):
 
@@ -307,20 +311,37 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
         if self.STARTED == False:
             m = self.dr.sp.get_match(1)
             self.set_text(self.txt_matchNum, m)
+            SHOW_CHIPS = [ True if x < 11 else False for x in range(16)  ]
+            SHOW_CHIPS[-1] = True
+            self.update_ranking(show_chips= SHOW_CHIPS[m])
+            self.setting_jokbo(m)
             self.warning(f"잠시 실수가 있었네요~\n match{m} 진행할게요!")
+            self.change_tab(1)
+
+    def setting_jokbo(self, match=0):
+        EXPLAIN_INFO = [4,8,11]
+        ind = 0
+        for i, val in enumerate(EXPLAIN_INFO):
+            ind = i + 1
+            if match < val:
+                break
+
+        self.set_image(self.img_Jokbo, f"./img/Jokbo_img_dir_{ind}.png",self.IMG_SIZE[0],self.IMG_SIZE[1])
+        
 
     def combox_item_changed(self, value):    
         # self.img_explain.setPixmap(pixmap)
         # pixmap = QPixmap('cat.jpg')
         value = self.item_name_dict[value]
-        self.set_image(self.img_explain, f"./img/item_{value}.png", self.IMG_SIZE[0],self.IMG_SIZE[1] )
-
+        #self.set_image(self.img_explain, f"./img/item_{value}.png", self.IMG_SIZE[0],self.IMG_SIZE[1] )
+        self.set_image(self.img_explain, f"./img/item_description_{value}.png", self.IMG_SIZE[2], self.IMG_SIZE[3])
+        
     def btn_match_start(self):
         group = self.get(self.txt_group, toint=True)
         match = self.get(self.txt_matchNum, toint=True) + 1
         FINAL_MATCH = 15
         EXPLAIN_INFO = [4,8,11]
-
+        
         if match <= 0:
             self.dr = Director(group, self.num_players)
             self.group = group
@@ -359,7 +380,7 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
                 elif self.EXPLAINED == 2:  
                     self.warning("미니게임 진행 후 아이템 저장을 완료해주세요!")
                     self.EXPLAINED = 1
-                    
+                    self.change_tab(2)
                     
                     return
                 elif self.EXPLAINED == 1:
@@ -378,9 +399,13 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
 
     def update_ranking(self, show_chips = True):
         ranking = self.dr.get_ranking()
+        m = self.get(self.txt_matchNum, toint=True)
+        check_list = self.dr.ck_match_list(m)
+                
         for row, rank in enumerate(ranking):
-            for col, val in enumerate(rank+['진행중']):
-                if show_chips == False and col == 2 : val = "-"
+            rank += [ '매치 완료' if check_list[rank[0]-1] else '진행중'   ]
+            for col, val in enumerate(rank):
+                if show_chips == False and col == 1 : val = "-"
                 print(f"self.rank_table{col+1}_{row+1}")
                 self.set_text( eval(f"self.rank_table{col+1}_{row+1}"), str(val) )
                     

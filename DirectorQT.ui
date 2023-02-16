@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="widget_2">
      <attribute name="title">
@@ -63,7 +63,7 @@
        </font>
       </property>
       <property name="text">
-       <string>게임 재개</string>
+       <string>실수로 껐을 때 클릭</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="txt_group">
@@ -150,7 +150,7 @@
        <enum>QFrame::Box</enum>
       </property>
       <property name="text">
-       <string>명</string>
+       <string>팀</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -159,7 +159,7 @@
     </widget>
     <widget class="QWidget" name="widget">
      <attribute name="title">
-      <string>게임 진헹</string>
+      <string>게임 진행</string>
      </attribute>
      <widget class="QLabel" name="img_Jokbo">
       <property name="geometry">
@@ -1086,16 +1086,19 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>130</y>
-        <width>900</width>
-        <height>800</height>
+        <y>10</y>
+        <width>788</width>
+        <height>900</height>
        </rect>
       </property>
       <property name="frameShape">
        <enum>QFrame::Box</enum>
       </property>
       <property name="text">
-       <string>설명용 이미지</string>
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>img/coin.png</pixmap>
       </property>
      </widget>
      <widget class="QLabel" name="label_item">
