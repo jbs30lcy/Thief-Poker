@@ -414,9 +414,9 @@ def draw_result(screen, const, var):
         if 400 <= score2 < 600 and player1.isdd: p1rank_text = NS[40].render('레인보우', True, White)
         else: p1rank_text = NS[40].render(str2Kr(player1.rank()), True, White)
     if tick >= 70 or tick == -1:
-        if w == 0: win_text = NSE[96].render('DRAW', True, Black)
-        if w == 1: win_text = NSE[96].render('YOU WIN!', True, Black)
-        if w == 2: win_text = NSE[96].render('YOU LOSE', True, Black)
+        if w == 0: win_text = NSE[96].render('DRAW',     True, Blue2)
+        if w == 1: win_text = NSE[96].render('YOU WIN!', True, Blue2)
+        if w == 2: win_text = NSE[96].render('YOU LOSE', True, Blue2)
     coin_text = NS[30].render(str(player1.coin), True, White)
     myteam_text = NS[40].render(f'Team {player1.team}', True, White)
 
@@ -434,7 +434,7 @@ def draw_result(screen, const, var):
         Mblit(screen, p1rank_text, (800, 740))
         Mblit(screen, p2rank_text, (800, 50))
     if tick >= 70 or tick == -1:
-        Mblit(screen, win_text, (800, 450))
+        Mblit(screen, win_text, (800, 400))
         Mblit(screen, Next_button, (1580, 880), 'BR')
     Mblit(screen, Coin_icon, (20, 855), 'ML')
     Mblit(screen, coin_text, (80, 855), 'ML')
@@ -602,8 +602,8 @@ def draw_end(screen, var):
     title = NSE[96].render('Game End!', True, Black)
     coin_text = NS[36].render('보유 코인: ', True, Black)
     coin_amoumt_text = NSE[96].render(str(coin), True, (3.5*tickf1, 3*tickf1, 0))
-    tetkai_text = NSE[56].render('텟카이', True, Black).convert_alpha()
-    tetkai_text.set_alpha(tickf2*255/30)
+    item0_img = Item_IMGlist[0].convert_alpha()
+    item0_img.set_alpha(tickf2*255/30)
 
     screen.fill(Grey1)
     Mblit(screen, title, (800, 150))
@@ -620,12 +620,12 @@ def draw_end(screen, var):
             if player1.item[0] == 0: coin = int(coin * 0.8)
             else:
                 player1.item[0] -= 1
-                coin = int(coin * 0.9)
+                coin = int(coin * 0.95)
                 tickf2 = 30
             tickf1 = 60
     if tickf1: tickf1 -= 1
     if tickf2:
-        Mblit(screen, tetkai_text, (1200, 450))
+        Mblit(screen, item0_img, (1200, 450))
         tickf2 -= 1
 
     return player1, coin, tickf1, tickf2, tick+1

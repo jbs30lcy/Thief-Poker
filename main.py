@@ -65,7 +65,7 @@ def set_last_coin(sp, var):
         if card.color == 'Black':
             if protect_joker > 0:
                 protect_joker -= 1
-                player1.coin = int(0.9 * player1.coin)
+                player1.coin = int(0.95 * player1.coin)
             else:
                 player1.coin = int(0.8 * player1.coin)
     sp.update_cell('chips', player1.team+1, player1.coin)

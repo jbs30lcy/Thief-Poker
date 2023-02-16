@@ -246,7 +246,7 @@ def mouse_exchange_lose(screen_size, var):
                     if len(player2.active_list) > 1:
                         del player2.active_list[0]
 
-        if in_rect(pos, (1580 - 90, 20, 90, 60)):
+        if in_rect(pos, (1580 - 90, 880 - 60, 90, 60)):
             if len(player2.active_list) < 1:
                 tickf1 = 30
             else:
