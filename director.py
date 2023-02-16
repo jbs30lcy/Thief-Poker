@@ -292,6 +292,7 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
         item = self.item_name_dict[item]
         self.dr.assign_item(item_team, item)
 
+        self.warning(f"{item}\n {item_team}팀 배정 완료!")
 
     def btn_game_start(self):
         self.STARTED = True

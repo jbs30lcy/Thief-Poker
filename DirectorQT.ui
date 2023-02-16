@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="widget_2">
      <attribute name="title">
@@ -314,13 +314,13 @@
        <rect>
         <x>290</x>
         <y>130</y>
-        <width>271</width>
+        <width>291</width>
         <height>61</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>40</pointsize>
+        <pointsize>35</pointsize>
        </font>
       </property>
       <property name="frameShape">
@@ -362,13 +362,13 @@
        <rect>
         <x>290</x>
         <y>190</y>
-        <width>271</width>
+        <width>291</width>
         <height>61</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>40</pointsize>
+        <pointsize>35</pointsize>
        </font>
       </property>
       <property name="frameShape">
@@ -866,13 +866,13 @@
        <rect>
         <x>290</x>
         <y>250</y>
-        <width>271</width>
+        <width>291</width>
         <height>61</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>40</pointsize>
+        <pointsize>35</pointsize>
        </font>
       </property>
       <property name="frameShape">
@@ -890,13 +890,13 @@
        <rect>
         <x>290</x>
         <y>310</y>
-        <width>271</width>
+        <width>291</width>
         <height>61</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>40</pointsize>
+        <pointsize>35</pointsize>
        </font>
       </property>
       <property name="frameShape">
@@ -914,13 +914,13 @@
        <rect>
         <x>290</x>
         <y>370</y>
-        <width>271</width>
+        <width>291</width>
         <height>61</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>40</pointsize>
+        <pointsize>35</pointsize>
        </font>
       </property>
       <property name="frameShape">
@@ -938,13 +938,13 @@
        <rect>
         <x>290</x>
         <y>430</y>
-        <width>271</width>
+        <width>291</width>
         <height>61</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>40</pointsize>
+        <pointsize>35</pointsize>
        </font>
       </property>
       <property name="frameShape">
@@ -962,13 +962,13 @@
        <rect>
         <x>290</x>
         <y>490</y>
-        <width>271</width>
+        <width>291</width>
         <height>61</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>40</pointsize>
+        <pointsize>35</pointsize>
        </font>
       </property>
       <property name="frameShape">
@@ -986,13 +986,13 @@
        <rect>
         <x>290</x>
         <y>550</y>
-        <width>271</width>
+        <width>291</width>
         <height>61</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>40</pointsize>
+        <pointsize>35</pointsize>
        </font>
       </property>
       <property name="frameShape">
@@ -1010,13 +1010,13 @@
        <rect>
         <x>290</x>
         <y>610</y>
-        <width>271</width>
+        <width>291</width>
         <height>61</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>40</pointsize>
+        <pointsize>35</pointsize>
        </font>
       </property>
       <property name="frameShape">
@@ -1034,13 +1034,13 @@
        <rect>
         <x>290</x>
         <y>670</y>
-        <width>271</width>
+        <width>291</width>
         <height>61</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>40</pointsize>
+        <pointsize>35</pointsize>
        </font>
       </property>
       <property name="frameShape">
@@ -1058,13 +1058,13 @@
        <rect>
         <x>290</x>
         <y>730</y>
-        <width>271</width>
+        <width>291</width>
         <height>61</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>40</pointsize>
+        <pointsize>35</pointsize>
        </font>
       </property>
       <property name="frameShape">
