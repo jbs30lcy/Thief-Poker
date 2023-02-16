@@ -253,7 +253,12 @@ class Director():
         if team == 0 : return
         chip = int(self.sp.get_acell('chips', team+1))
         self.sp.update_cell("chips", team+1, chip+chip_num)
-        
+
+    def ck_playing(self):
+        return self.sp.ck_playing(self.num)
+    def enroll_playing(self):
+        self.sp.enroll_playing(self.num)
+    
 
 form_class = uic.loadUiType("DirectorQT.ui")[0]
 
@@ -314,6 +319,11 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
     def btn_game_start(self):
         self.STARTED = True
         self.btn_game_resume()
+        if self.dr.ck_playing() == True:
+            self.warning("이미 진행중인 게임입니다! \n개발자에게 문의해주세요!")
+            return
+        else:
+            self.dr.enroll_playing()
         self.dr.clear_game()
         self.warning("다들 입장해주세요!")
         self.change_tab(1)
