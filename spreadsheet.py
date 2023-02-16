@@ -346,8 +346,8 @@ class SP:
         if group == 0: group = self.group
         query = f"SELECT playing from enrolled where mykey = {group}"
         fetch = self.execute(query)[0]['playing']
-        print(fetch)
-        print(type(fetch))
+        #print(fetch)
+        #print(type(fetch))
         return fetch == 1
 
     def enroll_playing(self, group):
