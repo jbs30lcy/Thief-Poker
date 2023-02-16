@@ -249,6 +249,12 @@ class Director():
         items_str = self.sp.encoding_list(items) #"|".join(list(map(str, items)))
         self.sp.update_cell('item', team+1, items_str)
 
+    def add_chip(self, team=0, chip_num=0):
+        if team == 0 : return
+        chip = int(self.sp.get_acell('chips', team+1))
+        self.sp.update_cell("chips", team+1, chip+chip_num)
+        
+
 form_class = uic.loadUiType("DirectorQT.ui")[0]
 
 class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
@@ -257,14 +263,16 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
     num_players = NUMBER_OF_TEAMS
     EXPLAINED = 2
     STARTED = False
-    item_name_dict = { "아이템 선택하기":5,"???":0, "바꿔줘 호애앵애애애애애애애애ㅐㅐㅐ애애ㅇ":1, "다~보인다 했제?!":2, "묻고 따블로 가!":3} 
+    item_name_dict = { "아이템 선택하기":5,"???":0, "바꿔줘 호애앵애애애애애애애애ㅐㅐㅐ애애ㅇ":1, "다~보인다 했제?!":2, "묻고 따블로 가!":3, "칩 추가!": 4} 
     IMG_SIZE = [900, 800, 788, 900] #족보 크기, 아이템 크기
+    CHIP_HIDE_MATCH = 11
     def __init__(self):
         #초기 설정
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle("도둑포커 디렉터용 파일")
         self.change_tab()
+        self.combox_item_changed("아이템 선택하기")
         #이미지 삽입
         self.set_image(self.img_Jokbo, "./img/Jokbo_img_dir_1", self.IMG_SIZE[0], self.IMG_SIZE[1])
         self.set_image(self.img_explain, "./img/item_description_5.png", self.IMG_SIZE[2], self.IMG_SIZE[3])
@@ -278,21 +286,30 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
 
     def change_tab(self, index=0):
         self.tabWidget.setCurrentIndex(index)
+        
 
     def btn_mk_item(self):
-        item      = self.get(self.cbox_itemNum, ob_type = "cbox", toint=False)
+        item_name      = self.get(self.cbox_itemNum, ob_type = "cbox", toint=False)
         item_team = self.get(self.cbox_itemTNum, ob_type = "cbox", toint=True)
         group     = self.get(self.txt_group, toint=True)
-        if item == "아이템 선택하기": 
+        match = self.get(self.txt_matchNum, toint=True)
+        if item_name == "아이템 선택하기": 
             self.warning("아이템을 선택해주세요!")
             return
 
         # self.dr = Director(group, self.num_players)
         # self.group = group
-        item = self.item_name_dict[item]
-        self.dr.assign_item(item_team, item)
+        item = self.item_name_dict[item_name]
+        if item == 4:
+            chips = self.get(self.num_chips, toint=True)
+            self.dr.add_chip(item_team, chips)
+            self.update_ranking( match < self.CHIP_HIDE_MATCH)
+            
+            self.warning(f"칩 {chips}개\n{item_team}팀 배정 완료!")
 
-        self.warning(f"{item}\n {item_team}팀 배정 완료!")
+        else:
+            self.dr.assign_item(item_team, item)
+            self.warning(f"{item_name}\n{item_team}팀 배정 완료!")
 
     def btn_game_start(self):
         self.STARTED = True
@@ -312,7 +329,7 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
         if self.STARTED == False:
             m = self.dr.sp.get_match(1)
             self.set_text(self.txt_matchNum, m)
-            SHOW_CHIPS = [ True if x < 11 else False for x in range(16)  ]
+            SHOW_CHIPS = [ True if x < self.CHIP_HIDE_MATCH else False for x in range(16)  ]
             SHOW_CHIPS[-1] = True
             self.update_ranking(show_chips= SHOW_CHIPS[m])
             self.setting_jokbo(m)
@@ -335,6 +352,12 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
         # pixmap = QPixmap('cat.jpg')
         value = self.item_name_dict[value]
         #self.set_image(self.img_explain, f"./img/item_{value}.png", self.IMG_SIZE[0],self.IMG_SIZE[1] )
+        if value == 4:
+            self.label_itemChip.show()
+            self.num_chips.show()
+        else:
+            self.label_itemChip.hide()
+            self.num_chips.hide()
         self.set_image(self.img_explain, f"./img/item_description_{value}.png", self.IMG_SIZE[2], self.IMG_SIZE[3])
         
     def btn_match_start(self):
@@ -369,7 +392,7 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
                 # self.dr.joker_penalty()
                 self.update_ranking()
                 return
-            SHOW_CHIPS = [ True if x < 11 else False for x in range(FINAL_MATCH+1)  ]
+            SHOW_CHIPS = [ True if x < self.CHIP_HIDE_MATCH else False for x in range(FINAL_MATCH+1)  ]
             SHOW_CHIPS[-1] = True
             self.update_ranking(show_chips= SHOW_CHIPS[match])
             if match in EXPLAIN_INFO:

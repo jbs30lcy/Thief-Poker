@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="widget_2">
      <attribute name="title">
@@ -1161,6 +1161,11 @@
         <string>묻고 따블로 가!</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>칩 추가!</string>
+       </property>
+      </item>
      </widget>
      <widget class="QComboBox" name="cbox_itemTNum">
       <property name="geometry">
@@ -1264,6 +1269,48 @@
       </property>
       <property name="text">
        <string>배정하기</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_itemChip">
+      <property name="geometry">
+       <rect>
+        <x>1360</x>
+        <y>740</y>
+        <width>71</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>40</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>개</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="num_chips">
+      <property name="geometry">
+       <rect>
+        <x>1130</x>
+        <y>730</y>
+        <width>211</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>40</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>30</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </widget>
