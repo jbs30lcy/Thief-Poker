@@ -249,6 +249,19 @@ class Director():
         items_str = self.sp.encoding_list(items) #"|".join(list(map(str, items)))
         self.sp.update_cell('item', team+1, items_str)
 
+    def ck_playing(self, num=0 ):
+        if num == 0 : num = self.num
+        return self.sp.ck_playing(num)
+
+    def reset_playing(self, num=0):
+        if num == 0 : num  = self.num
+        return self.sp.reset_playing(num)
+
+    def enroll_playing(self, num=0):
+        if num == 0 : num = self.num
+        return self.sp.enroll_playing(num)
+
+
 form_class = uic.loadUiType(resource_path("DirectorQT.ui"))[0]
 
 class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
