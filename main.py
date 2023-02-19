@@ -296,7 +296,9 @@ def main():
             t = draw_get_match(ori_screen, (p1, hover, text_index, Match), t)
             if not game.playing == 'HIDE':
                 score = game.draw(ori_screen, WR)
-                if connect_mode == 'Multi' and score > 0: sp.cur.execute(f"UPDATE etc set WR={score} where col=1")
+                if connect_mode == 'Multi' and score > 0:
+                    sp.cur.execute(f"UPDATE etc set WR={score}, WR_GROUP={p1.group}, WR_TEAM={p1.team} where col=1")
+
 
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
@@ -496,12 +498,7 @@ def main():
                     p2.showc += add_showc
                     mode = "result"
                     t = 0
-                    if p1.rank() == 'error':
-                        time.sleep(0.5)
-                        p1.showc = sp.force_get_showc(Round, p1.team)
-                    if p2.rank() == 'error':
-                        time.sleep(0.5)
-                        p2.showc = sp.force_get_showc(Round, p2.team)
+                    
                 p1.active_list = []
                 p2.active_list = []
             
@@ -527,6 +524,12 @@ def main():
                                     showc_tmp.remove(card2)
                         mode = "result"
                         t = 0
+                        if p1.rank() == 'error':
+                            time.sleep(0.5)
+                            p1.showc = sp.force_get_showc(Round, p1.team)
+                        if p2.rank() == 'error':
+                            time.sleep(0.5)
+                            p2.showc = sp.force_get_showc(Round, p2.team)
                     p1.active_list = []
                     p2.active_list = []
                 
@@ -766,6 +769,7 @@ def main():
                         game = Dinosaur_game()
                     if connect_mode == 'Multi' and mode == 'end':
                         coin2, p1 = set_last_coin(sp, (coin2, p1))# end에서 한번 더 바뀔거야. 그거 바꿔야돼
+                    if connect_mode == 'Single': coin2 = p1.coin
 
             if t == 50:
                 p1.card_list[p1.ex_index] = p2.ex_card

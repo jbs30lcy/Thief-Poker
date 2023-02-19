@@ -188,6 +188,8 @@ def draw_get_match(screen, const, var):
         TMI_text_1 = NS[31].render(Didyouknow[text_index][0], True, Grey3)
         TMI_text_2 = NS[31].render(Didyouknow[text_index][1], True, Grey3)
     if not hover == -1: desc_text = NS[30].render(Item_desc[hover], True, Black)
+    group_text  = NS[40].render(f'Group {player1.group}', True, Black)
+    myteam_text = NS[40].render(f'Team {player1.team}',  True, Black)
     j = 0
 
     screen.fill(Grey1)
@@ -207,6 +209,9 @@ def draw_get_match(screen, const, var):
             if player1.using_item == i: Mrect(screen, Red, (100 + 200*j, 750, 160, 240), 3)
             j += 1
     if not hover == -1: Mblit(screen, desc_text, (800, 590))
+
+    Mblit(screen, group_text, (1580, 830), 'BR')
+    Mblit(screen, myteam_text, (1580, 880), 'BR')
     screen.blit(Alpha_screen, (0, 0))
     return tick+1
 
