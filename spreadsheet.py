@@ -341,6 +341,24 @@ class SP:
         return cols
     def cards_to_texts(self, cards=[]):
         return [str(x) for x in cards]
+    
+    def ck_playing(self, group = 0):
+        if group == 0: group = self.group
+        query = f"SELECT playing from enrolled where mykey = {group}"
+        fetch = self.execute(query)[0]['playing']
+        #print(fetch)
+        #print(type(fetch))
+        return fetch == 1
+
+    def enroll_playing(self, group=0):
+        if group == 0: group = self.group
+        query = f"UPDATE enrolled set playing=1 where mykey = {group}"
+        self.execute(query)
+
+    def reset_playing(self, group = 0):
+        if group == 0: group = self.group
+        query = f"UPDATE enrolled set playing=0 where mykey = {group}"
+        self.execute(query)
 
 # 위는 놔두고 아래부터 수정, json 파일 수정 금지
 
