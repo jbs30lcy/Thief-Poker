@@ -249,7 +249,7 @@ class Director():
         items_str = self.sp.encoding_list(items) #"|".join(list(map(str, items)))
         self.sp.update_cell('item', team+1, items_str)
 
-form_class = uic.loadUiType("DirectorQT.ui")[0]
+form_class = uic.loadUiType(resource_path("DirectorQT.ui"))[0]
 
 class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
     #dr = None 
