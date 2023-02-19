@@ -258,7 +258,8 @@ class Director():
         return self.sp.ck_playing(self.num)
     def enroll_playing(self):
         self.sp.enroll_playing(self.num)
-    
+    def reset_playing(self):
+        self.sp.reset_playing(self.num)
 
 form_class = uic.loadUiType("DirectorQT.ui")[0]
 
@@ -276,11 +277,26 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle("도둑포커 디렉터용 파일")
+        self.setWindowIcon(QtGui.QIcon("./img/jeonsaegi.ico"))
         self.change_tab()
         self.combox_item_changed("아이템 선택하기")
         #이미지 삽입
         self.set_image(self.img_Jokbo, "./img/Jokbo_img_dir_1", self.IMG_SIZE[0], self.IMG_SIZE[1])
         self.set_image(self.img_explain, "./img/item_description_5.png", self.IMG_SIZE[2], self.IMG_SIZE[3])
+        
+        #폰트 설정
+        # QtGui.QFontDatabase.addApplicationFont("Typo_SsangmunDongB.ttf")
+        
+        # font = QtGui.QFont('Rix모던고딕 L', 40)
+
+        # for elements in self.findChildren(QComboBox):
+        #     elements.setFont(font)
+        # for elements in self.findChildren(QLabel):
+        #     elements.setFont(font)
+        # for elements in self.findChildren(QLineEdit):
+        #     elements.setFont(font)
+        # for elements in self.findChildren(QPushButton):
+        #     elements.setFont(font)
         #버튼에 기능 연결
         self.btn_matchStart.clicked.connect(self.btn_match_start)
         self.btn_mkItem.clicked.connect(self.btn_mk_item)
@@ -288,10 +304,18 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
         self.btn_gameStart.clicked.connect(self.btn_game_start)
         self.btn_gameResume.clicked.connect(self.btn_game_resume)
         self.cbox_itemNum.currentTextChanged.connect(self.combox_item_changed)
+        self.btn_gameReset.clicked.connect(self.btn_game_reset)
 
     def change_tab(self, index=0):
         self.tabWidget.setCurrentIndex(index)
         
+    def btn_game_reset(self):
+        group = self.get(self.txt_group, toint=True)
+        self.num_players = self.get(self.txt_numPlayers, toint=True)
+        self.dr = Director(group, self.num_players)
+        self.dr.reset_playing()
+        self.warning("게임 ㄱㄱ")
+
 
     def btn_mk_item(self):
         item_name      = self.get(self.cbox_itemNum, ob_type = "cbox", toint=False)
@@ -418,11 +442,15 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
                     
                     return
                 elif self.EXPLAINED == 1:
-                    self.EXPLAINED = 0
+                    self.EXPLAINED = -1
+                    self.set_image(self.img_Jokbo, f'./img/updated_jokbo_{EXPLAIN_INFO.index(match)+1}.png',self.IMG_SIZE[0],self.IMG_SIZE[1])
                     self.warning("바뀐 룰을 확인해주세요!")
-                    self.set_image(self.img_Jokbo, f"./img/Jokbo_img_dir_{EXPLAIN_INFO.index(match)+2}.png",self.IMG_SIZE[0],self.IMG_SIZE[1])
-        
+                    
+                    
                     return
+                elif self.EXPLAINED == -1:
+                    self.set_image(self.img_Jokbo, f"./img/Jokbo_img_dir_{EXPLAIN_INFO.index(match)+2}.png",self.IMG_SIZE[0],self.IMG_SIZE[1])
+                    self.EXPLAINED = 0
             
 
             self.dr.match_setting(match)
@@ -451,9 +479,13 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
                 self.set_text( eval(f"self.rank_table3_{row+1}"), str(val) )
                     
         else:
-            for row, flag in enumerate(self.dr.ck_match_list(m)):
-                val = '매치 완료' if flag else '진행중' 
-                self.set_text( eval(f"self.rank_table3_{row+1}"), str(val) )
+            check_list = self.dr.ck_match_list(m)
+
+            for row in range(len(check_list)):
+                for team, flag in enumerate(check_list):
+                    if team+1 != self.get(eval(f'self.rank_table1_{row+1}'), toint=True): continue
+                    val = '매치 완료' if flag else '진행중' 
+                    self.set_text( eval(f"self.rank_table3_{row+1}"), str(val) )
             
 
     def set_image(self, ob, img_link="", width = 0, height = 0):
