@@ -23,8 +23,13 @@
       <height>1200</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>HY견고딕</family>
+     </font>
+    </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="widget_2">
      <attribute name="title">
@@ -207,10 +212,10 @@
      <widget class="QLabel" name="label_ranking">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>30</y>
-        <width>191</width>
-        <height>71</height>
+        <x>60</x>
+        <y>20</y>
+        <width>251</width>
+        <height>81</height>
        </rect>
       </property>
       <property name="font">
@@ -229,9 +234,9 @@
       <property name="geometry">
        <rect>
         <x>1110</x>
-        <y>50</y>
-        <width>91</width>
-        <height>71</height>
+        <y>40</y>
+        <width>101</width>
+        <height>81</height>
        </rect>
       </property>
       <property name="font">
@@ -249,10 +254,10 @@
      <widget class="QPushButton" name="btn_matchStart">
       <property name="geometry">
        <rect>
-        <x>1210</x>
-        <y>50</y>
-        <width>141</width>
-        <height>71</height>
+        <x>1220</x>
+        <y>40</y>
+        <width>151</width>
+        <height>81</height>
        </rect>
       </property>
       <property name="font">
@@ -267,15 +272,15 @@
      <widget class="QLabel" name="label_match">
       <property name="geometry">
        <rect>
-        <x>810</x>
-        <y>50</y>
-        <width>311</width>
-        <height>71</height>
+        <x>780</x>
+        <y>40</y>
+        <width>341</width>
+        <height>81</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <family>굴림</family>
+        <family>HY견고딕</family>
         <pointsize>40</pointsize>
         <italic>false</italic>
        </font>
@@ -308,7 +313,7 @@
      <widget class="QLabel" name="rank_table1">
       <property name="geometry">
        <rect>
-        <x>60</x>
+        <x>50</x>
         <y>130</y>
         <width>81</width>
         <height>71</height>
@@ -404,7 +409,7 @@
      <widget class="QLabel" name="rank_table1_2">
       <property name="geometry">
        <rect>
-        <x>60</x>
+        <x>50</x>
         <y>270</y>
         <width>81</width>
         <height>71</height>
@@ -428,7 +433,7 @@
      <widget class="QLabel" name="rank_table1_3">
       <property name="geometry">
        <rect>
-        <x>60</x>
+        <x>50</x>
         <y>340</y>
         <width>81</width>
         <height>71</height>
@@ -452,7 +457,7 @@
      <widget class="QLabel" name="rank_table1_4">
       <property name="geometry">
        <rect>
-        <x>60</x>
+        <x>50</x>
         <y>410</y>
         <width>81</width>
         <height>71</height>
@@ -476,7 +481,7 @@
      <widget class="QLabel" name="rank_table1_5">
       <property name="geometry">
        <rect>
-        <x>60</x>
+        <x>50</x>
         <y>480</y>
         <width>81</width>
         <height>71</height>
@@ -500,7 +505,7 @@
      <widget class="QLabel" name="rank_table1_6">
       <property name="geometry">
        <rect>
-        <x>60</x>
+        <x>50</x>
         <y>550</y>
         <width>81</width>
         <height>71</height>
@@ -524,7 +529,7 @@
      <widget class="QLabel" name="rank_table1_7">
       <property name="geometry">
        <rect>
-        <x>60</x>
+        <x>50</x>
         <y>620</y>
         <width>81</width>
         <height>71</height>
@@ -548,7 +553,7 @@
      <widget class="QLabel" name="rank_table1_8">
       <property name="geometry">
        <rect>
-        <x>60</x>
+        <x>50</x>
         <y>690</y>
         <width>81</width>
         <height>71</height>
@@ -572,7 +577,7 @@
      <widget class="QLabel" name="rank_table1_9">
       <property name="geometry">
        <rect>
-        <x>60</x>
+        <x>50</x>
         <y>760</y>
         <width>81</width>
         <height>71</height>
@@ -596,7 +601,7 @@
      <widget class="QLabel" name="rank_table1_10">
       <property name="geometry">
        <rect>
-        <x>60</x>
+        <x>50</x>
         <y>830</y>
         <width>81</width>
         <height>71</height>
@@ -620,7 +625,7 @@
      <widget class="QLabel" name="rank_table1_1">
       <property name="geometry">
        <rect>
-        <x>60</x>
+        <x>50</x>
         <y>200</y>
         <width>81</width>
         <height>71</height>
@@ -1132,6 +1137,7 @@
       </property>
       <property name="font">
        <font>
+        <family>HY견고딕</family>
         <pointsize>40</pointsize>
        </font>
       </property>
@@ -1153,6 +1159,7 @@
       </property>
       <property name="font">
        <font>
+        <family>HY견고딕</family>
         <pointsize>40</pointsize>
        </font>
       </property>
