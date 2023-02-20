@@ -261,7 +261,10 @@ class Director():
         if num == 0 : num = self.num
         return self.sp.enroll_playing(num)
 
-
+    def add_chip(self, team, added=0 ):
+        chip = int(self.sp.get_acell("chips", team+1)) + added
+        self.sp.update_cell('chips', team + 1, chip)
+        
 form_class = uic.loadUiType(resource_path("DirectorQT.ui"))[0]
 
 class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
