@@ -281,7 +281,7 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
         super().__init__()
         self.setupUi(self)
         self.setWindowTitle("도둑포커 디렉터용 파일")
-        self.setWindowIcon(QtGui.QIcon("./img/jeonsaegi.ico"))
+        self.setWindowIcon(QtGui.QIcon(resource_path("./img/jeonsaegi.ico")))
         self.change_tab()
         self.combox_item_changed("아이템 선택하기")
         #이미지 삽입
@@ -493,7 +493,7 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
             
 
     def set_image(self, ob, img_link="", width = 0, height = 0):
-        pixmap = QtGui.QPixmap(img_link)
+        pixmap = QtGui.QPixmap(resource_path(img_link))
         if width * height > 0:
             pixmap = pixmap.scaled(width, height, QtCore.Qt.KeepAspectRatio)
         ob.setPixmap(pixmap)
