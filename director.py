@@ -403,7 +403,6 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
         match = self.get(self.txt_matchNum, toint=True) + 1
         FINAL_MATCH = 15
         EXPLAIN_INFO = [4,8,11]
-        
         if match <= 0:
             self.dr = Director(group, self.num_players)
             self.group = group
@@ -439,7 +438,7 @@ class DirectorQT(QMainWindow, form_class): #QT로 만든 Director 프로그램
                     if match == EXPLAIN_INFO[-1]:
                         self.dr.making_hand_reversed()
 
-                elif self.EXPLAINED == 2:  
+                if self.EXPLAINED == 2:  
                     self.warning("미니게임 진행 후 아이템 저장을 완료해주세요!")
                     self.EXPLAINED = 1
                     self.change_tab(2)

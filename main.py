@@ -202,6 +202,7 @@ def main():
                             mode="exchange_delay"
                             continue
                         if Phase == 4 : # 게임 대기중 화면으로
+                            Round = 1
                             continue
                         t, w = 0, -1
                         p1.active_list = []
@@ -531,9 +532,11 @@ def main():
                         if p1.rank() == 'error':
                             time.sleep(0.5)
                             p1.showc = sp.force_get_showc(Round, p1.team)
+                            if p1.rank() == 'error': raise Error
                         if p2.rank() == 'error':
                             time.sleep(0.5)
                             p2.showc = sp.force_get_showc(Round, p2.team)
+                            if p2.rank() == 'error': raise Error
                     p1.active_list = []
                     p2.active_list = []
                 

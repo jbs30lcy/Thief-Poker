@@ -211,7 +211,7 @@ class SP:
         return items
 
     def force_get_showc(self, Round, team):
-        return self.get_playing(team, 1) + self.get_playing(team, 2) + self.get_common(Round)
+        return self.get_playing(team, 1) + self.get_playing(team, 2) + [self.get_common(Round)]
 
     # 보조 메소드들
     def encoding_list(self, l = [], dimension = 1):
