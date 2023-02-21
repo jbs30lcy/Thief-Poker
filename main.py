@@ -388,8 +388,8 @@ def main():
                 sp.upload_shown(p1.shown)
                 if Match == 1: p1.coin = p2.coin = 100
                 else:
-                    p1.coin = sp.get_acell('chips', p1.team+1)
-                    p2.coin = sp.get_acell('chips', p2.team+1)
+                    p1.coin = sp.get_chips(p1.team)
+                    p2.coin = sp.get_chips(p2.team)
             r1, r2, reward_coin = set_para(Match)
             p1.Rule = [r1, r2]
             p2.Rule = [r1, r2]
