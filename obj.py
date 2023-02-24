@@ -191,7 +191,7 @@ class Player:
         if 'S-F' in self.Rule[0]: # 스티플
             is_straight = False
             is_s_index = -1
-            for i in range(3, -1, -1):
+            for i in range(4):
                 slice_val_arr = value_bool_arr[i:i+4]
                 if sum(slice_val_arr) + black == 4:
                     is_straight = True
@@ -245,9 +245,11 @@ class Player:
 
             rs = self.str2score(result_s)
             Rs = self.str2score(R)
-            if rs > Rs:
+            if rs//100 > Rs//100:
                 R = result_s
-            elif rs == Rs and not result_isblack:
+            elif rs//100 == Rs//100 and not result_isblack:
+                R = result_s
+            elif rs > Rs:
                 R = result_s
 
         if self.str2score(R) < 200:

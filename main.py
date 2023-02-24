@@ -531,6 +531,7 @@ def main():
                         t = 0
                         if p1.rank() == 'error':
                             time.sleep(0.5)
+                            print(p1.showc)
                             p1.showc = sp.force_get_showc(Round, p1.team)
                             if p1.rank() == 'error': raise Error
                         if p2.rank() == 'error':

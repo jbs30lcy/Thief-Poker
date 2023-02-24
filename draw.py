@@ -181,6 +181,7 @@ def draw_get_match(screen, const, var):
     Alpha_screen = pg.Surface((screen.get_width(), screen.get_height()), pg.SRCALPHA)
     title = NS[72].render("게임 준비 중...", True, Black)
     dyk_text = NS[28].render("알고 계셨나요?", True, Black)
+    mozaic_text = NS[28].render("1g(3#$%%b72q@!@TY#N$\\3tmt18:ns;riu7tv", True, Black)
     dyk_text = pg.transform.rotate(dyk_text, 10)
     if len(Didyouknow[text_index]) == 1:
         TMI_text_1 = NS[35].render(Didyouknow[text_index][0], True, Grey3)
@@ -194,13 +195,15 @@ def draw_get_match(screen, const, var):
 
     screen.fill(Grey1)
     Mblit(screen, title, (800, 100))
-    Mblit(screen, dyk_text, (300, 135))
     if not Match == 7:
+        Mblit(screen, dyk_text, (300, 135))
         if len(Didyouknow[text_index]) == 1:
             Mblit(screen, TMI_text_1, (800, 200))
         if len(Didyouknow[text_index]) == 2:
             Mblit(screen, TMI_text_1, (800, 180))
             Mblit(screen, TMI_text_2, (800, 220))
+    if Match == 7:
+        Mblit(screen, mozaic_text, (300, 135))
     for i in range(5):
         num_text = NS[18].render(str(player1.item[i]), True, Black)
         if player1.item[i]:
@@ -210,8 +213,8 @@ def draw_get_match(screen, const, var):
             j += 1
     if not hover == -1: Mblit(screen, desc_text, (800, 590))
 
-    Mblit(screen, group_text, (1580, 830), 'BR')
-    Mblit(screen, myteam_text, (1580, 880), 'BR')
+    Mblit(screen, group_text, (1280, 830), 'BR')
+    Mblit(screen, myteam_text, (1280, 880), 'BR')
     screen.blit(Alpha_screen, (0, 0))
     return tick+1
 
