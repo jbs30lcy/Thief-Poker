@@ -5,7 +5,6 @@ from obj import *
 from setting import *
 from draw import *
 from eventing import *
-from spreadsheet import *
 from dinosaur_game import *
 
 pg.init()
@@ -100,14 +99,7 @@ def main():
 
     p1 = Player()
     p2 = Player()
-    sp = SP()
     WAITING_TIME = 30
-
-    sp.cur.execute("SELECT * FROM etc where col=1")
-    fetch = sp.cur.fetchall()[0]
-    if fetch['is_end'] == 1111111111:
-        mode = 'credit'
-    WR = fetch['wr']
 
     # mode 변수에 따라 실행되는 코드가 달라짐
     while True:
@@ -290,16 +282,12 @@ def main():
                 j += 1
             if t == 0:
                 p1.using_item = -1
-                sp.upload_item_use(p1.using_item)
             if t % 1200 == 0:
                 text_index = random.choice(range(len(Didyouknow)))
             
             t = draw_get_match(ori_screen, (p1, hover, text_index, Match), t)
             if not game.playing == 'HIDE':
                 score = game.draw(ori_screen, WR)
-                if connect_mode == 'Multi' and score > 0:
-                    sp.cur.execute(f"UPDATE etc set WR={score}, WR_GROUP={p1.group}, WR_TEAM={p1.team} where col=1")
-
 
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
 
@@ -386,15 +374,10 @@ def main():
                 p2.pre.append([])
                 p1.shown = []
                 p2.shown = []
-                sp.upload_shown(p1.shown)
                 if Match == 1: p1.coin = p2.coin = 100
-                else:
-                    p1.coin = sp.get_chips(p1.team)
-                    p2.coin = sp.get_chips(p2.team)
             r1, r2, reward_coin = set_para(Match)
             p1.Rule = [r1, r2]
             p2.Rule = [r1, r2]
-            sp.update_cell_range("match", 3, p1.team+1, 1, [Match, 1, 0], False)
             
             if 1 in p1.Rule[1] or 2 in p1.Rule[1]:
                 mode = 'showDD'
@@ -609,7 +592,6 @@ def main():
                 
             if t == 0:
                 p1.set_shown()
-                sp.upload_shown(p1.shown)
                 p2.set_shown()
                 w = win(p1, p2)
             if t == 70:
@@ -623,8 +605,6 @@ def main():
                     p1.pre[-1].append(1)
                 if w == 2: #패배
                     p1.pre[-1].append(-1)
-                sp.update_cell('chips', p1.team+1, p1.coin)
-                sp.upload_pre(p1.pre)
                 #sp.clear_phase()
             if mode == 'result': #가끔 씹힐때 있어서 버그처리
                 p1, p2, t = draw_result(ori_screen, (Round, Match, w), (p1, p2, t))
