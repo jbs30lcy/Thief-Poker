@@ -380,10 +380,10 @@ class SP:
         self.team = team
         '''
 
-        self.host = 'jeonsaegi23.c5hjdgv5b9uj.ap-northeast-2.rds.amazonaws.com'
+        self.host = 'mydb2.chpxlqinlbll.ap-northeast-2.rds.amazonaws.com'
         self.port = 3306
-        self.user = 'jeonsaegi23'
-        self.password = 'jeonsaegi23' # host, password는 보안 문제가 있어서, 나중에 파일을 따로 빼자
+        self.user = 'admin'
+        self.password = 'lcy170807!' # host, password는 보안 문제가 있어서, 나중에 파일을 따로 빼자
         self.database = 'player_info'
         self.conn = pymysql.connect(host = self.host, port = self.port, user = self.user, password = self.password, database = self.database)
         self.cur = self.conn.cursor(pymysql.cursors.DictCursor)
