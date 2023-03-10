@@ -103,12 +103,6 @@ def main():
     sp = SP()
     WAITING_TIME = 30
 
-    sp.cur.execute("SELECT * FROM etc where col=1")
-    fetch = sp.cur.fetchall()[0]
-    if fetch['is_end'] == 1111111111:
-        mode = 'credit'
-    WR = fetch['wr']
-
     # mode 변수에 따라 실행되는 코드가 달라짐
     while True:
         if mode == 'main': # 초록색 게임 시작 화면
@@ -297,8 +291,6 @@ def main():
             t = draw_get_match(ori_screen, (p1, hover, text_index, Match), t)
             if not game.playing == 'HIDE':
                 score = game.draw(ori_screen, WR)
-                if connect_mode == 'Multi' and score > 0:
-                    sp.cur.execute(f"UPDATE etc set WR={score}, WR_GROUP={p1.group}, WR_TEAM={p1.team} where col=1")
 
 
             screen.blit(pg.transform.scale(ori_screen, (WIDTH, HEIGHT)), (0, 0))
@@ -316,9 +308,6 @@ def main():
                         Match += 1 
                         p2num = sp.get_opponent(Match) 
                     mode = 'reset'
-                
-                sp.cur.execute("SELECT * FROM etc where col=1")
-                WR = sp.cur.fetchall()[0]['wr']
 
             clock.tick(60)
             pg.display.update()   
