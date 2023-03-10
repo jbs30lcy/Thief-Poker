@@ -89,10 +89,10 @@ class Dinosaur_game():
 
         score_text     = NS[20].render(f'{int(self.nubjuk.x//10)}', True, Black)
         max_score_text = NS[20].render(f'{int(Dinosaur_game.Max_score//10)}', True, Black)
-        world_record   = NS[20].render(str(max(WR, int(self.nubjuk.x//10))), True, Red)
+        #world_record   = NS[20].render(str(max(WR, int(self.nubjuk.x//10))), True, Red)
         Mblit(self.screen, score_text,     (1180, 20), 'TR')
         Mblit(self.screen, max_score_text, (1180, 45), 'TR')
-        Mblit(self.screen, world_record,   (1180, 70), 'TR')
+        #Mblit(self.screen, world_record,   (1180, 70), 'TR')
         if self.playing == 'STOP':
             if WR == self.nubjuk.x // 10:
                 dying_text = NS[50].render('World Record!!', True, Red)

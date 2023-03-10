@@ -267,10 +267,10 @@ def main():
                 if event.type == MOUSEBUTTONDOWN and not is_esc:
                     p1, clicked = mouse_get_match((WIDTH, HEIGHT), p1)
                     if clicked : sp.upload_item_use(p1.using_item)
-            #     if event.type == KEYDOWN and event.key == K_r and not game.playing == 'PLAY':
-            #         if game.playing == 'STOP': game = Dinosaur_game()
-            #         game.playing = 'PLAY'
-            # if game.playing == 'PLAY': game.event(event_list, pg.key.get_pressed())
+                if event.type == KEYDOWN and event.key == K_r and not game.playing == 'PLAY':
+                    if game.playing == 'STOP': game = Dinosaur_game()
+                    game.playing = 'PLAY'
+            if game.playing == 'PLAY': game.event(event_list, pg.key.get_pressed())
 
             pos = list(pg.mouse.get_pos())
             pos[0] *= (1600/WIDTH)
@@ -290,6 +290,7 @@ def main():
             
             t = draw_get_match(ori_screen, (p1, hover, text_index, Match), t)
             if not game.playing == 'HIDE':
+                WR=0
                 score = game.draw(ori_screen, WR)
 
 
